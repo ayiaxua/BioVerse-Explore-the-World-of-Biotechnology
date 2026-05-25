@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>MicroVerse 2 | Ensiklopedia Sel Lanjutan BioVerse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #111827;
+      --bg-card: rgba(15, 25, 45, 0.85);
+      --text-primary: #e2e8f0;
+      --text-secondary: #b0bec5;
+      --accent: #00E5A0;
+      --accent-glow: 0 0 25px rgba(0, 229, 160, 0.4);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --font-display: 'Orbitron', sans-serif;
+      --font-body: 'Poppins', sans-serif;
+      --card-hover: rgba(0, 229, 160, 0.08);
+      --panel-bg: rgba(10, 20, 35, 0.98);
+      --sidebar-bg: rgba(12, 22, 38, 0.9);
+    }
+    .light-theme {
+      --bg-primary: #f0f4f8;
+      --bg-secondary: #e2e8f0;
+      --bg-card: rgba(255, 255, 255, 0.92);
+      --text-primary: #1a202c;
+      --text-secondary: #4a5568;
+      --accent-glow: 0 0 25px rgba(0, 180, 130, 0.3);
+      --border-subtle: rgba(0, 0, 0, 0.1);
+      --card-hover: rgba(0, 229, 160, 0.1);
+      --panel-bg: rgba(255, 255, 255, 0.98);
+      --sidebar-bg: rgba(240, 244, 248, 0.95);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: var(--font-body); background: var(--bg-primary); color: var(--text-primary);
+      min-height: 100vh; transition: background 0.4s, color 0.4s; overflow-x: hidden;
+    }
+    .micro-header {
+      display: flex; align-items: center; justify-content: space-between; padding: 14px 24px;
+      background: var(--bg-secondary); border-bottom: 1px solid var(--border-subtle);
+      backdrop-filter: blur(15px); position: sticky; top:0; z-index:100; flex-wrap: wrap; gap:10px;
+    }
+    .header-left { display:flex; align-items:center; gap:12px; }
+    .back-btn {
+      background: var(--bg-card); border:1px solid var(--accent); color:var(--accent);
+      padding:8px 16px; border-radius:25px; cursor:pointer; font-weight:600;
+      font-family:var(--font-body); font-size:0.85rem; transition:0.3s;
+    }
+    .back-btn:hover { background:var(--accent); color:#0a1a2a; }
+    .library-title {
+      font-family:var(--font-display); font-size:1.3rem; font-weight:700;
+      color:var(--accent); letter-spacing:1px;
+    }
+    .item-count { font-size:0.8rem; color:var(--text-secondary); font-weight:500; }
+    .header-right { display:flex; align-items:center; gap:10px; }
+    .theme-toggle {
+      background:var(--bg-card); border:1px solid var(--border-subtle); color:var(--text-primary);
+      padding:8px 14px; border-radius:25px; cursor:pointer; font-family:var(--font-body);
+      font-size:0.8rem; font-weight:600; transition:0.3s;
+    }
+    .theme-toggle:hover { border-color:var(--accent); }
+    .main-layout { display:flex; min-height:calc(100vh - 70px); }
+    .sidebar {
+      width:260px; background:var(--sidebar-bg); border-right:1px solid var(--border-subtle);
+      padding:20px 16px; overflow-y:auto; position:sticky; top:70px;
+      height:calc(100vh - 70px); backdrop-filter:blur(10px); flex-shrink:0;
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .sidebar h4 { font-family:var(--font-display); font-size:0.85rem; color:var(--accent); letter-spacing:1px; margin-bottom:4px; }
+    .category-btn {
+      background:transparent; border:1px solid var(--border-subtle); color:var(--text-secondary);
+      padding:10px 14px; border-radius:12px; cursor:pointer; font-family:var(--font-body);
+      font-size:0.8rem; text-align:left; transition:0.3s; font-weight:500;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .category-btn:hover,.category-btn.active { border-color:var(--accent); color:var(--accent); background:var(--card-hover); }
+    .category-count { background:rgba(0,229,160,0.2); padding:2px 8px; border-radius:12px; font-size:0.7rem; }
+    .content-area { flex:1; padding:20px 24px; overflow-y:auto; }
+    .search-container { display:flex; gap:10px; margin-bottom:16px; }
+    .search-input {
+      flex:1; padding:14px 20px; border-radius:35px; border:2px solid var(--border-subtle);
+      background:var(--bg-card); color:var(--text-primary); font-family:var(--font-body);
+      font-size:0.95rem; outline:none; transition:0.3s;
+    }
+    .search-input:focus { border-color:var(--accent); box-shadow:var(--accent-glow); }
+    .search-btn {
+      background:var(--accent); border:none; color:#0a1a2a; padding:14px 22px;
+      border-radius:30px; font-weight:700; cursor:pointer; font-family:var(--font-body); transition:0.3s;
+    }
+    .search-btn:hover { box-shadow:var(--accent-glow); }
+    .celly-banner {
+      display:flex; align-items:center; gap:12px; padding:12px 18px; margin-bottom:16px;
+      background:var(--bg-card); border-radius:18px; border:1px solid var(--accent); backdrop-filter:blur(10px);
+    }
+    .celly-avatar { width:50px; height:50px; flex-shrink:0; }
+    .celly-message { font-size:0.85rem; font-weight:500; color:var(--text-primary); line-height:1.5; }
+    .celly-message span { color:var(--accent); font-weight:700; }
+    .library-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; }
+    .organelle-card {
+      background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:18px;
+      padding:20px; cursor:pointer; transition:all 0.35s; backdrop-filter:blur(10px);
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .organelle-card:hover { transform:translateY(-5px); border-color:var(--accent); box-shadow:var(--accent-glow); background:var(--card-hover); }
+    .card-icon { width:50px; height:50px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; }
+    .card-title { font-family:var(--font-display); font-size:0.95rem; font-weight:700; letter-spacing:0.5px; }
+    .card-function { font-size:0.8rem; color:var(--text-secondary); line-height:1.5; flex-grow:1; }
+    .card-actions { display:flex; gap:8px; }
+    .btn-detail { background:var(--accent); color:#0a1a2a; border:none; padding:8px 14px; border-radius:20px; font-weight:700; cursor:pointer; font-size:0.75rem; transition:0.3s; }
+    .btn-detail:hover { box-shadow:var(--accent-glow); }
+    .btn-3d { background:transparent; border:2px solid #FF6B6B; color:#FF6B6B; padding:8px 14px; border-radius:20px; font-weight:700; cursor:pointer; font-size:0.75rem; transition:0.3s; }
+    .btn-3d:hover { background:#FF6B6B; color:white; }
+    .pagination { display:flex; justify-content:center; align-items:center; gap:8px; margin-top:24px; flex-wrap:wrap; }
+    .page-btn { background:var(--bg-card); border:1px solid var(--border-subtle); color:var(--text-primary); padding:10px 16px; border-radius:12px; cursor:pointer; font-weight:600; font-size:0.85rem; transition:0.3s; }
+    .page-btn:hover,.page-btn.active { border-color:var(--accent); color:var(--accent); background:var(--card-hover); }
+    .detail-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:200; display:none; justify-content:flex-end; }
+    .detail-overlay.active { display:flex; }
+    .detail-panel { width:100%; max-width:650px; height:100%; background:var(--panel-bg); backdrop-filter:blur(25px); border-left:2px solid var(--accent); padding:28px 24px; overflow-y:auto; animation:slideIn 0.35s ease-out; display:flex; flex-direction:column; gap:20px; }
+    @keyframes slideIn { from{transform:translateX(100%);} to{transform:translateX(0);} }
+    .detail-close { align-self:flex-end; background:transparent; border:1px solid var(--accent); color:var(--accent); padding:8px 18px; border-radius:25px; cursor:pointer; font-weight:700; transition:0.3s; }
+    .detail-close:hover { background:var(--accent); color:#0a1a2a; }
+    .detail-icon-large { width:80px; height:80px; border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:2.2rem; align-self:center; }
+    .detail-title { font-family:var(--font-display); font-size:1.5rem; font-weight:800; text-align:center; color:var(--accent); }
+    .detail-category { text-align:center; font-size:0.8rem; color:var(--text-secondary); font-weight:500; }
+    .detail-section { background:var(--bg-card); border-radius:14px; padding:18px; border:1px solid var(--border-subtle); line-height:1.8; }
+    .detail-section h4 { font-family:var(--font-display); font-size:0.9rem; color:var(--accent); margin-bottom:10px; letter-spacing:1px; border-bottom:1px solid var(--accent); padding-bottom:6px; }
+    .detail-section p { font-size:0.9rem; color:var(--text-secondary); line-height:1.9; text-align:justify; }
+    .detail-section ul { padding-left:18px; font-size:0.9rem; color:var(--text-secondary); line-height:1.9; }
+    .detail-section ul li { margin-bottom:6px; }
+    .info-box { background:rgba(0,229,160,0.06); border-left:3px solid var(--accent); padding:12px 16px; border-radius:8px; margin:10px 0; font-size:0.85rem; color:var(--text-secondary); }
+    .highlight-box { background:rgba(255,215,0,0.15); border-left:3px solid #FFD700; padding:12px 16px; border-radius:8px; margin:10px 0; font-size:0.85rem; color:var(--text-secondary); }
+    .model-3d-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); backdrop-filter:blur(10px); z-index:300; display:none; align-items:center; justify-content:center; }
+    .model-3d-overlay.active { display:flex; }
+    .model-3d-container { width:90%; max-width:850px; height:80vh; background:var(--bg-secondary); border-radius:22px; border:2px solid var(--accent); overflow:hidden; display:flex; flex-direction:column; box-shadow:0 0 50px rgba(0,229,160,0.5); animation:popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275); }
+    @keyframes popIn { from{transform:scale(0.8);opacity:0;} to{transform:scale(1);opacity:1;} }
+    .model-3d-header { display:flex; justify-content:space-between; align-items:center; padding:14px 20px; background:var(--bg-card); border-bottom:1px solid var(--accent); }
+    .model-3d-title { font-family:var(--font-display); color:var(--accent); font-weight:700; font-size:0.95rem; }
+    .model-3d-close { background:transparent; border:1px solid var(--accent); color:var(--accent); padding:8px 16px; border-radius:25px; cursor:pointer; font-weight:700; transition:0.3s; }
+    .model-3d-close:hover { background:var(--accent); color:#0a1a2a; }
+    .model-3d-iframe { flex:1; width:100%; border:none; }
+    .model-3d-fallback { text-align:center; padding:12px; font-size:0.8rem; color:var(--text-secondary); }
+    .model-3d-fallback a { color:#4285F4; font-weight:600; }
+    .search-tabs { display:flex; gap:8px; margin-bottom:8px; }
+    .search-tab { background:var(--bg-card); border:1px solid var(--border-subtle); color:var(--text-secondary); padding:8px 16px; border-radius:20px; cursor:pointer; font-size:0.8rem; font-weight:600; transition:0.3s; }
+    .search-tab.active { border-color:var(--accent); color:var(--accent); background:var(--card-hover); }
+    .external-results { display:none; background:var(--bg-card); border-radius:16px; padding:20px; margin-bottom:16px; border:1px solid var(--accent); }
+    .external-results.active { display:block; }
+    .external-result-item { padding:12px 0; border-bottom:1px solid var(--border-subtle); }
+    .external-result-item:last-child { border-bottom:none; }
+    .external-result-item h5 { color:var(--accent); margin-bottom:4px; }
+    .external-result-item p { font-size:0.85rem; color:var(--text-secondary); line-height:1.6; }
+    .external-result-item a { color:#4285F4; font-size:0.8rem; }
+    @media (max-width:768px) {
+      .main-layout { flex-direction:column; }
+      .sidebar { width:100%; height:auto; position:relative; top:0; flex-direction:row; flex-wrap:wrap; gap:6px; padding:12px; }
+      .library-grid { grid-template-columns:1fr; }
+      .detail-panel { max-width:100%; }
+    }
+  </style>
+</head>
+<body class="dark-theme">
+
+  <header class="micro-header">
+    <div class="header-left">
+      <button class="back-btn" id="back-btn">← Peta</button>
+      <span class="library-title">MICROVERSE 2</span>
+      <span class="item-count" id="item-count">49 item</span>
+    </div>
+    <div class="header-right">
+      <a href="microverse1.html" style="color:var(--accent);text-decoration:none;font-weight:600;font-size:0.85rem;">← MicroVerse 1</a>
+      <button class="theme-toggle" id="theme-toggle-btn">☀ Light</button>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <aside class="sidebar" id="sidebar">
+      <h4>KATEGORI</h4>
+      <button class="category-btn active" data-category="all">Semua <span class="category-count">49</span></button>
+    </aside>
+
+    <main class="content-area" id="content-area">
+      <div class="search-tabs">
+        <button class="search-tab active" data-tab="internal">🔍 Cari Internal</button>
+        <button class="search-tab" data-tab="external">🌐 Cari di Web</button>
+      </div>
+      <div class="search-container" id="search-internal">
+        <input type="text" class="search-input" id="search-input" placeholder="Cari di 49 item MicroVerse 2...">
+        <button class="search-btn" id="search-btn">Cari</button>
+      </div>
+      <div class="search-container" id="search-external" style="display:none;">
+        <input type="text" class="search-input" id="search-ext-input" placeholder="Cari info biologi dari web...">
+        <button class="search-btn" id="search-ext-btn">Cari Web</button>
+      </div>
+      <div class="external-results" id="external-results"></div>
+
+      <div class="celly-banner" id="celly-box">
+        <svg class="celly-avatar" viewBox="0 0 60 60" fill="none">
+          <circle cx="30" cy="30" r="26" fill="#00E5A0" stroke="#fff" stroke-width="2.5"/>
+          <circle cx="22" cy="24" r="4.5" fill="white"/><circle cx="38" cy="24" r="4.5" fill="white"/>
+          <circle cx="22" cy="24" r="2" fill="#1a1a2e"/><circle cx="38" cy="24" r="2" fill="#1a1a2e"/>
+          <path d="M24 38 Q30 44 36 38" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="celly-message" id="celly-message">
+          <span>Celly:</span> MicroVerse 2 hadir! 49 item MURNI tentang sel: sinyal sel, checkpoints, epigenetika, stress sel, dan banyak lagi!
+        </div>
+      </div>
+
+      <div class="library-grid" id="library-grid"></div>
+      <div class="pagination" id="pagination"></div>
+    </main>
+  </div>
+
+  <div class="detail-overlay" id="detail-overlay">
+    <div class="detail-panel" id="detail-panel">
+      <button class="detail-close" id="detail-close-btn">Tutup</button>
+      <div class="detail-icon-large" id="detail-icon"></div>
+      <div class="detail-title" id="detail-title"></div>
+      <div class="detail-category" id="detail-category"></div>
+      <div class="detail-section" id="detail-content"></div>
+      <button class="btn-3d" id="detail-open-3d" style="width:100%;justify-content:center;padding:14px;">🔍 Lihat Model 3D di Sketchfab</button>
+    </div>
+  </div>
+
+  <div class="model-3d-overlay" id="model-3d-overlay">
+    <div class="model-3d-container">
+      <div class="model-3d-header">
+        <span class="model-3d-title" id="model-3d-title">Model 3D</span>
+        <button class="model-3d-close" id="model-3d-close-btn">Tutup</button>
+      </div>
+      <iframe class="model-3d-iframe" id="model-3d-iframe" allowfullscreen allow="autoplay; fullscreen; xr-spatial-tracking" title="Model 3D"></iframe>
+      <div class="model-3d-fallback">Model tidak muncul? <a id="model-3d-fallback-link" href="#" target="_blank" rel="noopener">Buka di Sketchfab</a></div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const categories = [
+        { id: 'sel-tubuh-lanjutan', name: 'Jenis Sel Tubuh Lanjutan', icon: '🧫', color: '#e74c3c' },
+        { id: 'sinyal-sel', name: 'Sinyal Sel & Second Messenger', icon: '📡', color: '#3498db' },
+        { id: 'reseptor', name: 'Reseptor & Ligan', icon: '🎯', color: '#f39c12' },
+        { id: 'checkpoints', name: 'Cell Cycle Checkpoints', icon: '🚦', color: '#2ecc71' },
+        { id: 'dna-repair', name: 'DNA Repair Mechanisms', icon: '🔧', color: '#8e44ad' },
+        { id: 'epigenetika', name: 'Epigenetika Sel', icon: '🧬', color: '#e67e22' },
+        { id: 'apoptosis-detail', name: 'Apoptosis & Nekrosis Detail', icon: '💀', color: '#c0392b' },
+        { id: 'autofagi', name: 'Autofagi & Mitofagi', icon: '♻️', color: '#27ae60' },
+        { id: 'stress-sel', name: 'Stres Sel & Respons', icon: '⚠️', color: '#f1c40f' },
+        { id: 'aging', name: 'Aging Seluler', icon: '⏳', color: '#7f8c8d' }
+      ];
+
+      function generateItems() {
+        const items = [];
+        function add(id, name, category, icon, iconBg, content) {
+          items.push({ id, name, category, icon, iconBg, content, sketchfabSearch: name.replace(/\s+/g,'+')+'+3d+model' });
+        }
+
+        const selCat = 'sel-tubuh-lanjutan';
+        add('hepatocyte-detail', 'Hepatosit (Detail)', selCat, '🏭', '#e67e22', `
+          <h4>Definisi & Gambaran Umum</h4>
+          <p>Hepatosit adalah sel parenkim utama hati yang menyusun sekitar 70-80% massa total organ vital ini. Setiap hepatosit adalah sel epitel yang sangat terspesialisasi dengan bentuk polihedral (berbentuk banyak sisi) dan diameter sekitar 20-30 mikrometer. Hati manusia dewasa mengandung sekitar 100-300 miliar hepatosit yang bekerja tanpa lelah menjalankan lebih dari 500 fungsi metabolisme berbeda.</p>
+
+          <h4>Karakteristik Unik</h4>
+          <p>Hepatosit memiliki karakteristik unik yang membedakannya dari sel lain: mereka sering berinti ganda (binukleat) atau bahkan poliploid (memiliki lebih dari dua set kromosom). Sekitar 30-40% hepatosit manusia dewasa adalah binukleat, dan persentase ini meningkat seiring usia atau setelah cedera hati. Poliploidi ini diyakini memberikan keuntungan metabolik dan genetik, memungkinkan hepatosit menghasilkan lebih banyak protein dan enzim yang dibutuhkan untuk fungsi hati yang intensif.</p>
+
+          <h4>Arsitektur & Organisasi</h4>
+          <p>Arsitektur hepatosit dalam hati sangat terorganisir. Mereka tersusun dalam lempeng-lempeng setebal satu sel (hepatic plates) yang dipisahkan oleh sinusoid (pembuluh darah kapiler khusus hati). Setiap hepatosit memiliki tiga permukaan berbeda:</p>
+          <ul>
+            <li><strong>Permukaan sinusoidal:</strong> Menghadap darah, menyerap nutrisi dan toksin.</li>
+            <li><strong>Permukaan lateral:</strong> Menghadap hepatosit tetangga.</li>
+            <li><strong>Permukaan kanalikular:</strong> Membentuk saluran empedu kecil, mensekresi empedu.</li>
+          </ul>
+          <p>Organisasi ini memungkinkan hepatosit melakukan fungsi ganda: menyerap nutrisi dan toksin dari darah di satu sisi, dan mensekresi empedu di sisi lainnya.</p>
+
+          <h4>Fungsi Metabolisme Utama</h4>
+          <ul>
+            <li><strong>Metabolisme Karbohidrat:</strong> Glikogenesis (menyimpan glukosa sebagai glikogen), glikogenolisis (memecah glikogen), dan glukoneogenesis (mensintesis glukosa dari laktat, gliserol, dan asam amino).</li>
+            <li><strong>Metabolisme Lipid:</strong> Sintesis kolesterol dan lipoprotein (VLDL, HDL), oksidasi asam lemak untuk energi, dan sintesis asam empedu dari kolesterol.</li>
+            <li><strong>Metabolisme Protein:</strong> Sintesis albumin (protein plasma paling melimpah), faktor pembekuan darah (fibrinogen, protrombin), dan protein transport (transferin, seruloplasmin).</li>
+            <li><strong>Detoksifikasi:</strong> Enzim sitokrom P450 di Retikulum Endoplasma Halus memodifikasi obat-obatan, alkohol, dan toksin lingkungan menjadi metabolit yang lebih mudah diekskresi melalui urin atau empedu.</li>
+          </ul>
+
+          <div class="info-box"><strong>Kapasitas Regenerasi:</strong> Hati adalah organ dengan kapasitas regenerasi tertinggi di tubuh manusia. Setelah kerusakan atau reseksi hingga 70%, hepatosit yang tersisa dapat berproliferasi dan mengembalikan massa hati dalam waktu 2-3 minggu. Prometheus dalam mitologi Yunani dihukum dengan elang yang memakan hatinya setiap hari, dan hatinya beregenerasi setiap malam - sebuah metafora kuno yang menakjubkan untuk kapasitas regeneratif hati!</div>
+        `);
+
+        add('podocyte', 'Podosit (Sel Filtrasi Ginjal)', selCat, '🦶', '#3498db', `
+          <h4>Definisi & Asal Nama</h4>
+          <p>Podosit adalah sel epitel yang sangat terspesialisasi yang melapisi kapsul Bowman di glomerulus ginjal. Mereka adalah komponen kunci dari sawar filtrasi glomerulus yang mencegah protein besar lolos ke urin. Nama "podosit" berasal dari bahasa Yunani "podo" (kaki) dan "cytos" (sel), merujuk pada prosesus kaki (foot processes) mereka yang unik.</p>
+
+          <h4>Struktur Unik Foot Processes</h4>
+          <p>Setiap podosit memiliki badan sel yang besar dan beberapa prosesus primer yang bercabang menjadi prosesus sekunder dan akhirnya foot processes (pedikel) yang saling bertautan dengan foot processes podosit tetangga. Celah antara foot processes disebut slit diaphragm, yang lebarnya hanya sekitar 25-60 nm - cukup kecil untuk mencegah albumin (66 kDa) melewatinya.</p>
+
+          <h4>Protein Kunci Slit Diaphragm</h4>
+          <p>Protein utama slit diaphragm adalah nefrin, yang ditemukan oleh penelitian genetika sindrom nefrotik kongenital. Nefrin membentuk struktur seperti ritsleting bersama protein lain termasuk podosin, NEPH1, dan CD2AP. Mutasi pada gen-gen ini menyebabkan proteinuria masif dan gagal ginjal.</p>
+
+          <div class="highlight-box"><strong>Fakta Klinis:</strong> Kerusakan podosit adalah penyebab utama penyakit ginjal kronis. Diabetes melitus menyebabkan podosit kehilangan foot processes (effacement), yang meningkatkan permeabilitas filtrasi dan menyebabkan nefropati diabetik - penyebab utama gagal ginjal di seluruh dunia.</div>
+        `);
+
+        add('beta-cell-detail', 'Sel Beta Pankreas (Detail)', selCat, '🍬', '#f39c12', `
+          <h4>Definisi & Peran</h4>
+          <p>Sel beta adalah sel endokrin yang terletak di pulau Langerhans pankreas, menyusun sekitar 60-70% dari total sel pulau. Fungsi utama mereka adalah mensintesis, menyimpan, dan mensekresi insulin sebagai respons terhadap peningkatan kadar glukosa darah. Setiap sel beta mengandung sekitar 10.000 butiran sekretori yang siap melepaskan insulin.</p>
+
+          <h4>Mekanisme Sekresi Insulin</h4>
+          <p>Mekanisme sekresi insulin adalah contoh luar biasa dari penginderaan metabolik. Glukosa masuk ke sel beta melalui transporter GLUT2, difosforilasi oleh glukokinase (sensor glukosa), dan dimetabolisme melalui glikolisis dan siklus Krebs untuk menghasilkan ATP. Peningkatan ATP menutup saluran K+ sensitif-ATP, menyebabkan depolarisasi membran, pembukaan saluran Ca2+ voltage-gated, dan fusi butiran insulin dengan membran plasma.</p>
+
+          <h4>Kaitan dengan Diabetes</h4>
+          <p>Pada diabetes tipe 1, sel beta dihancurkan oleh respons autoimun yang dimediasi sel T. Pada diabetes tipe 2, sel beta mengalami disfungsi dan akhirnya gagal karena stres oksidatif, stres Retikulum Endoplasma, dan akumulasi amiloid pulau (islet amyloid polypeptide).</p>
+
+          <div class="info-box"><strong>Fakta:</strong> Sel beta memiliki salah satu laju sintesis protein tertinggi di tubuh. Saat dirangsang glukosa, sel beta dapat meningkatkan biosintesis insulin hingga 10 kali lipat dalam waktu kurang dari 2 jam.</div>
+        `);
+
+        add('sertoli-cell-detail', 'Sel Sertoli (Detail)', selCat, '🛡️', '#8e44ad', `
+          <h4>Definisi & Sejarah</h4>
+          <p>Sel Sertoli adalah sel somatik besar yang terletak di tubulus seminiferus testis, berfungsi sebagai sel pendukung utama untuk spermatogenesis. Mereka pertama kali dideskripsikan oleh Enrico Sertoli pada tahun 1865. Sel Sertoli memiliki bentuk kolumnar yang membentang dari membran basal hingga lumen tubulus, menciptakan mikro-lingkungan khusus untuk perkembangan sel germinal.</p>
+
+          <h4>Sawar Darah-Testis</h4>
+          <p>Salah satu fungsi terpenting sel Sertoli adalah membentuk sawar darah-testis (blood-testis barrier) melalui tight junction antar sel Sertoli. Sawar ini membagi tubulus seminiferus menjadi kompartemen basal (tempat spermatogonia) dan kompartemen adluminal (tempat spermatosit dan spermatid meiosis). Sawar ini mencegah sistem imun menyerang sel germinal haploid yang dianggap "asing" karena memiliki setengah kromosom.</p>
+
+          <h4>Fungsi Pendukung</h4>
+          <p>Setiap sel Sertoli dapat mendukung sekitar 30-50 sel germinal pada berbagai tahap perkembangan. Mereka menyediakan nutrisi, faktor pertumbuhan, dan sinyal yang diperlukan untuk spermatogenesis. Sel Sertoli juga memfagositosis sisa sitoplasma yang dikeluarkan selama spermiogenesis (pembentukan sperma matang).</p>
+        `);
+
+        add('type2-pneumocyte', 'Pneumosit Tipe II (Detail)', selCat, '🫧', '#16a085', `
+          <h4>Definisi & Proporsi</h4>
+          <p>Pneumosit tipe II adalah sel epitel kuboid yang tersebar di antara pneumosit tipe I yang melapisi alveoli paru-paru. Meskipun hanya menyusun sekitar 5% dari luas permukaan alveoli, mereka memiliki peran vital yang tidak proporsional: produksi dan sekresi surfaktan paru.</p>
+
+          <h4>Surfaktan Paru</h4>
+          <p>Surfaktan adalah campuran kompleks fosfolipid (terutama dipalmitoilfosfatidilkolin atau DPPC) dan protein surfaktan (SP-A, SP-B, SP-C, SP-D) yang mengurangi tegangan permukaan di antarmuka udara-cairan alveoli. Tanpa surfaktan, tegangan permukaan akan menyebabkan alveoli kolaps saat ekspirasi (atelektasis), membuat pernapasan normal tidak mungkin.</p>
+
+          <h4>Badan Lamelar</h4>
+          <p>Pneumosit tipe II menyimpan surfaktan dalam badan lamelar (lamellar bodies) - organel unik yang terlihat seperti kantung berlapis di bawah mikroskop elektron. Badan lamelar ini adalah lisosom yang dimodifikasi yang mengakumulasi dan mengemas surfaktan sebelum sekresi melalui eksositosis.</p>
+
+          <div class="highlight-box"><strong>Signifikansi Klinis:</strong> Bayi prematur yang lahir sebelum 35 minggu gestasi sering kekurangan surfaktan karena pneumosit tipe II belum matang, menyebabkan Respiratory Distress Syndrome (RDS) yang mengancam jiwa. Pemberian surfaktan eksogen dan kortikosteroid antenatal telah secara dramatis meningkatkan kelangsungan hidup bayi prematur.</div>
+        `);
+
+        add('mast-cell-detail', 'Sel Mast (Detail)', selCat, '🤧', '#f39c12', `
+          <h4>Definisi & Lokasi</h4>
+          <p>Sel mast adalah sel imun jaringan yang berasal dari sumsum tulang dan bermigrasi ke jaringan sebagai prekursor yang belum matang, di mana mereka berdiferensiasi menjadi sel mast dewasa di bawah pengaruh faktor pertumbuhan lokal. Mereka paling banyak ditemukan di jaringan yang berbatasan dengan lingkungan luar: kulit, saluran pernapasan, dan saluran pencernaan.</p>
+
+          <h4>Granula & Mediator</h4>
+          <p>Sel mast memiliki sitoplasma yang dipenuhi granula metakromatik (berubah warna dengan pewarnaan toluidin biru) yang mengandung mediator inflamasi siap-pakai: histamin, heparin, serotonin (pada hewan pengerat), protease netral (triptase, kimase), dan berbagai sitokin. Granula ini dapat dilepaskan dalam hitungan detik setelah aktivasi melalui proses degranulasi.</p>
+
+          <h4>Mekanisme Aktivasi Alergi</h4>
+          <p>Aktivasi sel mast paling dikenal melalui ikatan silang reseptor FcεRI yang terikat IgE pada permukaannya. Saat alergen menjembatani dua molekul IgE yang terikat ke FcεRI, ini memicu kaskade sinyal yang menghasilkan degranulasi masif. Inilah mekanisme yang mendasari reaksi alergi akut, termasuk anafilaksis yang mengancam jiwa.</p>
+
+          <div class="info-box"><strong>Evolusi:</strong> Mengapa kita memiliki sel yang dapat menyebabkan reaksi alergi yang mengancam jiwa? Teori yang berlaku adalah bahwa sel mast berevolusi terutama untuk pertahanan melawan parasit, terutama cacing. Dalam populasi dengan beban parasit tinggi, kemampuan sel mast untuk memicu inflamasi kuat dan kontraksi otot polos (untuk mengeluarkan parasit) adalah adaptasi yang menguntungkan.</div>
+        `);
+
+        add('melanocyte-detail-lanjut', 'Melanosit (Detail Lanjutan)', selCat, '🎨', '#8e44ad', `
+          <h4>Definisi & Asal Embriologis</h4>
+          <p>Melanosit adalah sel dendritik yang berasal dari neural crest embrionik dan bermigrasi ke epidermis, folikel rambut, mata, dan telinga dalam selama perkembangan. Fungsi utama mereka adalah mensintesis melanin, pigmen yang memberikan warna pada kulit, rambut, dan mata, serta melindungi keratinosit dari kerusakan DNA akibat radiasi ultraviolet (UV).</p>
+
+          <h4>Sintesis Melanin di Melanosom</h4>
+          <p>Sintesis melanin terjadi di organel khusus yang disebut melanosom, yang melalui empat tahap pematangan dari premelanosom (tanpa pigmen) hingga melanosom matang yang penuh melanin. Enzim kunci adalah tirosinase, yang mengkatalisis konversi tirosin menjadi DOPA dan DOPAquinone. Dua jenis melanin dihasilkan: eumelanin (coklat-hitam, fotoprotektif) dan feomelanin (merah-kuning, kurang fotoprotektif).</p>
+
+          <h4>Transfer Melanin ke Keratinosit</h4>
+          <p>Setelah matang, melanosom diangkut sepanjang dendrit melanosit melalui protein motor (kinesin dan dynein) dan ditransfer ke keratinosit tetangga melalui mekanisme yang masih diperdebatkan (fagositosis ujung dendrit, fusi membran, atau eksositosis diikuti endositosis). Satu melanosit dapat menyuplai melanin ke sekitar 36 keratinosit, membentuk unit melanin epidermal.</p>
+
+          <div class="highlight-box"><strong>Fakta:</strong> Semua manusia memiliki jumlah melanosit yang kira-kira sama di kulit mereka. Perbedaan warna kulit antar populasi disebabkan oleh perbedaan jumlah dan distribusi melanosom yang diproduksi, bukan perbedaan jumlah melanosit. Melanosit orang berkulit gelap menghasilkan melanosom yang lebih besar, lebih banyak, dan lebih tersebar di keratinosit.</div>
+        `);
+
+        add('osteoclast-detail', 'Osteoklas (Detail)', selCat, '🦴', '#d35400', `
+          <h4>Definisi & Asal</h4>
+          <p>Osteoklas adalah sel multinukleat raksasa yang bertanggung jawab untuk resorpsi tulang - proses pemecahan matriks tulang yang penting untuk remodeling tulang, homeostasis kalsium, dan perbaikan kerusakan. Osteoklas berasal dari fusi prekursor monosit/makrofag di bawah pengaruh faktor pertumbuhan M-CSF dan sitokin RANKL.</p>
+
+          <h4>Struktur Multinukleat</h4>
+          <p>Osteoklas dewasa dapat memiliki 5-20 inti dan diameter 40-100 mikrometer. Ketika aktif meresorpsi tulang, mereka menempel erat ke permukaan tulang melalui zona penyegelan (sealing zone) yang kaya filamen aktin, menciptakan kompartemen tertutup di mana resorpsi terjadi. Membran plasma yang menghadap tulang membentuk border berkerut (ruffled border) yang memperluas area permukaan untuk sekresi asam dan enzim.</p>
+
+          <h4>Mekanisme Resorpsi Tulang</h4>
+          <p>Mekanisme resorpsi tulang melibatkan pompa proton V-ATPase di ruffled border yang mengasamkan kompartemen resorpsi hingga pH 4.5. Asam ini melarutkan mineral hidroksiapatit tulang. Kemudian enzim protease, terutama cathepsin K yang disekresi osteoklas, mendegradasi matriks organik (terutama kolagen tipe I).</p>
+
+          <div class="info-box"><strong>Keseimbangan Dinamis:</strong> Tulang bukanlah struktur statis. Sekitar 10% dari total massa tulang diremodel setiap tahun oleh aksi seimbang osteoklas (resorpsi) dan osteoblas (pembentukan). Gangguan keseimbangan ini menyebabkan penyakit seperti osteoporosis (resorpsi berlebihan) atau osteopetrosis (resorpsi tidak mencukupi).</div>
+        `);
+
+        add('satellite-cell', 'Sel Satelit Otot', selCat, '💪', '#2ecc71', `
+          <h4>Definisi & Penemuan</h4>
+          <p>Sel satelit adalah sel punca otot rangka dewasa yang terletak di antara membran plasma serat otot dan lamina basal. Ditemukan oleh Alexander Mauro pada tahun 1961, sel ini dinamakan demikian karena posisinya yang seperti "satelit" di pinggiran serat otot. Dalam otot dewasa yang sehat, sel satelit berada dalam keadaan diam (quiescent) dan hanya diaktivasi saat cedera otot.</p>
+
+          <h4>Mekanisme Regenerasi Otot</h4>
+          <p>Ketika serat otot mengalami kerusakan, sel satelit diaktivasi, berproliferasi, dan berdiferensiasi menjadi mioblas yang kemudian berfusi dengan serat otot yang ada atau satu sama lain untuk memperbaiki atau membentuk serat otot baru. Proses ini dimediasi oleh faktor transkripsi MyoD, Myf5, myogenin, dan MRF4.</p>
+
+          <h4>Penuaan & Sarkopenia</h4>
+          <p>Populasi sel satelit menurun seiring usia, berkontribusi pada sarkopenia (kehilangan massa otot terkait usia). Penelitian terbaru menunjukkan bahwa sel satelit juga dapat berdiferensiasi menjadi adiposit (sel lemak) di bawah kondisi tertentu, menjelaskan infiltrasi lemak di otot yang terlihat pada penuaan dan distrofi otot.</p>
+
+          <div class="highlight-box"><strong>Fakta:</strong> Olahraga resistensi (angkat beban) tidak hanya menyebabkan hipertrofi serat otot yang ada, tetapi juga mengaktifkan sel satelit untuk menyumbangkan inti baru ke serat otot, meningkatkan kapasitas sintesis protein serat tersebut.</div>
+        `);
+
+        const sigCat = 'sinyal-sel';
+        add('gpcr-detail', 'GPCR (G Protein-Coupled Receptor)', sigCat, '🎛️', '#2980b9', `
+          <h4>Definisi & Superfamili</h4>
+          <p>GPCR adalah superfamili reseptor permukaan sel terbesar pada eukariota, dengan lebih dari 800 gen pada manusia (sekitar 4% dari genom pengkode protein). Semua GPCR memiliki arsitektur yang sama: tujuh heliks alfa transmembran yang terhubung oleh tiga loop intraseluler dan tiga loop ekstraseluler. Mereka mendeteksi berbagai ligan dari foton dan ion hingga neurotransmitter, hormon, dan odoran.</p>
+
+          <h4>Mekanisme Sinyal</h4>
+          <p>Mekanisme sinyal GPCR dimulai saat ligan mengikat reseptor, menyebabkan perubahan konformasi yang memungkinkan reseptor bertindak sebagai Guanine nucleotide Exchange Factor (GEF) untuk protein G heterotrimerik terkait. Protein G terdiri dari subunit α, β, dan γ. Dalam keadaan tidak aktif, subunit α mengikat GDP. Aktivasi reseptor menyebabkan pertukaran GDP dengan GTP pada subunit α, yang kemudian terlepas dari kompleks βγ dan mengaktivasi efektor hilir.</p>
+
+          <h4>Keanekaragaman Sinyal</h4>
+          <p>Keanekaragaman sinyal GPCR diperluas oleh beberapa mekanisme: protein G berbeda (Gs, Gi/o, Gq/11, G12/13) yang mengaktivasi efektor berbeda; desensitisasi reseptor melalui fosforilasi oleh GRK (GPCR Kinase) dan pengikatan arrestin; dan sinyal bias di mana ligan berbeda dapat mengaktivasi jalur sinyal berbeda dari reseptor yang sama.</p>
+
+          <div class="info-box"><strong>Signifikansi Farmakologis:</strong> Sekitar 30-40% dari semua obat resep menargetkan GPCR, termasuk beta-blocker, antihistamin, opioid, dan banyak obat psikiatri. Ini menjadikan GPCR sebagai target obat paling sukses dalam farmakologi.</div>
+        `);
+
+        add('rtk-detail', 'Reseptor Tirosin Kinase (RTK)', sigCat, '🔑', '#e74c3c', `
+          <h4>Definisi & Klasifikasi</h4>
+          <p>Reseptor Tirosin Kinase adalah reseptor permukaan sel dengan aktivitas enzimatik intrinsik yang memfosforilasi residu tirosin pada protein target. Pada manusia, ada 58 RTK yang dikelompokkan ke dalam 20 subfamili, termasuk reseptor insulin, reseptor EGF (EGFR), reseptor PDGF, dan reseptor VEGF.</p>
+
+          <h4>Mekanisme Aktivasi</h4>
+          <p>Aktivasi RTK dimulai dengan pengikatan ligan (faktor pertumbuhan atau hormon) yang menyebabkan dimerisasi reseptor. Dimerisasi ini mendekatkan domain kinase intraseluler, memungkinkan trans-autofosforilasi pada residu tirosin spesifik. Fosfotirosin ini menjadi situs docking untuk protein adaptor yang mengandung domain SH2 atau PTB, yang kemudian merekrut efektor hilir.</p>
+
+          <h4>Jalur Sinyal Utama</h4>
+          <p>Jalur sinyal utama yang diaktivasi RTK meliputi jalur Ras-MAPK (proliferasi), jalur PI3K-Akt (pertumbuhan dan survival), dan jalur PLCγ-PKC (mobilisasi kalsium). Mutasi yang menyebabkan aktivasi konstitutif RTK adalah driver onkogenik umum di kanker, menjadikan RTK target penting untuk terapi kanker.</p>
+
+          <div class="highlight-box"><strong>Fakta:</strong> EGFR adalah salah satu onkogen paling awal yang ditemukan. Amplifikasi atau mutasi EGFR ditemukan di berbagai kanker termasuk kanker paru-paru non-sel kecil, glioblastoma, dan kanker kolorektal. Inhibitor EGFR telah merevolusi pengobatan kanker-kanker ini.</div>
+        `);
+
+        add('notch-signaling', 'Jalur Sinyal Notch', sigCat, '📝', '#9b59b6', `
+          <h4>Definisi & Keunikan</h4>
+          <p>Jalur Notch adalah sistem sinyal sel-ke-sel langsung yang sangat terpelihara sepanjang evolusi, dari cacing hingga manusia. Tidak seperti kebanyakan jalur sinyal yang menggunakan molekul terlarut, sinyal Notch memerlukan kontak fisik antara sel pengirim (mengekspresikan ligan) dan sel penerima (mengekspresikan reseptor Notch).</p>
+
+          <h4>Reseptor & Ligan</h4>
+          <p>Pada mamalia, ada empat reseptor Notch (Notch1-4) dan lima ligan (Jagged1-2, DLL1, DLL3, DLL4). Saat ligan mengikat reseptor, reseptor mengalami proteolisis berturut-turut oleh ADAM protease (di permukaan) dan γ-sekretase (di membran). Pemotongan oleh γ-sekretase melepaskan domain intraseluler Notch (NICD), yang kemudian bermigrasi ke nukleus dan membentuk kompleks dengan faktor transkripsi CSL dan ko-aktivator Mastermind untuk mengaktivasi gen target.</p>
+
+          <h4>Fungsi & Penyakit Terkait</h4>
+          <p>Jalur Notch mengatur keputusan nasib sel dalam berbagai konteks perkembangan: neurogenesis, somitogenesis, angiogenesis, dan perkembangan limfosit T. Mutasi pada komponen jalur Notch menyebabkan penyakit manusia termasuk sindrom Alagille (Jagged1), CADASIL (Notch3), dan leukemia limfoblastik T (mutasi Notch1).</p>
+
+          <div class="info-box"><strong>Keunikan:</strong> Reseptor Notch hanya digunakan sekali dan didegradasi setelah aktivasi. Tidak seperti reseptor lain yang dapat digunakan kembali, setiap molekul Notch adalah "sekali pakai". Ini memberikan kontrol ketat terhadap intensitas dan durasi sinyal.</div>
+        `);
+
+        add('wnt-signaling', 'Jalur Sinyal Wnt', sigCat, '🧬', '#2ecc71', `
+          <h4>Definisi & Asal Nama</h4>
+          <p>Jalur Wnt adalah salah satu jalur sinyal paling penting dalam perkembangan embrio dan homeostasis jaringan. Dinamakan dari gen wingless (Drosophila) dan int-1 (mamalia) yang merupakan homolog. Ligan Wnt adalah glikoprotein yang disekresi dan berdifusi melalui jaringan untuk membentuk gradien morfogen.</p>
+
+          <h4>Jalur Kanonikal (β-catenin-dependent)</h4>
+          <p>Jalur Wnt kanonikal adalah yang paling dipahami. Tanpa Wnt, β-catenin sitoplasmik difosforilasi oleh "destruction complex" (terdiri dari Axin, APC, GSK3β, CK1) dan didegradasi oleh proteasom. Saat Wnt mengikat reseptor Frizzled dan ko-reseptor LRP5/6, destruction complex diinaktivasi, β-catenin terakumulasi, masuk ke nukleus, dan mengaktivasi gen target bersama faktor transkripsi TCF/LEF.</p>
+
+          <h4>Jalur Non-Kanonikal & Kanker</h4>
+          <p>Jalur Wnt non-kanonikal meliputi jalur Planar Cell Polarity (PCP) yang mengatur polaritas sel, dan jalur Wnt/Ca2+ yang memobilisasi kalsium intraseluler. Disregulasi sinyal Wnt terlibat dalam banyak kanker, terutama kanker kolorektal di mana mutasi APC adalah peristiwa awal yang paling umum.</p>
+
+          <div class="highlight-box"><strong>Fakta:</strong> Gradien Wnt mengatur pola tubuh dari ujung kepala hingga ekor. Konsentrasi Wnt yang berbeda menentukan apakah sel akan menjadi kepala atau ekor selama perkembangan embrio.</div>
+        `);
+
+        add('hedgehog-signaling', 'Jalur Sinyal Hedgehog', sigCat, '🦔', '#f39c12', `
+          <h4>Definisi & Asal Nama</h4>
+          <p>Jalur Hedgehog (Hh) dinamakan dari fenotipe larva Drosophila yang kekurangan gen ini: tubuhnya ditutupi dentikel yang menyerupai landak. Ligan Hedgehog (Sonic, Indian, Desert Hedgehog pada mamalia) adalah protein yang mengalami modifikasi unik: pemotongan autokatalitik dan penambahan kolesterol dan palmitat.</p>
+
+          <h4>Mekanisme Sinyal</h4>
+          <p>Reseptor utama adalah Patched (PTCH1), yang dalam keadaan tanpa ligan menghambat protein Smoothened (SMO). Saat Hh mengikat PTCH1, inhibisi SMO dilepaskan, dan SMO mengaktivasi faktor transkripsi Gli melalui kaskade yang belum sepenuhnya dipahami. Gli kemudian mengaktivasi atau merepresi gen target.</p>
+
+          <h4>Fungsi & Kanker</h4>
+          <p>Jalur Hh sangat penting dalam perkembangan: pola anggota tubuh, perkembangan sistem saraf, dan pembentukan gigi. Mutasi menyebabkan holoprosencephaly (kegagalan pembelahan otak depan). Aktivasi aberran jalur Hh ditemukan di karsinoma sel basal (mutasi PTCH1) dan medulloblastoma. Inhibitor SMO (vismodegib) digunakan untuk mengobati kanker ini.</p>
+        `);
+
+        add('jak-stat', 'Jalur JAK-STAT', sigCat, '📊', '#3498db', `
+          <h4>Definisi & Komponen</h4>
+          <p>Jalur JAK-STAT adalah jalur sinyal langsung dari reseptor sitokin ke nukleus. Reseptor sitokin (untuk interleukin, interferon, eritropoietin, hormon pertumbuhan) tidak memiliki aktivitas kinase intrinsik, tetapi berasosiasi dengan Janus Kinase (JAK1, JAK2, JAK3, TYK2).</p>
+
+          <h4>Mekanisme Kerja</h4>
+          <p>Saat sitokin mengikat reseptornya, reseptor berdimerisasi, mendekatkan JAK terkait yang saling memfosforilasi dan kemudian memfosforilasi residu tirosin pada reseptor. Fosfotirosin ini menjadi situs docking untuk protein STAT (Signal Transducer and Activator of Transcription) melalui domain SH2 mereka. STAT kemudian difosforilasi oleh JAK, berdimerisasi, dan bermigrasi ke nukleus untuk mengaktivasi transkripsi gen target.</p>
+
+          <h4>Signifikansi Klinis</h4>
+          <p>Jalur JAK-STAT sangat penting dalam hematopoiesis dan fungsi imun. Mutasi JAK2 V617F adalah penyebab paling umum polycythemia vera dan trombositemia esensial. Inhibitor JAK (ruxolitinib, tofacitinib) digunakan untuk mengobati mielofibrosis dan penyakit autoimun seperti artritis reumatoid.</p>
+        `);
+
+        const resCat = 'reseptor';
+        add('receptor-overview', 'Reseptor Sel - Gambaran Umum', resCat, '📻', '#f39c12', `
+          <h4>Definisi</h4>
+          <p>Reseptor sel adalah protein yang mendeteksi sinyal kimia atau fisik dari lingkungan dan mentransduksinya menjadi respons seluler. Reseptor dapat terletak di membran plasma (reseptor permukaan sel) atau di dalam sel (reseptor intraseluler). Setiap reseptor memiliki spesifisitas untuk ligan tertentu, mirip dengan kunci dan gembok.</p>
+
+          <h4>Klasifikasi Reseptor</h4>
+          <ul>
+            <li><strong>Reseptor Permukaan Sel:</strong> GPCR, RTK, reseptor sitokin (JAK-STAT), reseptor TGF-β, reseptor Notch, reseptor Toll-like.</li>
+            <li><strong>Reseptor Intraseluler:</strong> Reseptor steroid (glukokortikoid, estrogen, androgen), reseptor tiroid, reseptor retinoid. Mereka adalah faktor transkripsi yang diaktivasi ligan.</li>
+          </ul>
+
+          <h4>Konsep Kunci</h4>
+          <ul>
+            <li><strong>Afinitas:</strong> Kekuatan ikatan antara ligan dan reseptor. Afinitas tinggi berarti ligan mengikat bahkan pada konsentrasi rendah.</li>
+            <li><strong>Spesifisitas:</strong> Kemampuan reseptor untuk membedakan ligan yang tepat dari molekul serupa.</li>
+            <li><strong>Desensitisasi:</strong> Penurunan respons setelah stimulasi berkepanjangan, melalui internalisasi reseptor atau fosforilasi.</li>
+          </ul>
+        `);
+
+        add('ligand-types', 'Jenis-Jenis Ligan', resCat, '🏷️', '#e67e22', `
+          <h4>Definisi</h4>
+          <p>Ligan adalah molekul yang berikatan secara spesifik dengan reseptor untuk menginduksi respons biologis. Ligan dapat berupa molekul kecil, peptida, protein, lipid, nukleotida, atau bahkan ion dan gas.</p>
+
+          <h4>Klasifikasi Ligan</h4>
+          <ul>
+            <li><strong>Agonis:</strong> Mengaktivasi reseptor, menghasilkan respons biologis penuh.</li>
+            <li><strong>Antagonis:</strong> Mengikat reseptor tetapi tidak mengaktivasi, memblokir aksi agonis.</li>
+            <li><strong>Agonis Parsial:</strong> Mengaktivasi reseptor tetapi dengan efikasi lebih rendah dari agonis penuh.</li>
+            <li><strong>Agonis Invers:</strong> Mengurangi aktivitas basal reseptor yang aktif secara konstitutif.</li>
+          </ul>
+
+          <h4>Contoh Ligan Alami</h4>
+          <ul>
+            <li><strong>Neurotransmitter:</strong> Asetilkolin, dopamin, serotonin, glutamat.</li>
+            <li><strong>Hormon:</strong> Insulin, glukagon, adrenalin, kortisol.</li>
+            <li><strong>Faktor Pertumbuhan:</strong> EGF, FGF, NGF, VEGF.</li>
+          </ul>
+        `);
+
+        add('intracellular-receptor', 'Reseptor Intraseluler', resCat, '🏠', '#9b59b6', `
+          <h4>Definisi & Superfamili</h4>
+          <p>Reseptor intraseluler adalah protein reseptor yang terletak di sitoplasma atau nukleus. Ligan mereka harus bersifat lipofilik (larut lemak) untuk dapat melewati membran plasma. Setelah mengikat ligan, reseptor intraseluler bertindak sebagai faktor transkripsi yang mengatur ekspresi gen.</p>
+          <p>Superfamili reseptor inti (nuclear receptor) mencakup reseptor untuk hormon steroid (glukokortikoid, mineralokortikoid, estrogen, progesteron, androgen), hormon tiroid, vitamin D, dan retinoid. Mereka memiliki struktur domain yang terpelihara: domain N-terminal (AF-1), domain pengikat DNA (DBD) dengan dua zinc finger, domain engsel, dan domain pengikat ligan (LBD) di C-terminal.</p>
+
+          <h4>Mekanisme Kerja</h4>
+          <p>Mekanisme kerjanya: ligan berdifusi ke dalam sel, mengikat reseptor, menyebabkan perubahan konformasi, pelepasan protein chaperone (Hsp90), dimerisasi, translokasi ke nukleus (jika di sitoplasma), pengikatan ke elemen respons hormon (HRE) pada DNA, dan perekrutan ko-aktivator untuk aktivasi transkripsi.</p>
+
+          <div class="info-box"><strong>Fakta:</strong> Tamoxifen, obat kanker payudara, adalah Selective Estrogen Receptor Modulator (SERM) yang bertindak sebagai antagonis reseptor estrogen di payudara tetapi agonis di tulang, memberikan efek anti-kanker sekaligus melindungi massa tulang.</div>
+        `);
+
+        add('toll-like-receptor', 'Toll-Like Receptor (TLR)', resCat, '🛡️', '#27ae60', `
+          <h4>Definisi & Asal Nama</h4>
+          <p>Toll-Like Receptor adalah reseptor pengenal pola (Pattern Recognition Receptor) yang mendeteksi pola molekuler terkait patogen (PAMP) dan pola molekuler terkait kerusakan (DAMP). Dinamakan dari gen Toll Drosophila. Pada manusia, ada 10 TLR (TLR1-10) yang mengenali berbagai ligan mikroba.</p>
+
+          <h4>Lokasi & Ligan</h4>
+          <p>TLR terletak di permukaan sel (TLR1, 2, 4, 5, 6) atau di endosom (TLR3, 7, 8, 9). Ligan mereka meliputi lipopolisakarida bakteri (TLR4), peptidoglikan (TLR2), flagelin (TLR5), RNA untai ganda virus (TLR3), RNA untai tunggal (TLR7/8), dan DNA CpG bakteri (TLR9). Aktivasi TLR memicu respons imun bawaan dan membantu membentuk imunitas adaptif.</p>
+        `);
+
+        const ckCat = 'checkpoints';
+        add('g1-checkpoint', 'Checkpoint G1/S', ckCat, '🚦', '#2ecc71', `
+          <h4>Definisi & Titik Restriksi</h4>
+          <p>Checkpoint G1/S, juga disebut titik restriksi (Restriction Point) pada sel mamalia, adalah pos pemeriksaan utama yang menentukan apakah sel akan melanjutkan ke fase S untuk mereplikasi DNA. Setelah melewati titik ini, sel berkomitmen untuk menyelesaikan siklus sel bahkan tanpa adanya faktor pertumbuhan.</p>
+
+          <h4>Mekanisme Regulasi</h4>
+          <p>Keputusan melewati checkpoint G1/S diatur oleh keseimbangan antara siklin D-CDK4/6 dan inhibitor CDK (p16INK4a, p21CIP1, p27KIP1). Siklin D diinduksi oleh sinyal mitogenik. Kompleks siklin D-CDK4/6 memfosforilasi protein retinoblastoma (pRb), melepaskan faktor transkripsi E2F yang kemudian mengaktivasi gen untuk fase S termasuk siklin E, siklin A, dan enzim replikasi DNA.</p>
+          <p>Kerusakan DNA mengaktivasi p53 yang menginduksi p21CIP1, yang menghambat semua kompleks siklin-CDK dan menghentikan sel di G1. Ini memberikan waktu untuk perbaikan DNA sebelum replikasi. Mutasi pada jalur pRb (kehilangan pRb atau amplifikasi siklin D/CDK4) ditemukan di hampir semua kanker manusia.</p>
+
+          <div class="highlight-box"><strong>Fakta:</strong> Inhibitor CDK4/6 (palbociclib, ribociclib, abemaciclib) telah menjadi terapi standar untuk kanker payudara positif reseptor hormon, bekerja dengan memblokir progresi G1/S dan menyebabkan penangkapan siklus sel.</div>
+        `);
+
+        add('g2-checkpoint', 'Checkpoint G2/M', ckCat, '🚦', '#f39c12', `
+          <h4>Definisi & Fungsi</h4>
+          <p>Checkpoint G2/M memastikan bahwa semua DNA telah direplikasi dengan benar dan tidak rusak sebelum sel memasuki mitosis. Ini adalah pos pemeriksaan terakhir sebelum pembelahan sel yang tidak dapat diubah.</p>
+
+          <h4>Mekanisme Sensor & Efektor</h4>
+          <p>Sensor utama adalah kinase ATM dan ATR yang mendeteksi kerusakan DNA. Mereka mengaktivasi kinase checkpoint Chk1 dan Chk2, yang kemudian memfosforilasi dan menginaktivasi fosfatase Cdc25. Tanpa Cdc25 aktif, kompleks siklin B-CDK1 (Mitosis Promoting Factor) tetap terfosforilasi pada residu inhibisi dan tidak aktif, menahan sel di G2.</p>
+          <p>Jika kerusakan DNA diperbaiki, checkpoint dinonaktifkan dan sel melanjutkan ke mitosis. Jika kerusakan tidak dapat diperbaiki, sinyal dapat mengarahkan sel ke apoptosis atau senesens. Banyak sel kanker memiliki defek pada checkpoint G2, memungkinkan mereka memasuki mitosis dengan DNA rusak - ini dapat dieksploitasi secara terapeutik.</p>
+        `);
+
+        add('spindle-checkpoint', 'Spindle Assembly Checkpoint', ckCat, '🚦', '#e74c3c', `
+          <h4>Definisi & Tujuan</h4>
+          <p>Spindle Assembly Checkpoint (SAC), juga disebut checkpoint metafase, memastikan bahwa semua kromosom telah melekat dengan benar ke spindle mitosis sebelum anafase dimulai. Ini mencegah aneuploidi (jumlah kromosom abnormal) yang merupakan ciri khas kanker.</p>
+
+          <h4>Mekanisme "Sinyal Tunggu"</h4>
+          <p>SAC bekerja dengan menghasilkan sinyal "tunggu" dari kinetokor yang belum melekat ke mikrotubulus. Protein MAD2, BUBR1, dan BUB3 membentuk Mitotic Checkpoint Complex (MCC) yang menghambat APC/C (Anaphase Promoting Complex/Cyclosome). Ketika semua kinetokor telah melekat dengan benar, MCC diinaktivasi, APC/C diaktifkan, dan siklin B serta sekurin didegradasi, memungkinkan anafase berlangsung.</p>
+
+          <div class="info-box"><strong>Fakta:</strong> Sel kanker sering memiliki SAC yang lemah, menyebabkan ketidakstabilan kromosom dan aneuploidi. Ini adalah pedang bermata dua: memungkinkan evolusi klonal kanker tetapi juga menciptakan kerentanan yang dapat ditargetkan secara terapeutik.</div>
+        `);
+
+        add('dna-damage-checkpoint', 'DNA Damage Checkpoint', ckCat, '🚦', '#c0392b', `
+          <h4>Definisi & Komponen</h4>
+          <p>DNA Damage Checkpoint adalah jaringan sinyal kompleks yang mendeteksi kerusakan DNA dan mengkoordinasikan respons seluler: penghentian siklus sel, aktivasi perbaikan DNA, atau apoptosis jika kerusakan terlalu parah. Sensor utama adalah kompleks MRN (Mre11-Rad50-Nbs1) yang mendeteksi pemutusan untai ganda, dan RPA yang mendeteksi DNA untai tunggal.</p>
+
+          <h4>Kinase ATM & ATR</h4>
+          <p>Kinase ATM terutama merespons pemutusan untai ganda, sementara ATR merespons DNA untai tunggal dan stres replikasi. Keduanya memfosforilasi ratusan substrat termasuk p53, Chk1, Chk2, dan histon H2AX (γH2AX, penanda kerusakan DNA). Aktivasi p53 mengarah pada transkripsi p21 (penangkapan siklus sel), gen perbaikan DNA, atau gen pro-apoptosis (Bax, PUMA).</p>
+        `);
+
+        const dnCat = 'dna-repair';
+        add('ner', 'Nucleotide Excision Repair (NER)', dnCat, '🔧', '#8e44ad', `
+          <h4>Definisi & Target Kerusakan</h4>
+          <p>Nucleotide Excision Repair adalah jalur perbaikan DNA yang menghapus lesi besar yang mendistorsi heliks, terutama dimer pirimidin yang disebabkan UV (cyclobutane pyrimidine dimer dan 6-4 photoproduct) dan adduct kimia besar. NER memperbaiki kerusakan dengan memotong segmen DNA yang mengandung lesi dan mengisi celah menggunakan untai yang tidak rusak sebagai template.</p>
+
+          <h4>Sub-Jalur GG-NER & TC-NER</h4>
+          <p>NER terdiri dari dua sub-jalur: Global Genome NER (GG-NER) yang memindai seluruh genom untuk distorsi heliks, dan Transcription-Coupled NER (TC-NER) yang secara khusus memperbaiki lesi di untai yang sedang ditranskripsi. Perbedaan utama adalah pada langkah pengenalan kerusakan: GG-NER menggunakan kompleks XPC-RAD23B, sementara TC-NER diinisiasi oleh RNA polimerase yang terhenti di lesi.</p>
+
+          <h4>Mekanisme Perbaikan</h4>
+          <p>Setelah pengenalan, kedua sub-jalur menggunakan mekanisme yang sama: perekrutan TFIIH (mengandung helikase XPB dan XPD), pembukaan DNA, verifikasi kerusakan oleh XPA, pemotongan oleh endonuklease XPF-ERCC1 (sisi 5') dan XPG (sisi 3'), pelepasan oligonukleotida 24-32 basa, dan sintesis pengganti oleh DNA polimerase δ/ε diikuti ligasi.</p>
+
+          <div class="highlight-box"><strong>Penyakit:</strong> Defek pada gen NER menyebabkan Xeroderma Pigmentosum (XP), ditandai dengan sensitivitas ekstrem terhadap sinar matahari dan risiko kanker kulit ribuan kali lipat lebih tinggi. Pasien XP harus menghindari paparan UV sepenuhnya - mereka sering disebut "children of the night".</div>
+        `);
+
+        add('ber', 'Base Excision Repair (BER)', dnCat, '🔧', '#e67e22', `
+          <h4>Definisi & Target</h4>
+          <p>Base Excision Repair adalah jalur utama untuk memperbaiki kerusakan basa DNA kecil yang tidak mendistorsi heliks secara signifikan: oksidasi, alkilasi, deaminasi, dan situs abasik (AP sites). Sel memperbaiki sekitar 10.000-20.000 lesi per hari melalui BER.</p>
+
+          <h4>Mekanisme Langkah Demi Langkah</h4>
+          <p>Proses dimulai dengan DNA glikosilase yang mengenali dan menghapus basa yang rusak, meninggalkan situs AP. Ada 11 DNA glikosilase berbeda pada manusia, masing-masing spesifik untuk jenis kerusakan tertentu. AP endonuklease (APE1) memotong backbone DNA di situs AP. DNA polimerase β mengisi nukleotida yang hilang, dan DNA ligase III-XRCC1 menyambung backbone.</p>
+        `);
+
+        add('mmr', 'Mismatch Repair (MMR)', dnCat, '🔧', '#2ecc71', `
+          <h4>Definisi & Fungsi</h4>
+          <p>Mismatch Repair memperbaiki kesalahan replikasi DNA yang lolos dari proofreading DNA polimerase: basa yang salah pasang dan loop insersi/delesi yang terjadi di sekuens repetitif (mikrosatelit). MMR meningkatkan akurasi replikasi DNA 100-1000 kali lipat.</p>
+
+          <h4>Mekanisme</h4>
+          <p>Protein MutSα (MSH2-MSH6) mengenali basa salah pasang dan insersi/delesi kecil, sementara MutSβ (MSH2-MSH3) mengenali loop yang lebih besar. MutLα (MLH1-PMS2) direkrut dan mengkoordinasikan pemotongan untai yang baru disintesis. Eksonuklease EXO1 menghapus segmen yang mengandung kesalahan, dan DNA polimerase δ mengisi ulang.</p>
+
+          <div class="highlight-box"><strong>Kanker:</strong> Defek MMR (mutasi atau metilasi MLH1, MSH2, MSH6, PMS2) menyebabkan sindrom Lynch (Hereditary Non-Polyposis Colorectal Cancer) dan ditemukan di 15% kanker kolorektal sporadis. Tumor defisien MMR memiliki ketidakstabilan mikrosatelit (MSI) dan sangat responsif terhadap imunoterapi (pembrolizumab).</div>
+        `);
+
+        add('hr', 'Homologous Recombination (HR)', dnCat, '🔧', '#9b59b6', `
+          <h4>Definisi & Kondisi</h4>
+          <p>Homologous Recombination adalah jalur perbaikan presisi tinggi untuk pemutusan untai ganda DNA (Double-Strand Breaks/DSBs). HR menggunakan kromatid saudara yang identik sebagai template, sehingga terbatas pada fase S dan G2 di mana kromatid saudara tersedia. Karena menggunakan template, HR pada dasarnya bebas kesalahan.</p>
+
+          <h4>Mekanisme Detail</h4>
+          <p>Proses dimulai dengan reseksi ujung oleh kompleks MRN dan eksonuklease untuk menghasilkan overhang 3' untai tunggal. Protein RPA melapisi DNA untai tunggal, kemudian digantikan oleh RAD51 yang membentuk filamen nukleoprotein. Filamen RAD51 mencari sekuens homolog pada kromatid saudara dan melakukan invasi untai, membentuk D-loop. DNA polimerase memperpanjang ujung 3' yang menginvasi, dan struktur intermediate diresolusi oleh resolvase atau jalur dissolution.</p>
+
+          <div class="info-box"><strong>BRCA:</strong> Protein BRCA1 dan BRCA2 sangat penting untuk HR. Mutasi pada gen-gen ini secara dramatis meningkatkan risiko kanker payudara, ovarium, prostat, dan pankreas. Inhibitor PARP mengeksploitasi defek HR dengan memblokir jalur perbaikan alternatif, menyebabkan kematian sel tumor secara selektif (synthetic lethality).</div>
+        `);
+
+        add('nhej', 'Non-Homologous End Joining (NHEJ)', dnCat, '🔧', '#c0392b', `
+          <h4>Definisi & Karakteristik</h4>
+          <p>Non-Homologous End Joining adalah jalur utama untuk memperbaiki pemutusan untai ganda DNA di sel mamalia, terutama selama fase G1 di mana kromatid saudara tidak tersedia. Tidak seperti HR, NHEJ tidak memerlukan template dan langsung menyambung kembali ujung yang patah, sehingga rawan kesalahan (error-prone).</p>
+
+          <h4>Mekanisme</h4>
+          <p>Protein Ku70/Ku80 (heterodimer Ku) mengenali dan mengikat ujung DNA yang patah dengan afinitas sangat tinggi. Ku merekrut DNA-PKcs (DNA-dependent Protein Kinase catalytic subunit) yang memfosforilasi protein target dan memproses ujung DNA. Artemis, nuklease yang diaktivasi DNA-PKcs, memproses ujung yang kompleks. Akhirnya, kompleks XRCC4-DNA ligase IV menyambung ujung.</p>
+          <p>NHEJ juga penting dalam sistem imun adaptif: enzim RAG1/RAG2 menghasilkan pemutusan untai ganda terprogram selama rekombinasi V(D)J untuk menghasilkan keragaman antibodi dan reseptor sel T. Defek pada komponen NHEJ menyebabkan imunodefisiensi gabungan parah (severe combined immunodeficiency/SCID).</p>
+        `);
+
+        const epiCat = 'epigenetika';
+        add('dna-methylation', 'Metilasi DNA', epiCat, '🧬', '#e67e22', `
+          <h4>Definisi & Enzim</h4>
+          <p>Metilasi DNA adalah modifikasi epigenetik yang melibatkan penambahan gugus metil (-CH3) ke posisi 5' dari basa sitosin, terutama dalam konteks dinukleotida CpG. Dikatalisis oleh DNA methyltransferase (DNMT): DNMT1 mempertahankan pola metilasi selama replikasi, sementara DNMT3A dan DNMT3B melakukan metilasi de novo.</p>
+
+          <h4>Fungsi dalam Regulasi Gen</h4>
+          <p>Pola metilasi DNA sangat penting untuk regulasi ekspresi gen. CpG island (daerah dengan densitas CpG tinggi) di promoter gen umumnya tidak termetilasi, memungkinkan transkripsi. Metilasi CpG island promoter menyebabkan pembungkaman gen jangka panjang. Metilasi DNA bekerja dengan merekrut protein pengikat metil-CpG (MeCP2, MBD1-4) yang membawa kompleks remodeling kromatin.</p>
+
+          <h4>Metilasi DNA pada Kanker</h4>
+          <p>Pola metilasi DNA berubah secara dramatis pada kanker: hipometilasi global (menyebabkan ketidakstabilan genom) dan hipermetilasi promoter spesifik (membungkam gen tumor suppressor). Ini menjadikan metilasi DNA sebagai target terapi dan biomarker diagnostik.</p>
+
+          <div class="info-box"><strong>Fakta:</strong> Pola metilasi DNA dapat dipengaruhi oleh lingkungan dan gaya hidup. Studi pada kembar identik menunjukkan bahwa pola metilasi mereka semakin berbeda seiring usia, menjelaskan mengapa kembar identik dapat memiliki kerentanan penyakit yang berbeda.</div>
+        `);
+
+        add('histone-modification', 'Modifikasi Histon', epiCat, '🧶', '#3498db', `
+          <h4>Definisi & Kode Histon</h4>
+          <p>Modifikasi histon adalah perubahan kovalen pasca-translasi pada ekor N-terminal protein histon yang menonjol dari nukleosom. Modifikasi ini membentuk "kode histon" yang mengatur struktur kromatin dan ekspresi gen. Jenis modifikasi meliputi asetilasi, metilasi, fosforilasi, ubiquitinasi, dan banyak lagi.</p>
+
+          <h4>Asetilasi vs Metilasi</h4>
+          <p>Asetilasi lisin oleh Histone Acetyltransferase (HAT) menetralkan muatan positif lisin, mengurangi interaksi dengan DNA negatif, dan membuka kromatin (eukromatin, aktif transkripsi). Deasetilasi oleh Histone Deacetylase (HDAC) mengembalikan muatan positif dan memadatkan kromatin. Inhibitor HDAC digunakan dalam terapi kanker.</p>
+          <p>Metilasi histon lebih kompleks: dapat mengaktivasi atau merepresi tergantung residu dan jumlah gugus metil. H3K4me3 (trimetilasi lisin 4 histon H3) adalah penanda promoter aktif, sementara H3K27me3 adalah penanda represi oleh Polycomb. Ini dikatalisis oleh Histone Methyltransferase (HMT) dan dihapus oleh Histone Demethylase.</p>
+        `);
+
+        add('chromatin-remodeling', 'Remodeling Kromatin', epiCat, '🏗️', '#8e44ad', `
+          <h4>Definisi & Kompleks</h4>
+          <p>Remodeling kromatin adalah proses perubahan posisi atau komposisi nukleosom yang diatur oleh kompleks remodeling kromatin ATP-dependent. Kompleks ini menggunakan energi hidrolisis ATP untuk menggeser, mengeluarkan, atau mengganti histon, mengatur aksesibilitas DNA untuk transkripsi, replikasi, dan perbaikan.</p>
+
+          <h4>Empat Keluarga Utama</h4>
+          <p>Empat keluarga utama kompleks remodeling: SWI/SNF (aktivasi transkripsi), ISWI (penataan nukleosom), CHD (represi), dan INO80 (variasi). Mutasi pada subunit SWI/SNF (terutama ARID1A, SMARCB1/SNF5) ditemukan di sekitar 20% dari semua kanker manusia, menjadikan kompleks ini sebagai tumor suppressor utama.</p>
+        `);
+
+        add('noncoding-rna', 'Non-Coding RNA dalam Epigenetika', epiCat, '📝', '#2ecc71', `
+          <h4>Definisi & Kelas</h4>
+          <p>Non-coding RNA adalah RNA yang tidak ditranslasi menjadi protein tetapi berfungsi sebagai regulator epigenetik. Dua kelas utama adalah microRNA (miRNA) dan long non-coding RNA (lncRNA).</p>
+
+          <h4>miRNA & lncRNA</h4>
+          <p>miRNA (~22 nukleotida) mengikat mRNA target melalui komplementaritas parsial dan merepresi translasi atau menyebabkan degradasi mRNA. Satu miRNA dapat menargetkan ratusan mRNA. lncRNA (>200 nukleotida) berfungsi sebagai scaffold untuk kompleks remodeling kromatin, pemandu untuk faktor transkripsi, atau decoy untuk miRNA.</p>
+          <p>Contoh terkenal adalah XIST, lncRNA yang menginaktivasi satu kromosom X pada mamalia betina (X-inactivation). XIST melapisi kromosom X yang akan diinaktivasi dan merekrut kompleks Polycomb yang menambahkan H3K27me3 represif.</p>
+        `);
+
+        const apoCat = 'apoptosis-detail';
+        add('intrinsic-apoptosis', 'Apotosis Jalur Intrinsik (Mitokondria)', apoCat, '💀', '#c0392b', `
+          <h4>Definisi & Pemicu</h4>
+          <p>Jalur intrinsik apoptosis, juga disebut jalur mitokondria, diaktivasi oleh sinyal internal: kerusakan DNA ireversibel, stres Retikulum Endoplasma, kekurangan faktor pertumbuhan, atau stres oksidatif berat. Jalur ini diatur oleh keseimbangan antara protein pro-apoptosis dan anti-apoptosis dari famili Bcl-2.</p>
+
+          <h4>Mekanisme Pelepasan Sitokrom c</h4>
+          <p>Protein anti-apoptosis (Bcl-2, Bcl-xL, Mcl-1) menjaga integritas membran luar mitokondria. Sinyal apoptosis mengaktivasi protein BH3-only (Bim, Bid, Bad, Puma, Noxa) yang menghambat protein anti-apoptosis dan/atau mengaktivasi protein efektor Bax dan Bak. Bax/Bak teraktivasi membentuk pori di membran luar mitokondria, menyebabkan pelepasan sitokrom c dan protein pro-apoptosis lainnya.</p>
+
+          <h4>Kaskade Kaspase</h4>
+          <p>Sitokrom c yang dilepaskan mengikat Apaf-1, membentuk apoptosom yang merekrut dan mengaktivasi kaspase-9 (kaspase inisiator). Kaspase-9 kemudian mengaktivasi kaspase eksekutor (kaspase-3, -6, -7) yang memecah ratusan substrat seluler, menyebabkan perubahan morfologis dan biokimia khas apoptosis.</p>
+
+          <div class="highlight-box"><strong>Terapi Kanker:</strong> Venetoclax adalah inhibitor Bcl-2 yang meniru aksi protein BH3-only, melepaskan rem pada apoptosis di sel kanker yang bergantung pada Bcl-2 untuk bertahan hidup. Ini telah merevolusi pengobatan leukemia limfositik kronis (CLL).</div>
+        `);
+
+        add('extrinsic-apoptosis', 'Apotosis Jalur Ekstrinsik (Reseptor Kematian)', apoCat, '💀', '#e74c3c', `
+          <h4>Definisi & Reseptor Kematian</h4>
+          <p>Jalur ekstrinsik apoptosis diaktivasi oleh ligan eksternal yang mengikat reseptor kematian di permukaan sel. Reseptor kematian termasuk Fas (CD95), TNFR1, dan TRAIL receptor (DR4, DR5). Ligan mereka adalah FasL, TNF-α, dan TRAIL.</p>
+
+          <h4>Pembentukan DISC</h4>
+          <p>Saat ligan mengikat reseptor, reseptor bertrimerisasi dan merekrut protein adaptor (FADD untuk Fas, TRADD untuk TNFR1) melalui domain kematian (Death Domain). FADD kemudian merekrut pro-kaspase-8 melalui domain efektor kematian (Death Effector Domain), membentuk Death-Inducing Signaling Complex (DISC). Kaspase-8 teraktivasi di DISC melalui dimerisasi dan autoproteolisis.</p>
+          <p>Kaspase-8 yang teraktivasi kemudian memotong dan mengaktivasi kaspase eksekutor (kaspase-3, -7), yang menjalankan program apoptosis. Di beberapa sel (tipe II), sinyal dari kaspase-8 diperkuat melalui pemotongan Bid (protein BH3-only) yang kemudian mengaktivasi jalur mitokondria.</p>
+        `);
+
+        add('caspase-cascade', 'Kaskade Kaspase', apoCat, '✂️', '#2c3e50', `
+          <h4>Definisi & Klasifikasi</h4>
+          <p>Kaspase (cysteine-aspartic proteases) adalah protease sistein yang memotong substrat setelah residu aspartat. Mereka disintesis sebagai zimogen inaktif (pro-kaspase) dan diaktivasi melalui pemotongan proteolitik. Kaskade kaspase adalah inti dari eksekusi apoptosis, memastikan amplifikasi sinyal dan ireversibilitas proses.</p>
+
+          <h4>Kaspase Inisiator & Eksekutor</h4>
+          <p>Kaspase inisiator (kaspase-8, -9, -10) diaktivasi melalui dimerisasi di kompleks aktivasi (DISC untuk kaspase-8, apoptosom untuk kaspase-9). Kaspase inisiator yang teraktivasi kemudian memotong dan mengaktivasi kaspase eksekutor (kaspase-3, -6, -7). Satu kaspase inisiator dapat mengaktivasi banyak kaspase eksekutor, menciptakan amplifikasi sinyal.</p>
+          <p>Kaspase eksekutor memotong lebih dari 1000 substrat seluler, termasuk: inhibitor DNase (ICAD, melepaskan CAD untuk fragmentasi DNA), protein sitoskeleton (aktin, lamin), protein perbaikan DNA (PARP), dan protein anti-apoptosis. Ini menyebabkan perubahan morfologis khas: blebbing membran, kondensasi kromatin, fragmentasi DNA, dan pembentukan badan apoptosis.</p>
+        `);
+
+        add('necrosis-detail', 'Nekrosis (Detail)', apoCat, '💥', '#7f8c8d', `
+          <h4>Definisi & Perbedaan dengan Apoptosis</h4>
+          <p>Nekrosis adalah kematian sel yang tidak terprogram dan tidak teratur, berbeda dengan apoptosis yang terprogram dan teratur. Nekrosis terjadi akibat cedera akut: trauma, iskemia, toksin, panas ekstrem, atau infeksi. Sel nekrotik mengalami pembengkakan (onkbosis), kehilangan integritas membran, dan melepaskan isinya ke ruang ekstraseluler, memicu inflamasi.</p>
+          <p>Secara historis, nekrosis dianggap sebagai proses pasif yang tidak diatur. Namun, penelitian telah mengidentifikasi bentuk nekrosis terprogram yang disebut nekroptosis, yang dimediasi oleh kinase RIPK1 dan RIPK3 serta protein efektor MLKL. Nekroptosis berfungsi sebagai mekanisme pertahanan terhadap virus yang menghambat apoptosis.</p>
+
+          <h4>Jenis-Jenis Nekrosis</h4>
+          <ul>
+            <li><strong>Nekrosis Koagulatif:</strong> Preservasi arsitektur jaringan, umum di infark miokard.</li>
+            <li><strong>Nekrosis Likuefaktif:</strong> Pencairan jaringan, umum di infark serebral.</li>
+            <li><strong>Nekrosis Kaseosa:</strong> Penampilan seperti keju, khas tuberkulosis.</li>
+            <li><strong>Nekrosis Lemak:</strong> Kerusakan jaringan adiposa, umum di pankreatitis akut.</li>
+          </ul>
+        `);
+
+        const autCat = 'autofagi';
+        add('macroautophagy', 'Makroautofagi', autCat, '♻️', '#27ae60', `
+          <h4>Definisi & Proses</h4>
+          <p>Makroautofagi (sering disebut autofagi) adalah proses degradasi dan daur ulang komponen seluler melalui pembentukan vesikel membran ganda yang disebut autofagosom. Autofagosom menelan sebagian sitoplasma, organel, atau agregat protein, kemudian berfusi dengan lisosom untuk mendegradasi isinya. Ini adalah mekanisme utama untuk kontrol kualitas seluler dan adaptasi terhadap stres.</p>
+
+          <h4>Mekanisme Molekuler</h4>
+          <p>Proses autofagi diatur oleh gen ATG (AuTophaGy-related). Inisiasi dimulai dengan pembentukan phagophore (membran isolasi) oleh kompleks ULK1 dan PI3K kelas III. Elongasi phagophore memerlukan dua sistem konjugasi mirip ubiquitin: ATG12-ATG5 dan LC3-PE (fosfatidiletanolamin). LC3-II (bentuk lipidasi LC3) tertanam di membran autofagosom dan berfungsi sebagai reseptor untuk kargo yang akan didegradasi.</p>
+          <p>Autofagi diinduksi oleh berbagai stres: kelaparan nutrisi (penghambatan mTOR), hipoksia, stres oksidatif, dan infeksi. Sel menggunakan autofagi untuk mendaur ulang asam amino dan asam lemak selama kelaparan, membersihkan organel rusak (mitofagi, retikulofagi), dan menghilangkan patogen intraseluler (xenofagi).</p>
+
+          <div class="highlight-box"><strong>Fakta:</strong> Yoshinori Ohsumi memenangkan Nobel Fisiologi/Kedokteran 2016 untuk penemuannya tentang mekanisme autofagi. Penelitiannya menggunakan ragi mutan untuk mengidentifikasi gen ATG yang penting untuk proses ini.</div>
+        `);
+
+        add('mitophagy', 'Mitofagi (Autofagi Mitokondria)', autCat, '♻️', '#e74c3c', `
+          <h4>Definisi & Pentingnya</h4>
+          <p>Mitofagi adalah autofagi selektif mitokondria, penting untuk kontrol kualitas mitokondria dan homeostasis energi. Mitokondria yang rusak atau berlebihan ditandai untuk degradasi dan ditelan oleh autofagosom. Disfungsi mitofagi terkait dengan penyakit neurodegeneratif dan penuaan.</p>
+
+          <h4>Jalur PINK1-Parkin</h4>
+          <p>Jalur paling dikenal adalah jalur PINK1-Parkin. PINK1 (kinase) terakumulasi di membran luar mitokondria yang rusak (dengan potensial membran rendah). PINK1 memfosforilasi ubiquitin dan Parkin (E3 ubiquitin ligase). Parkin yang teraktivasi kemudian menambahkan rantai ubiquitin ke protein membran luar mitokondria. Rantai ubiquitin ini dikenali oleh reseptor autofagi (p62/SQSTM1, NDP52, OPTN) yang mengikat LC3 dan menargetkan mitokondria ke autofagosom.</p>
+          <p>Mutasi pada PINK1 dan Parkin adalah penyebab penyakit Parkinson familial resesif, menunjukkan peran penting mitofagi dalam kelangsungan hidup neuron dopaminergik.</p>
+        `);
+
+        add('chaperone-mediated', 'Chaperone-Mediated Autophagy (CMA)', autCat, '🤲', '#f39c12', `
+          <h4>Definisi & Keunikan</h4>
+          <p>Chaperone-Mediated Autophagy adalah jalur autofagi selektif yang mendegradasi protein sitosolik individu tanpa pembentukan vesikel. Protein target memiliki motif KFERQ-like yang dikenali oleh chaperone Hsc70. Kompleks Hsc70-protein target berikatan dengan reseptor LAMP-2A di membran lisosom, dan protein didorong masuk ke lumen lisosom untuk degradasi.</p>
+          <p>CMA sangat penting untuk kontrol kualitas protein dan respons terhadap stres. Aktivitas CMA menurun seiring usia, berkontribusi pada akumulasi protein rusak yang terlihat pada penuaan dan penyakit neurodegeneratif.</p>
+        `);
+
+        const stCat = 'stress-sel';
+        add('er-stress', 'Stres Retikulum Endoplasma', stCat, '⚠️', '#f1c40f', `
+          <h4>Definisi & Pemicu</h4>
+          <p>Stres Retikulum Endoplasma terjadi ketika kapasitas pelipatan protein di RE terlampaui, menyebabkan akumulasi protein yang salah lipat di lumen RE. Ini dipicu oleh berbagai kondisi: hipoksia, kekurangan glukosa, gangguan glikosilasi, mutasi protein, atau peningkatan sintesis protein yang tiba-tiba.</p>
+
+          <h4>Unfolded Protein Response (UPR)</h4>
+          <p>Respons terhadap stres RE disebut Unfolded Protein Response (UPR), dimediasi oleh tiga sensor transmembran: IRE1, PERK, dan ATF6. Dalam kondisi normal, ketiga sensor ini diikat dan dihambat oleh chaperone BiP (Hsp70). Saat protein salah lipat terakumulasi, BiP dilepaskan untuk membantu pelipatan, dan ketiga sensor teraktivasi.</p>
+          <p>IRE1 memotong mRNA XBP1 (splicing tidak konvensional), menghasilkan faktor transkripsi aktif yang meningkatkan ekspresi chaperone dan enzim degradasi. PERK memfosforilasi eIF2α, mengurangi terjemahan global sambil meningkatkan terjemahan ATF4 (faktor transkripsi untuk gen stres). ATF6 diproses di Golgi menjadi faktor transkripsi aktif. Jika UPR gagal memulihkan homeostasis, jalur ini menginduksi apoptosis.</p>
+
+          <div class="highlight-box"><strong>Penyakit:</strong> Stres RE kronis terlibat dalam diabetes melitus (stres RE di sel beta akibat permintaan insulin tinggi), penyakit neurodegeneratif (Alzheimer, Parkinson), dan kanker (sel tumor menggunakan UPR untuk bertahan di lingkungan mikro tumor yang keras).</div>
+        `);
+
+        add('oxidative-stress', 'Stres Oksidatif', stCat, '⚠️', '#e74c3c', `
+          <h4>Definisi & ROS</h4>
+          <p>Stres oksidatif adalah kondisi ketidakseimbangan antara produksi spesies oksigen reaktif (Reactive Oxygen Species/ROS) dan kemampuan sistem antioksidan sel untuk mendetoksifikasinya. ROS meliputi superoksida (O2•-), hidrogen peroksida (H2O2), dan radikal hidroksil (•OH). Pada tingkat rendah, ROS berfungsi sebagai molekul sinyal. Pada tingkat tinggi, ROS merusak DNA, protein, dan lipid.</p>
+
+          <h4>Sumber & Pertahanan</h4>
+          <p>Sumber utama ROS seluler adalah rantai transpor elektron mitokondria (Kompleks I dan III), NADPH oksidase (NOX), dan peroksisom. Sistem pertahanan antioksidan meliputi enzim (superoksida dismutase/SOD, katalase, glutation peroksidase) dan molekul kecil (glutation, vitamin C, vitamin E).</p>
+          <p>Stres oksidatif terlibat dalam penuaan (teori radikal bebas penuaan), kanker, penyakit kardiovaskular, dan penyakit neurodegeneratif. Paradoksnya, sel kanker sering memiliki ROS basal yang lebih tinggi, membuatnya lebih rentan terhadap kerusakan oksidatif tambahan - ini dapat dieksploitasi secara terapeutik.</p>
+        `);
+
+        add('heat-shock-response', 'Respons Kejutan Panas', stCat, '🌡️', '#d35400', `
+          <h4>Definisi & Pemicu</h4>
+          <p>Respons kejutan panas adalah respons seluler terhadap peningkatan suhu dan stres proteotoksik lainnya. Dipicu oleh akumulasi protein yang terdenaturasi, respons ini menginduksi ekspresi Heat Shock Proteins (HSP) yang berfungsi sebagai chaperone molekuler untuk mencegah agregasi protein dan membantu pelipatan kembali.</p>
+
+          <h4>Regulasi oleh HSF1</h4>
+          <p>Regulator utama adalah Heat Shock Factor 1 (HSF1). Dalam kondisi normal, HSF1 berada di sitoplasma sebagai monomer inaktif terikat Hsp90. Saat stres, protein rusak bersaing untuk Hsp90, melepaskan HSF1 yang kemudian bertrimerisasi, masuk ke nukleus, dan mengikat Heat Shock Elements (HSE) di promoter gen HSP.</p>
+          <p>HSP diklasifikasikan berdasarkan berat molekul: Hsp100, Hsp90, Hsp70, Hsp60 (chaperonin), dan small HSP. Mereka bekerja sama dalam jaringan chaperone untuk mempertahankan proteostasis (homeostasis protein) di bawah kondisi stres.</p>
+        `);
+
+        add('dna-damage-response', 'Respons Kerusakan DNA (DDR)', stCat, '⚠️', '#8e44ad', `
+          <h4>Definisi & Komponen</h4>
+          <p>DNA Damage Response adalah jaringan sinyal kompleks yang mendeteksi kerusakan DNA dan mengkoordinasikan respons seluler: penghentian siklus sel, aktivasi perbaikan DNA, perubahan transkripsi, atau apoptosis jika kerusakan terlalu parah. DDR sangat penting untuk menjaga stabilitas genom dan mencegah kanker.</p>
+
+          <h4>Sensor & Efektor</h4>
+          <p>Sensor kerusakan DNA (MRN, RPA, Rad9-Rad1-Hus1) mendeteksi lesi dan merekrut kinase ATM dan ATR. ATM dan ATR memfosforilasi ratusan substrat termasuk kinase checkpoint Chk1/Chk2 dan histon H2AX (γH2AX). γH2AX membentuk fokus di sekitar pemutusan untai ganda, berfungsi sebagai platform untuk perekrutan protein perbaikan DNA.</p>
+          <p>Efektor DDR meliputi p53 (penangkapan siklus sel atau apoptosis), BRCA1 (perbaikan DNA), dan banyak protein lainnya. Defek pada DDR adalah ciri khas kanker, dan sel kanker sering bergantung pada jalur DDR yang tersisa untuk bertahan hidup, menciptakan kerentanan terapeutik.</p>
+
+          <div class="info-box"><strong>Kerentanan Terapeutik:</strong> Inhibitor PARP mengeksploitasi defek pada Homologous Recombination (BRCA1/2) dengan memblokir jalur perbaikan alternatif, menyebabkan kematian sel tumor secara selektif. Ini adalah contoh klasik synthetic lethality dalam terapi kanker.</div>
+        `);
+
+        add('hypoxia-response', 'Respons Hipoksia (HIF)', stCat, '🫁', '#3498db', `
+          <h4>Definisi & HIF</h4>
+          <p>Hipoksia adalah kondisi kekurangan oksigen di tingkat jaringan atau sel. Respons seluler terhadap hipoksia dimediasi terutama oleh Hypoxia-Inducible Factor (HIF), faktor transkripsi heterodimerik yang terdiri dari subunit α (HIF-1α, HIF-2α) yang diatur oksigen dan subunit β (ARNT) yang konstitutif.</p>
+
+          <h4>Mekanisme Regulasi Oksigen</h4>
+          <p>Dalam kondisi oksigen normal (normoksia), HIF-α dihidroksilasi oleh enzim prolyl hydroxylase domain (PHD) yang membutuhkan oksigen sebagai substrat. HIF-α terhidroksilasi dikenali oleh protein von Hippel-Lindau (VHL) yang merupakan bagian dari kompleks E3 ubiquitin ligase, menargetkan HIF-α untuk degradasi proteasomal. Dalam kondisi hipoksia, PHD tidak aktif, HIF-α terakumulasi, berdimerisasi dengan ARNT, dan mengaktivasi transkripsi gen respons hipoksia.</p>
+          <p>Gen target HIF meliputi eritropoietin (EPO, merangsang produksi sel darah merah), VEGF (angiogenesis), enzim glikolitik (adaptasi metabolik), dan banyak gen lainnya. Di tumor, HIF memungkinkan adaptasi terhadap lingkungan mikro hipoksik dan mendorong angiogenesis tumor.</p>
+        `);
+
+        const agCat = 'aging';
+        add('telomere-shortening', 'Pemendekan Telomer', agCat, '⏳', '#7f8c8d', `
+          <h4>Definisi & Struktur Telomer</h4>
+          <p>Telomer adalah struktur nukleoprotein di ujung kromosom yang melindungi DNA dari degradasi dan fusi. Pada manusia, telomer terdiri dari ribuan pengulangan sekuens TTAGGG dan kompleks protein shelterin. Karena masalah replikasi ujung (end replication problem), telomer memendek sekitar 50-150 pasangan basa per pembelahan sel.</p>
+
+          <h4>Senesens Replikatif</h4>
+          <p>Ketika telomer mencapai panjang kritis, mereka dikenali sebagai kerusakan DNA dan memicu penangkapan siklus sel permanen yang disebut senesens replikatif. Ini berfungsi sebagai mekanisme tumor suppression dengan membatasi kapasitas proliferatif sel somatik. Namun, ini juga berkontribusi pada penuaan jaringan.</p>
+          <p>Telomerase, enzim yang memperpanjang telomer, aktif di sel germinal dan sel punca tetapi tidak di sebagian besar sel somatik. Banyak kanker (85-90%) mengaktifkan kembali telomerase untuk mencapai imortalitas replikatif. Ini menjadikan telomerase sebagai target terapi kanker yang menarik.</p>
+        `);
+
+        add('cellular-senescence', 'Senesens Seluler', agCat, '👴', '#bdc3c7', `
+          <h4>Definisi & Pemicu</h4>
+          <p>Senesens seluler adalah keadaan penangkapan siklus sel permanen yang dapat diinduksi oleh berbagai stres: pemendekan telomer (senesens replikatif), kerusakan DNA, stres oksidatif, atau aktivasi onkogen (Oncogene-Induced Senescence/OIS). Sel senesen tetap metabolik aktif tetapi tidak dapat membelah.</p>
+
+          <h4>SASP & Dampaknya</h4>
+          <p>Sel senesen mengembangkan fenotip sekretori terkait senesens (Senescence-Associated Secretory Phenotype/SASP), mensekresi sitokin pro-inflamasi, kemokin, faktor pertumbuhan, dan protease matriks. SASP dapat memiliki efek menguntungkan (memperkuat penangkapan siklus sel, merekrut sel imun untuk membersihkan sel senesen) atau merugikan (inflamasi kronis, degradasi jaringan).</p>
+          <p>Akumulasi sel senesen seiring usia berkontribusi pada penuaan jaringan dan penyakit terkait usia. Penelitian terbaru menunjukkan bahwa membersihkan sel senesen dengan senolitik (obat yang menginduksi apoptosis sel senesen) dapat memperbaiki fungsi jaringan dan memperpanjang kesehatan pada hewan model.</p>
+
+          <div class="highlight-box"><strong>Fakta:</strong> Penemuan bahwa sel senesen dapat dihilangkan secara selektif dengan senolitik adalah salah satu terobosan paling menarik dalam biologi penuaan. Uji klinis senolitik untuk osteoartritis dan fibrosis paru idiopatik sedang berlangsung.</div>
+        `);
+
+        add('mitochondrial-aging', 'Penuaan Mitokondria', agCat, '⚡', '#e74c3c', `
+          <h4>Definisi & Akumulasi Mutasi</h4>
+          <p>Mitokondria memainkan peran sentral dalam penuaan seluler. Seiring waktu, mitokondria mengakumulasi mutasi pada DNA mitokondria (mtDNA) karena kurangnya histon pelindung dan sistem perbaikan DNA yang efisien. Ini menyebabkan disfungsi rantai transpor elektron, peningkatan produksi ROS, dan penurunan produksi ATP.</p>
+
+          <h4>Teori Radikal Bebas & Strategi</h4>
+          <p>Teori radikal bebas penuaan (Harman, 1956) mengusulkan bahwa akumulasi kerusakan oksidatif dari ROS mitokondria adalah penyebab utama penuaan. Meskipun teori ini telah dimodifikasi, disfungsi mitokondria tetap menjadi ciri khas penuaan. Mitokondria yang rusak juga kurang efisien dalam mitofagi, menciptakan lingkaran setan kerusakan.</p>
+          <p>Strategi untuk menargetkan penuaan mitokondria meliputi antioksidan yang ditargetkan ke mitokondria (MitoQ), aktivasi mitofagi (NAD+ prekursor seperti NMN dan NR), dan pembatasan kalori yang menginduksi biogenesis mitokondria.</p>
+        `);
+
+        add('protein-aggregation', 'Agregasi Protein & Penuaan', agCat, '🧶', '#9b59b6', `
+          <h4>Definisi & Penurunan Proteostasis</h4>
+          <p>Penurunan kapasitas proteostasis (homeostasis protein) adalah ciri khas penuaan. Seiring usia, sel menjadi kurang efisien dalam melipat, memperbaiki, dan mendegradasi protein. Ini menyebabkan akumulasi agregat protein yang resisten terhadap degradasi.</p>
+
+          <h4>Penyakit Neurodegeneratif</h4>
+          <p>Agregat protein adalah ciri khas banyak penyakit neurodegeneratif terkait usia: plak amyloid-β dan tau tangles di Alzheimer, badan Lewy (α-synuclein) di Parkinson, dan agregat huntingtin di penyakit Huntington. Penurunan autofagi dan sistem ubiquitin-proteasome berkontribusi pada akumulasi ini.</p>
+          <p>Penelitian menunjukkan bahwa meningkatkan kapasitas proteostasis melalui aktivasi autofagi (misalnya dengan rapamycin) atau chaperone dapat memperlambat penuaan dan mengurangi patologi terkait usia di organisme model.</p>
+        `);
+
+        add('epigenetic-aging', 'Jam Epigenetik', agCat, '🕐', '#e67e22', `
+          <h4>Definisi & Jam Horvath</h4>
+          <p>Jam epigenetik adalah biomarker penuaan berdasarkan pola metilasi DNA yang berubah secara terprediksi seiring usia. Dikembangkan oleh Steve Horvath pada tahun 2013, jam ini dapat memperkirakan usia kronologis dengan korelasi tinggi (r>0.96) hanya dari data metilasi DNA.</p>
+
+          <h4>Age Acceleration & Aplikasi</h4>
+          <p>Perbedaan antara usia epigenetik yang diprediksi dan usia kronologis disebut "age acceleration" dan terkait dengan risiko penyakit dan mortalitas. Individu dengan percepatan usia epigenetik memiliki risiko lebih tinggi untuk kanker, penyakit kardiovaskular, dan kematian dini.</p>
+          <p>Jam epigenetik dapat diperlambat oleh gaya hidup sehat (diet, olahraga) dan berpotensi digunakan untuk mengevaluasi efektivitas intervensi anti-penuaan. Penemuan ini telah membuka era baru dalam penelitian penuaan di mana penuaan dapat diukur secara molekuler.</p>
+
+          <div class="info-box"><strong>Fakta:</strong> Jam epigenetik Horvath adalah salah satu biomarker penuaan paling akurat yang pernah dikembangkan. Ini dapat memperkirakan usia dengan kesalahan rata-rata hanya 3.6 tahun, hanya dari 353 situs CpG di genom!</div>
+        `);
+
+        return items;
+      }
+
+      const allItems = generateItems();
+      let currentCategory = 'all', currentPage = 1;
+      const itemsPerPage = 20;
+      let filteredItems = [...allItems];
+      let currentOrganelle = null;
+      let searchMode = 'internal';
+
+      const sidebar = document.getElementById('sidebar');
+      const libraryGrid = document.getElementById('library-grid');
+      const pagination = document.getElementById('pagination');
+      const searchInput = document.getElementById('search-input');
+      const searchBtn = document.getElementById('search-btn');
+      const searchExtInput = document.getElementById('search-ext-input');
+      const searchExtBtn = document.getElementById('search-ext-btn');
+      const externalResults = document.getElementById('external-results');
+      const itemCount = document.getElementById('item-count');
+      const cellyMessage = document.getElementById('celly-message');
+      const detailOverlay = document.getElementById('detail-overlay');
+      const detailCloseBtn = document.getElementById('detail-close-btn');
+      const detailIcon = document.getElementById('detail-icon');
+      const detailTitle = document.getElementById('detail-title');
+      const detailCategory = document.getElementById('detail-category');
+      const detailContent = document.getElementById('detail-content');
+      const detailOpen3dBtn = document.getElementById('detail-open-3d');
+      const model3dOverlay = document.getElementById('model-3d-overlay');
+      const model3dTitle = document.getElementById('model-3d-title');
+      const model3dIframe = document.getElementById('model-3d-iframe');
+      const model3dCloseBtn = document.getElementById('model-3d-close-btn');
+      const model3dFallbackLink = document.getElementById('model-3d-fallback-link');
+      const themeToggleBtn = document.getElementById('theme-toggle-btn');
+      const backBtn = document.getElementById('back-btn');
+
+      function setTheme(t) {
+        if(t==='light'){document.body.classList.add('light-theme');themeToggleBtn.innerHTML='☾ Dark';}
+        else{document.body.classList.remove('light-theme');themeToggleBtn.innerHTML='☀ Light';}
+        localStorage.setItem('bioverse_theme',t);
+      }
+      setTheme(localStorage.getItem('bioverse_theme')||'dark');
+      themeToggleBtn.addEventListener('click',()=>setTheme(document.body.classList.contains('light-theme')?'dark':'light'));
+
+      function buildSidebar(){
+        const counts={}; allItems.forEach(i=>counts[i.category]=(counts[i.category]||0)+1);
+        categories.forEach(cat=>{
+          const btn=document.createElement('button');
+          btn.className='category-btn'+(cat.id==='all'?' active':'');
+          btn.dataset.category=cat.id;
+          btn.innerHTML=`${cat.name} <span class="category-count">${cat.id==='all'?allItems.length:counts[cat.id]||0}</span>`;
+          btn.addEventListener('click',()=>{
+            document.querySelectorAll('.category-btn').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            currentCategory=cat.id; currentPage=1; filterItems();
+          });
+          sidebar.appendChild(btn);
+        });
+      }
+
+      function filterItems(){
+        let items=[...allItems];
+        if(currentCategory!=='all') items=items.filter(i=>i.category===currentCategory);
+        const q=searchInput.value.trim().toLowerCase();
+        if(q) items=items.filter(i=>i.name.toLowerCase().includes(q)||i.content.toLowerCase().includes(q));
+        filteredItems=items; itemCount.textContent=items.length+' item'; renderPage();
+      }
+
+      function renderPage(){
+        const tp=Math.ceil(filteredItems.length/itemsPerPage);
+        const start=(currentPage-1)*itemsPerPage;
+        const pageItems=filteredItems.slice(start,start+itemsPerPage);
+        libraryGrid.innerHTML='';
+        pageItems.forEach(item=>{
+          const card=document.createElement('div'); card.className='organelle-card';
+          card.innerHTML=`<div class="card-icon" style="background:${item.iconBg};color:white;">${item.icon}</div><div class="card-title">${item.name}</div><div class="card-function">${item.content.replace(/<[^>]*>/g,'').substring(0,120)}...</div><div class="card-actions"><button class="btn-detail">Detail</button><button class="btn-3d">3D</button></div>`;
+          card.addEventListener('click',()=>openDetail(item));
+          card.querySelector('.btn-detail').addEventListener('click',e=>{e.stopPropagation();openDetail(item);});
+          card.querySelector('.btn-3d').addEventListener('click',e=>{e.stopPropagation();openModel3D(item);});
+          libraryGrid.appendChild(card);
+        });
+        renderPagination(tp);
+      }
+
+      function renderPagination(tp){
+        pagination.innerHTML=''; if(tp<=1) return;
+        const prev=document.createElement('button'); prev.className='page-btn'; prev.textContent='«'; prev.disabled=currentPage===1; prev.onclick=()=>{currentPage--;renderPage();window.scrollTo(0,0);}; pagination.appendChild(prev);
+        for(let i=1;i<=tp;i++){const b=document.createElement('button');b.className='page-btn'+(i===currentPage?' active':'');b.textContent=i;b.onclick=()=>{currentPage=i;renderPage();window.scrollTo(0,0);};pagination.appendChild(b);}
+        const next=document.createElement('button');next.className='page-btn';next.textContent='»';next.disabled=currentPage===tp;next.onclick=()=>{currentPage++;renderPage();window.scrollTo(0,0);};pagination.appendChild(next);
+      }
+
+      function openDetail(item){
+        currentOrganelle=item; detailIcon.innerHTML=item.icon; detailIcon.style.background=item.iconBg; detailIcon.style.color='white';
+        detailTitle.textContent=item.name; const co=categories.find(c=>c.id===item.category); detailCategory.textContent=co?co.name:item.category;
+        detailContent.innerHTML=item.content; detailOverlay.classList.add('active');
+        cellyMessage.innerHTML=`<span>Celly:</span> Membaca tentang <strong>${item.name}</strong>. Ilmu sel itu luas dan menakjubkan!`;
+      }
+      detailCloseBtn.addEventListener('click',()=>detailOverlay.classList.remove('active'));
+      detailOverlay.addEventListener('click',e=>{if(e.target===detailOverlay)detailOverlay.classList.remove('active');});
+      detailOpen3dBtn.addEventListener('click',()=>{if(currentOrganelle)openModel3D(currentOrganelle);});
+
+      function openModel3D(item){
+        model3dTitle.textContent='Model 3D: '+item.name;
+        const url='https://sketchfab.com/search?q='+encodeURIComponent(item.sketchfabSearch)+'&type=models';
+        model3dIframe.src=url; model3dFallbackLink.href=url; model3dOverlay.classList.add('active');
+      }
+      model3dCloseBtn.addEventListener('click',()=>{model3dOverlay.classList.remove('active');model3dIframe.src='';});
+      model3dOverlay.addEventListener('click',e=>{if(e.target===model3dOverlay){model3dOverlay.classList.remove('active');model3dIframe.src='';}});
+
+      function performSearch(){currentPage=1;filterItems();externalResults.classList.remove('active');}
+      searchBtn.addEventListener('click',performSearch);
+      searchInput.addEventListener('keypress',e=>{if(e.key==='Enter')performSearch();});
+
+      async function performExternalSearch(){
+        const q=searchExtInput.value.trim();
+        if(!q) return;
+        externalResults.innerHTML='<p style="text-align:center;">🔍 Mencari di Wikipedia...</p>';
+        externalResults.classList.add('active');
+        cellyMessage.innerHTML=`<span>Celly:</span> Mencari info tentang "<em>${q}</em>" dari Wikipedia...`;
+        try{
+          const resp=await fetch(`https://id.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*`);
+          const data=await resp.json();
+          if(data.query.search.length===0){externalResults.innerHTML='<p>Tidak ditemukan hasil.</p>';return;}
+          let html='';
+          for(let i=0;i<Math.min(data.query.search.length,5);i++){
+            const r=data.query.search[i];
+            html+=`<div class="external-result-item"><h5>${r.title}</h5><p>${r.snippet.replace(/<\/?[^>]+(>|$)/g,'').substring(0,300)}...</p><a href="https://id.wikipedia.org/wiki/${encodeURIComponent(r.title)}" target="_blank">Baca di Wikipedia →</a></div>`;
+          }
+          externalResults.innerHTML=html;
+          cellyMessage.innerHTML=`<span>Celly:</span> Aku menemukan ${Math.min(data.query.search.length,5)} hasil dari Wikipedia untuk "<em>${q}</em>". Klik link untuk membaca lengkapnya!`;
+        }catch(e){externalResults.innerHTML='<p>Gagal mencari. Coba lagi nanti.</p>';}
+      }
+      searchExtBtn.addEventListener('click',performExternalSearch);
+      searchExtInput.addEventListener('keypress',e=>{if(e.key==='Enter')performExternalSearch();});
+
+      document.querySelectorAll('.search-tab').forEach(tab=>{
+        tab.addEventListener('click',()=>{
+          document.querySelectorAll('.search-tab').forEach(t=>t.classList.remove('active'));
+          tab.classList.add('active');
+          searchMode=tab.dataset.tab;
+          document.getElementById('search-internal').style.display=searchMode==='internal'?'flex':'none';
+          document.getElementById('search-external').style.display=searchMode==='external'?'flex':'none';
+          if(searchMode==='internal') externalResults.classList.remove('active');
+        });
+      });
+
+      backBtn.addEventListener('click',()=>{window.location.href='index.html';});
+      buildSidebar(); filterItems();
+
+      const greetings=['<span>Celly:</span> MicroVerse 2 hadir! 49 item MURNI tentang sel: sinyal sel, checkpoints, epigenetika, stress sel, dan penuaan!','<span>Celly:</span> Semua konten sudah dirapikan dengan sub-heading dan bullet points. Klik kartu untuk belajar!','<span>Celly:</span> Coba fitur "Cari di Web" untuk mencari info dari Wikipedia yang melengkapi pengetahuanmu!'];
+      let gi=0;
+      setInterval(()=>{if(!detailOverlay.classList.contains('active')&&!model3dOverlay.classList.contains('active')){cellyMessage.innerHTML=greetings[gi%greetings.length];gi++;}},15000);
+    })();
+  </script>
+</body>
+</html>

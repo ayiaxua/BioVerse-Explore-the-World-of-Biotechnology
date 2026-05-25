@@ -1,0 +1,2132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>MicroVerse 1 | Ensiklopedia Sel BioVerse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #111827;
+      --bg-card: rgba(15, 25, 45, 0.85);
+      --text-primary: #e2e8f0;
+      --text-secondary: #b0bec5;
+      --accent: #00E5A0;
+      --accent-glow: 0 0 25px rgba(0, 229, 160, 0.4);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --font-display: 'Orbitron', sans-serif;
+      --font-body: 'Poppins', sans-serif;
+      --card-hover: rgba(0, 229, 160, 0.08);
+      --panel-bg: rgba(10, 20, 35, 0.98);
+      --sidebar-bg: rgba(12, 22, 38, 0.9);
+      --highlight-yellow: rgba(255, 215, 0, 0.15);
+      --info-box-bg: rgba(0, 229, 160, 0.06);
+    }
+    .light-theme {
+      --bg-primary: #f0f4f8;
+      --bg-secondary: #e2e8f0;
+      --bg-card: rgba(255, 255, 255, 0.92);
+      --text-primary: #1a202c;
+      --text-secondary: #4a5568;
+      --accent-glow: 0 0 25px rgba(0, 180, 130, 0.3);
+      --border-subtle: rgba(0, 0, 0, 0.1);
+      --card-hover: rgba(0, 229, 160, 0.1);
+      --panel-bg: rgba(255, 255, 255, 0.98);
+      --sidebar-bg: rgba(240, 244, 248, 0.95);
+      --highlight-yellow: rgba(255, 215, 0, 0.2);
+      --info-box-bg: rgba(0, 180, 130, 0.06);
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      transition: background 0.4s, color 0.4s;
+      overflow-x: hidden;
+    }
+    .micro-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-subtle);
+      backdrop-filter: blur(15px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .back-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 8px 16px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      transition: 0.3s;
+    }
+    .back-btn:hover {
+      background: var(--accent);
+      color: #0a1a2a;
+    }
+    .library-title {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 1px;
+    }
+    .item-count {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .theme-toggle {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      padding: 8px 14px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    .theme-toggle:hover {
+      border-color: var(--accent);
+    }
+    .main-layout {
+      display: flex;
+      min-height: calc(100vh - 70px);
+    }
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border-subtle);
+      padding: 20px 16px;
+      overflow-y: auto;
+      position: sticky;
+      top: 70px;
+      height: calc(100vh - 70px);
+      backdrop-filter: blur(10px);
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .sidebar h4 {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .category-btn {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      padding: 10px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      text-align: left;
+      transition: 0.3s;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .category-btn:hover,
+    .category-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--card-hover);
+    }
+    .category-count {
+      background: rgba(0, 229, 160, 0.2);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+    }
+    .content-area {
+      flex: 1;
+      padding: 20px 24px;
+      overflow-y: auto;
+    }
+    .search-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .search-input {
+      flex: 1;
+      padding: 14px 20px;
+      border-radius: 35px;
+      border: 2px solid var(--border-subtle);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      outline: none;
+      transition: 0.3s;
+    }
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: var(--accent-glow);
+    }
+    .search-btn {
+      background: var(--accent);
+      border: none;
+      color: #0a1a2a;
+      padding: 14px 22px;
+      border-radius: 30px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: 0.3s;
+    }
+    .search-btn:hover {
+      box-shadow: var(--accent-glow);
+    }
+    .celly-banner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 18px;
+      margin-bottom: 16px;
+      background: var(--bg-card);
+      border-radius: 18px;
+      border: 1px solid var(--accent);
+      backdrop-filter: blur(10px);
+    }
+    .celly-avatar {
+      width: 50px;
+      height: 50px;
+      flex-shrink: 0;
+    }
+    .celly-message {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+    .celly-message span {
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .library-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .organelle-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .organelle-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent);
+      box-shadow: var(--accent-glow);
+      background: var(--card-hover);
+    }
+    .card-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .card-function {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      flex-grow: 1;
+    }
+    .card-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-detail {
+      background: var(--accent);
+      color: #0a1a2a;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      transition: 0.3s;
+    }
+    .btn-detail:hover {
+      box-shadow: var(--accent-glow);
+    }
+    .btn-3d {
+      background: transparent;
+      border: 2px solid #FF6B6B;
+      color: #FF6B6B;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      transition: 0.3s;
+    }
+    .btn-3d:hover {
+      background: #FF6B6B;
+      color: white;
+    }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .page-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      padding: 10px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: 0.3s;
+    }
+    .page-btn:hover,
+    .page-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--card-hover);
+    }
+    .detail-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 200;
+      display: none;
+      justify-content: flex-end;
+    }
+    .detail-overlay.active {
+      display: flex;
+    }
+    .detail-panel {
+      width: 100%;
+      max-width: 650px;
+      height: 100%;
+      background: var(--panel-bg);
+      backdrop-filter: blur(25px);
+      border-left: 2px solid var(--accent);
+      padding: 28px 24px;
+      overflow-y: auto;
+      animation: slideIn 0.35s ease-out;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+      }
+      to {
+        transform: translateX(0);
+      }
+    }
+    .detail-close {
+      align-self: flex-end;
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 8px 18px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 700;
+      font-family: var(--font-body);
+      transition: 0.3s;
+    }
+    .detail-close:hover {
+      background: var(--accent);
+      color: #0a1a2a;
+    }
+    .detail-icon-large {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      align-self: center;
+    }
+    .detail-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      text-align: center;
+      color: var(--accent);
+    }
+    .detail-category {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .detail-section {
+      background: var(--bg-card);
+      border-radius: 14px;
+      padding: 18px;
+      border: 1px solid var(--border-subtle);
+      line-height: 1.8;
+    }
+    .detail-section h4 {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      color: var(--accent);
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 6px;
+    }
+    .detail-section p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.9;
+      text-align: justify;
+    }
+    .detail-section ul {
+      padding-left: 18px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.9;
+    }
+    .detail-section ul li {
+      margin-bottom: 6px;
+    }
+    .info-box {
+      background: var(--info-box-bg);
+      border-left: 3px solid var(--accent);
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+    .highlight-box {
+      background: var(--highlight-yellow);
+      border-left: 3px solid #FFD700;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+    .model-3d-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .model-3d-overlay.active {
+      display: flex;
+    }
+    .model-3d-container {
+      width: 90%;
+      max-width: 850px;
+      height: 80vh;
+      background: var(--bg-secondary);
+      border-radius: 22px;
+      border: 2px solid var(--accent);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 50px rgba(0, 229, 160, 0.5);
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popIn {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    .model-3d-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--accent);
+    }
+    .model-3d-title {
+      font-family: var(--font-display);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .model-3d-close {
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 8px 16px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: 0.3s;
+    }
+    .model-3d-close:hover {
+      background: var(--accent);
+      color: #0a1a2a;
+    }
+    .model-3d-iframe {
+      flex: 1;
+      width: 100%;
+      border: none;
+    }
+    .model-3d-fallback {
+      text-align: center;
+      padding: 12px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+    .model-3d-fallback a {
+      color: #4285F4;
+      font-weight: 600;
+    }
+    @media (max-width: 768px) {
+      .main-layout {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        top: 0;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 12px;
+      }
+      .category-btn {
+        font-size: 0.7rem;
+        padding: 8px 10px;
+      }
+      .library-grid {
+        grid-template-columns: 1fr;
+      }
+      .detail-panel {
+        max-width: 100%;
+      }
+    }
+	/Search Eksternal/
+.search-tabs { display:flex; gap:8px; margin-bottom:8px; }
+.search-tab { background:var(--bg-card); border:1px solid var(--border-subtle); color:var(--text-secondary); padding:8px 16px; border-radius:20px; cursor:pointer; font-size:0.8rem; font-weight:600; transition:0.3s; font-family:var(--font-body); }
+.search-tab.active { border-color:var(--accent); color:var(--accent); background:var(--card-hover); }
+.search-tab:hover { border-color:var(--accent); }
+.external-results { display:none; background:var(--bg-card); border-radius:16px; padding:20px; margin-bottom:16px; border:1px solid var(--accent); max-height:400px; overflow-y:auto; }
+.external-results.active { display:block; }
+.external-result-item { padding:12px 0; border-bottom:1px solid var(--border-subtle); }
+.external-result-item:last-child { border-bottom:none; }
+.external-result-item h5 { color:var(--accent); margin-bottom:4px; font-family:var(--font-display); font-size:0.9rem; }
+.external-result-item p { font-size:0.85rem; color:var(--text-secondary); line-height:1.6; }
+.external-result-item a { color:#4285F4; font-size:0.8rem; text-decoration:none; font-weight:600; }
+.external-result-item a:hover { text-decoration:underline; }
+.external-loading { text-align:center; padding:20px; color:var(--accent); }
+
+  </style>
+</head>
+<body class="dark-theme">
+
+  <header class="micro-header">
+    <div class="header-left">
+      <button class="back-btn" id="back-btn">← Peta</button>
+      <span class="library-title">MICROVERSE 1</span>
+      <span class="item-count" id="item-count">101 item</span>
+    </div>
+    <div class="header-right">
+      <a href="microverse2.html" style="color:var(--accent);text-decoration:none;font-weight:600;font-size:0.85rem;">MicroVerse 2 →</a>
+      <button class="theme-toggle" id="theme-toggle-btn">☀ Light</button>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <aside class="sidebar" id="sidebar">
+      <h4>KATEGORI</h4>
+      <button class="category-btn active" data-category="all">Semua <span class="category-count">101</span></button>
+    </aside>
+
+    <main class="content-area" id="content-area">
+   <!-- Tab Search -->
+<div class="search-tabs">
+  <button class="search-tab active" data-tab="internal">🔍 Cari Internal</button>
+  <button class="search-tab" data-tab="external">🌐 Cari di Web</button>
+</div>
+
+<!-- Search Internal -->
+<div class="search-container" id="search-internal">
+  <input type="text" class="search-input" id="search-input" placeholder="Cari di 101 item MicroVerse 1...">
+  <button class="search-btn" id="search-btn">Cari</button>
+</div>
+
+<!-- Search External -->
+<div class="search-container" id="search-external" style="display:none;">
+  <input type="text" class="search-input" id="search-ext-input" placeholder="Cari info biologi dari Wikipedia...">
+  <button class="search-btn" id="search-ext-btn">Cari Web</button>
+</div>
+
+<!-- Hasil Pencarian External -->
+<div class="external-results" id="external-results"></div>
+
+      <div class="celly-banner" id="celly-box">
+        <svg class="celly-avatar" viewBox="0 0 60 60" fill="none">
+          <circle cx="30" cy="30" r="26" fill="#00E5A0" stroke="#fff" stroke-width="2.5"/>
+          <circle cx="22" cy="24" r="4.5" fill="white"/>
+          <circle cx="38" cy="24" r="4.5" fill="white"/>
+          <circle cx="22" cy="24" r="2" fill="#1a1a2e"/>
+          <circle cx="38" cy="24" r="2" fill="#1a1a2e"/>
+          <path d="M24 38 Q30 44 36 38" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="celly-message" id="celly-message">
+          <span>Celly:</span> Selamat datang di MicroVerse 1! 101 item pertama dengan penjelasan super detail. Klik kartu untuk membaca!
+        </div>
+      </div>
+
+      <div class="library-grid" id="library-grid"></div>
+      <div class="pagination" id="pagination"></div>
+    </main>
+  </div>
+
+  <div class="detail-overlay" id="detail-overlay">
+    <div class="detail-panel" id="detail-panel">
+      <button class="detail-close" id="detail-close-btn">Tutup</button>
+      <div class="detail-icon-large" id="detail-icon"></div>
+      <div class="detail-title" id="detail-title"></div>
+      <div class="detail-category" id="detail-category"></div>
+      <div class="detail-section" id="detail-content"></div>
+      <button class="btn-3d" id="detail-open-3d" style="width:100%;justify-content:center;padding:14px;">
+        🔍 Lihat Model 3D di Sketchfab
+      </button>
+    </div>
+  </div>
+
+  <div class="model-3d-overlay" id="model-3d-overlay">
+    <div class="model-3d-container">
+      <div class="model-3d-header">
+        <span class="model-3d-title" id="model-3d-title">Model 3D</span>
+        <button class="model-3d-close" id="model-3d-close-btn">Tutup</button>
+      </div>
+      <iframe class="model-3d-iframe" id="model-3d-iframe" allowfullscreen allow="autoplay; fullscreen; xr-spatial-tracking" title="Model 3D"></iframe>
+      <div class="model-3d-fallback">
+        Model tidak muncul? <a id="model-3d-fallback-link" href="#" target="_blank" rel="noopener">Buka di Sketchfab</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const categories = [
+        { id: 'organel-utama', name: 'Organel Sel Hewan', icon: '🔬', color: '#9b59b6' },
+        { id: 'organel-tambahan', name: 'Organel Tambahan', icon: '🧪', color: '#e74c3c' },
+        { id: 'membran-transport', name: 'Membran & Transport', icon: '🔄', color: '#3498db' },
+        { id: 'molekul', name: 'Molekul Penting', icon: '⚛️', color: '#f39c12' },
+        { id: 'enzim', name: 'Enzim & Katalisis', icon: '⚡', color: '#e67e22' },
+        { id: 'siklus-sel', name: 'Siklus Sel & Pembelahan', icon: '🔁', color: '#2ecc71' },
+        { id: 'metabolisme', name: 'Metabolisme Sel', icon: '🔥', color: '#c0392b' },
+        { id: 'sintesis-protein', name: 'Sintesis Protein', icon: '🧬', color: '#8e44ad' },
+        { id: 'sel-imun', name: 'Sel Imun', icon: '🛡️', color: '#27ae60' },
+        { id: 'sel-tubuh', name: 'Sel Tubuh Lainnya', icon: '🧫', color: '#2980b9' }
+      ];
+
+      // ==================== DATA ITEM DENGAN KONTEN DETAIL ====================
+      function generateItems() {
+        const items = [];
+
+        function add(id, name, category, icon, iconBg, content) {
+          items.push({ id, name, category, icon, iconBg, content,
+            sketchfabSearch: name.replace(/\s+/g, '+') + '+3d+model' });
+        }
+
+        // KATEGORI 1: ORGANEL UTAMA (15 item)
+        const oCat = 'organel-utama';
+
+        add('nucleus', 'Inti Sel (Nukleus)', oCat, '⭐', '#9b59b6', `
+          <h4>Definisi & Gambaran Umum</h4>
+          <p>Inti sel atau nukleus adalah organel terbesar dalam sel eukariotik, berfungsi sebagai pusat kendali yang menyimpan dan melindungi materi genetik berupa DNA. Nukleus pertama kali diamati oleh Antonie van Leeuwenhoek pada tahun 1700-an, namun baru dideskripsikan secara detail oleh Robert Brown pada tahun 1831 saat mengamati sel anggrek. Nama "nukleus" berasal dari bahasa Latin yang berarti "kernel" atau "inti".</p>
+          <p>Hampir semua sel eukariotik memiliki nukleus, kecuali beberapa sel khusus seperti eritrosit matang (sel darah merah) yang kehilangan nukleusnya selama proses pematangan untuk memaksimalkan kapasitas pengangkutan oksigen. Sebaliknya, sel otot rangka memiliki banyak nukleus (multinukleat) karena terbentuk dari fusi banyak sel selama perkembangan.</p>
+          
+          <h4>Struktur Detail</h4>
+          <p>Nukleus terdiri dari beberapa komponen struktural yang bekerja bersama:</p>
+          <ul>
+            <li><strong>Membran Inti (Nuclear Envelope):</strong> Lapisan ganda fosfolipid yang memisahkan isi nukleus dari sitoplasma. Terdiri dari membran luar yang terhubung dengan Retikulum Endoplasma Kasar dan membran dalam yang berikatan dengan lamina inti. Ketebalan total sekitar 30-50 nm.</li>
+            <li><strong>Pori Inti (Nuclear Pore Complex):</strong> Kompleks protein raksasa dengan berat molekul sekitar 125 juta Dalton yang membentuk saluran selektif. Setiap pori terdiri dari sekitar 30 protein berbeda yang disebut nukleoporin. Molekul kecil (<40 kDa) dapat berdifusi bebas, sementara molekul besar memerlukan sinyal lokalisasi inti (NLS) dan transport aktif yang dimediasi oleh importin dan exportin. Rata-rata sel mamalia memiliki 3000-4000 pori inti.</li>
+            <li><strong>Lamina Inti:</strong> Jaring-jaring protein filamen intermediet (lamin A, B, C) yang melapisi sisi dalam membran inti. Lamina memberikan dukungan mekanis, mempertahankan bentuk nukleus, dan berperan dalam organisasi kromatin. Mutasi pada gen lamin menyebabkan penyakit langka yang disebut laminopati, termasuk sindrom Hutchinson-Gilford progeria (penuaan dini).</li>
+            <li><strong>Nukleoplasma:</strong> Cairan kental di dalam nukleus yang mengandung nukleotida, enzim, protein, dan faktor transkripsi. Mirip dengan sitoplasma tetapi memiliki komposisi ion yang berbeda.</li>
+            <li><strong>Nukleolus:</strong> Struktur padat tanpa membran di dalam nukleus yang merupakan tempat sintesis RNA ribosom (rRNA) dan perakitan subunit ribosom. Nukleolus terbentuk di sekitar daerah pengorganisasi nukleolus (NOR) pada kromosom akrosentrik (13, 14, 15, 21, 22 pada manusia).</li>
+            <li><strong>Kromatin:</strong> Kompleks DNA dan protein histon yang membentuk kromosom. Eukromatin adalah bentuk longgar yang aktif ditranskripsi, sedangkan heterokromatin adalah bentuk padat yang tidak aktif secara transkripsi.</li>
+          </ul>
+          
+          <div class="info-box">
+            <strong>Tahukah Kamu?</strong> Jika semua DNA dalam satu sel manusia direntangkan, panjangnya mencapai sekitar 2 meter. DNA ini harus dikemas ke dalam nukleus yang diameternya hanya sekitar 6 mikrometer. Ini setara dengan memasukkan benang sepanjang 40 km ke dalam bola tenis!
+          </div>
+          
+          <h4>Fungsi Utama</h4>
+          <ul>
+            <li><strong>Penyimpanan Materi Genetik:</strong> Melindungi DNA dari kerusakan oleh enzim dan radikal bebas di sitoplasma.</li>
+            <li><strong>Replikasi DNA:</strong> Proses penggandaan DNA terjadi di dalam nukleus sebelum pembelahan sel.</li>
+            <li><strong>Transkripsi:</strong> Sintesis mRNA dari template DNA. RNA polimerase II membaca gen dan menghasilkan pre-mRNA yang kemudian diproses (capping, splicing, polyadenylation).</li>
+            <li><strong>Regulasi Ekspresi Gen:</strong> Nukleus mengontrol gen mana yang diekspresikan melalui faktor transkripsi, modifikasi histon, dan metilasi DNA.</li>
+            <li><strong>Pemrosesan RNA:</strong> Splicing (pembuangan intron), penambahan 5' cap, dan 3' poly-A tail terjadi di nukleus sebelum mRNA diekspor ke sitoplasma.</li>
+            <li><strong>Perakitan Ribosom:</strong> Nukleolus mensintesis rRNA dan merakitnya dengan protein ribosom menjadi subunit 40S dan 60S.</li>
+          </ul>
+          
+          <h4>Transport Nukleus-Sitoplasma</h4>
+          <p>Pori inti mengatur lalu lintas molekul dengan sangat selektif. Protein yang perlu masuk ke nukleus (seperti faktor transkripsi dan histon) memiliki Nuclear Localization Signal (NLS) yang dikenali oleh importin. Sebaliknya, mRNA, tRNA, dan subunit ribosom yang perlu keluar memiliki Nuclear Export Signal (NES) yang dikenali oleh exportin. Proses ini membutuhkan energi dari GTP yang dihidrolisis oleh protein Ran.</p>
+          
+          <h4>Gangguan Terkait</h4>
+          <ul>
+            <li><strong>Kanker:</strong> Banyak kanker menunjukkan abnormalitas bentuk nukleus (pleomorfisme inti) yang digunakan sebagai kriteria diagnostik.</li>
+            <li><strong>Progeria:</strong> Mutasi gen LMNA menyebabkan penuaan dini akibat kerusakan lamina inti.</li>
+            <li><strong>Sindrom Down:</strong> Disebabkan oleh trisomi kromosom 21, terlihat dari jumlah kromosom abnormal di nukleus.</li>
+          </ul>
+        `);
+
+        add('mitochondria', 'Mitokondria', oCat, '⚡', '#e74c3c', `
+          <h4>Definisi & Gambaran Umum</h4>
+          <p>Mitokondria adalah organel bermembran ganda yang berfungsi sebagai pusat pembangkit energi sel eukariotik. Nama "mitokondria" berasal dari bahasa Yunani "mitos" (benang) dan "chondrion" (butiran), menggambarkan bentuknya di bawah mikroskop. Mitokondria sering disebut "the powerhouse of the cell" karena menghasilkan sebagian besar ATP melalui fosforilasi oksidatif.</p>
+          <p>Berdasarkan teori endosimbiosis yang diajukan Lynn Margulis pada tahun 1967, mitokondria berasal dari bakteri aerobik purba (kemungkinan dari kelompok Alphaproteobacteria) yang ditelan oleh sel eukariotik awal sekitar 1.5-2 miliar tahun lalu. Bukti teori ini meliputi: DNA sirkuler mirip bakteri, ribosom 70S, membran ganda, dan pembelahan dengan binary fission.</p>
+          
+          <h4>Struktur Detail</h4>
+          <ul>
+            <li><strong>Membran Luar:</strong> Halus, mengandung protein porin yang membentuk saluran besar. Permeabel terhadap molekul hingga 5000 Dalton. Mengandung enzim untuk metabolisme lipid.</li>
+            <li><strong>Ruang Antar Membran:</strong> Mengandung sitokrom c yang berperan dalam apoptosis. Konsentrasi ion mirip sitosol.</li>
+            <li><strong>Membran Dalam:</strong> Sangat impermeabel, terlipat membentuk krista. Rasio protein:lipid 3:1. Mengandung kompleks rantai transpor elektron (I-IV) dan ATP sintase (Kompleks V).</li>
+            <li><strong>Krista:</strong> Lipatan yang memperluas permukaan. Sel jantung memiliki krista rapat, sel hati lebih longgar.</li>
+            <li><strong>Matriks:</strong> Mengandung enzim siklus Krebs, mtDNA, ribosom mitokondria, tRNA, dan granula kalsium. pH sekitar 7.8.</li>
+          </ul>
+          
+          <div class="info-box">
+            <strong>Tahukah Kamu?</strong> Mitokondria menghasilkan panas setara suhu 50°C di dalam krista! Untungnya, sitosol mendinginkannya dengan cepat. Racun sianida mematikan karena menghambat Kompleks IV di rantai transpor elektron, menghentikan produksi ATP dalam hitungan menit.
+          </div>
+          
+          <h4>Fungsi Lengkap</h4>
+          <ul>
+            <li><strong>Produksi ATP:</strong> 1 glukosa → ~30-32 ATP melalui glikolisis, siklus Krebs, dan rantai transpor elektron.</li>
+            <li><strong>Beta-Oksidasi Asam Lemak:</strong> Pemecahan asam lemak menjadi Asetil-KoA.</li>
+            <li><strong>Siklus Urea:</strong> Detoksifikasi amonia di hati.</li>
+            <li><strong>Homeostasis Kalsium:</strong> Bekerja sama dengan RE mengatur Ca2+ untuk sinyal sel dan kontraksi otot.</li>
+            <li><strong>Apoptosis:</strong> Pelepasan sitokrom c mengaktifkan kaskade kaspase.</li>
+            <li><strong>Termogenesis:</strong> UCP1 di adiposit coklat menghasilkan panas.</li>
+            <li><strong>Sintesis Heme:</strong> Langkah pertama dan terakhir sintesis hemoglobin.</li>
+            <li><strong>Sintesis Steroid:</strong> Kolesterol → hormon steroid di adrenal dan gonad.</li>
+          </ul>
+          
+          <h4>DNA Mitokondria (mtDNA)</h4>
+          <p>Berukuran 16.569 bp pada manusia, mengandung 37 gen (13 protein, 22 tRNA, 2 rRNA). Diwariskan secara maternal. Tingkat mutasi 10x lebih tinggi dari DNA inti karena tidak memiliki histon pelindung dan sistem perbaikan yang efisien.</p>
+          
+          <h4>Dinamika Mitokondria</h4>
+          <ul>
+            <li><strong>Fisi:</strong> Pembelahan oleh protein Drp1.</li>
+            <li><strong>Fusi:</strong> Penggabungan oleh Mfn1/Mfn2 dan OPA1.</li>
+            <li><strong>Mitofagi:</strong> Autofagi selektif mitokondria rusak melalui jalur PINK1/Parkin.</li>
+          </ul>
+          
+          <h4>Gangguan Terkait</h4>
+          <ul>
+            <li><strong>Penyakit Mitokondria:</strong> MELAS, MERRF, sindrom Leigh akibat mutasi mtDNA.</li>
+            <li><strong>Parkinson:</strong> Mutasi PINK1/Parkin mengganggu mitofagi.</li>
+            <li><strong>Penuaan:</strong> Akumulasi mutasi mtDNA berkorelasi dengan penuaan.</li>
+            <li><strong>Kanker:</strong> Efek Warburg - sel kanker beralih ke glikolisis meski ada oksigen.</li>
+          </ul>
+        `);
+
+        add('rough-er', 'Retikulum Endoplasma Kasar', oCat, '🌐', '#f1c40f', `
+          <h4>Definisi & Gambaran Umum</h4>
+          <p>Retikulum Endoplasma Kasar (Rough ER) adalah jaringan membran yang ditempeli ribosom, membentuk sistem saluran dan kantung pipih (sisterna) yang terhubung dengan membran inti. Nama "retikulum" berasal dari bahasa Latin yang berarti "jaring kecil", sementara "endoplasma" berarti "di dalam sitoplasma". RE Kasar pertama kali diamati oleh Keith Porter dan Albert Claude pada tahun 1945 menggunakan mikroskop elektron.</p>
+          <p>RE Kasar sangat berkembang di sel-sel yang aktif mensintesis protein untuk sekresi, seperti sel plasma (menghasilkan antibodi), sel asinar pankreas (menghasilkan enzim pencernaan), dan sel goblet (menghasilkan mukus).</p>
+          
+          <h4>Struktur Detail</h4>
+          <ul>
+            <li><strong>Sisterna:</strong> Kantung pipih bertumpuk yang memperluas area permukaan untuk sintesis protein.</li>
+            <li><strong>Ribosom Terikat:</strong> Ribosom 80S menempel pada permukaan sitosolik RE melalui protein translokon (Sec61 kompleks).</li>
+            <li><strong>Lumen RE:</strong> Ruang di dalam sisterna tempat pelipatan protein terjadi. Mengandung chaperone seperti BiP (Hsp70) dan calnexin.</li>
+            <li><strong>Hubungan dengan Membran Inti:</strong> Membran luar inti adalah kelanjutan langsung dari membran RE.</li>
+          </ul>
+          
+          <h4>Fungsi Utama</h4>
+          <ul>
+            <li><strong>Sintesis Protein Sekretori:</strong> Protein yang akan disekresi, dimasukkan ke membran, atau dikirim ke lisosom disintesis di sini.</li>
+            <li><strong>Glikosilasi Awal:</strong> Penambahan oligosakarida ke asparagin (N-linked glycosylation) dimulai di RE.</li>
+            <li><strong>Pelipatan Protein:</strong> Chaperone membantu protein melipat dengan benar. Protein yang gagal melipat didegradasi melalui ERAD (ER-Associated Degradation).</li>
+            <li><strong>Kontrol Kualitas:</strong> Hanya protein yang terlipat benar yang diizinkan melanjutkan ke Golgi.</li>
+            <li><strong>Penyimpanan Kalsium:</strong> RE menyimpan Ca2+ dan melepaskannya saat sinyal (penting untuk kontraksi otot dan sinyal sel).</li>
+          </ul>
+          
+          <div class="info-box">
+            <strong>Signal Peptida:</strong> Protein yang ditakdirkan untuk RE memiliki urutan sinyal di N-terminal (15-30 asam amino hidrofobik). Signal Recognition Particle (SRP) mengenali urutan ini dan mengarahkan ribosom ke translokon di membran RE.
+          </div>
+        `);
+
+        add('smooth-er', 'Retikulum Endoplasma Halus', oCat, '🌐', '#f1c40f', `
+          <h4>Definisi & Gambaran Umum</h4>
+          <p>Retikulum Endoplasma Halus (Smooth ER) adalah jaringan membran tubular tanpa ribosom, melanjutkan dari RE Kasar. Berbeda dengan RE Kasar yang pipih, RE Halus berbentuk tabung yang saling berhubungan. RE Halus sangat berkembang di sel hati (hepatosit) untuk detoksifikasi, sel otot (retikulum sarkoplasmik) untuk penyimpanan kalsium, dan sel penghasil steroid.</p>
+          
+          <h4>Fungsi Utama</h4>
+          <ul>
+            <li><strong>Sintesis Lipid:</strong> Fosfolipid, kolesterol, dan steroid dibuat di sini.</li>
+            <li><strong>Detoksifikasi:</strong> Enzim sitokrom P450 di hati memodifikasi obat dan toksin agar lebih mudah diekskresi.</li>
+            <li><strong>Metabolisme Karbohidrat:</strong> Glukosa-6-fosfatase di RE hati melepaskan glukosa ke darah.</li>
+            <li><strong>Penyimpanan Kalsium:</strong> Retikulum sarkoplasmik di sel otot menyimpan dan melepaskan Ca2+ untuk kontraksi.</li>
+          </ul>
+          
+          <div class="highlight-box">
+            <strong>Fakta Menarik:</strong> Konsumsi alkohol kronis menyebabkan proliferasi besar-besaran RE Halus di hati, meningkatkan toleransi terhadap alkohol dan obat-obatan tertentu. Inilah mengapa pecandu alkohol memerlukan dosis anestesi yang lebih tinggi!
+          </div>
+        `);
+
+        add('ribosome', 'Ribosom', oCat, '●', '#2c3e50', `
+          <h4>Definisi</h4>
+          <p>Ribosom adalah kompleks ribonukleoprotein yang berfungsi sebagai tempat sintesis protein (translasi). Ditemukan oleh George Palade pada tahun 1950-an. Terdiri dari subunit kecil (40S) dan subunit besar (60S) yang bersama-sama membentuk ribosom 80S pada eukariota. Ribosom membaca kode genetik dari mRNA dan menerjemahkannya menjadi rantai polipeptida dengan bantuan tRNA.</p>
+          <p>Setiap sel manusia mengandung jutaan ribosom. Sel yang aktif mensintesis protein seperti sel pankreas dapat memiliki hingga 10 juta ribosom.</p>
+          
+          <h4>Struktur</h4>
+          <ul>
+            <li><strong>Subunit 40S:</strong> Mengandung rRNA 18S dan sekitar 33 protein. Tempat pengikatan mRNA dan pembacaan kodon.</li>
+            <li><strong>Subunit 60S:</strong> Mengandung rRNA 28S, 5.8S, 5S dan sekitar 49 protein. Memiliki aktivitas peptidil transferase (ribozim).</li>
+            <li><strong>Situs A (Aminoacyl):</strong> Tempat masuk tRNA yang membawa asam amino baru.</li>
+            <li><strong>Situs P (Peptidyl):</strong> Tempat tRNA yang membawa rantai polipeptida yang sedang tumbuh.</li>
+            <li><strong>Situs E (Exit):</strong> Tempat tRNA kosong keluar dari ribosom.</li>
+          </ul>
+          
+          <div class="info-box">
+            <strong>Kecepatan Sintesis:</strong> Ribosom eukariotik dapat menambahkan sekitar 2-6 asam amino per detik. Satu molekul mRNA dapat dibaca oleh banyak ribosom sekaligus membentuk polisom (poliribosom).
+          </div>
+        `);
+
+        add('golgi', 'Badan Golgi', oCat, '📦', '#f39c12', `
+          <h4>Definisi</h4>
+          <p>Badan Golgi (Golgi apparatus) adalah organel berbentuk tumpukan kantung pipih (sisterna) yang berfungsi memproses, mengemas, dan mendistribusikan protein dan lipid. Ditemukan oleh Camillo Golgi pada tahun 1898 menggunakan pewarnaan perak nitrat. Sering disebut "kantor pos sel" karena perannya dalam menyortir dan mengirim molekul ke tujuan yang tepat.</p>
+          
+          <h4>Struktur</h4>
+          <ul>
+            <li><strong>Sisi Cis:</strong> Wajah penerima, menerima vesikel dari RE.</li>
+            <li><strong>Sisterna Medial:</strong> Tempat modifikasi terjadi (glikosilasi, fosforilasi, sulfasi).</li>
+            <li><strong>Sisi Trans:</strong> Wajah pengirim, melepas vesikel ke membran plasma, lisosom, atau vesikel sekretori.</li>
+            <li><strong>Trans-Golgi Network (TGN):</strong> Pusat penyortiran utama.</li>
+          </ul>
+          
+          <h4>Fungsi</h4>
+          <ul>
+            <li><strong>Modifikasi Protein:</strong> Glikosilasi, sulfasi, fosforilasi.</li>
+            <li><strong>Penyortiran:</strong> Menentukan tujuan protein (membran, sekresi, lisosom).</li>
+            <li><strong>Sintesis Lisosom:</strong> Membentuk lisosom primer.</li>
+            <li><strong>Sintesis Dinding Sel:</strong> Pada tumbuhan, mensintesis pektin dan hemiselulosa.</li>
+          </ul>
+        `);
+
+        add('lysosome', 'Lisosom', oCat, '🔬', '#27ae60', `
+          <h4>Definisi</h4>
+          <p>Lisosom adalah organel berbentuk kantung yang mengandung enzim hidrolitik untuk pencernaan intraseluler. Ditemukan oleh Christian de Duve pada tahun 1955 (Nobel 1974). Disebut "kantung bunuh diri sel" karena enzimnya dapat mencerna seluruh sel saat apoptosis.</p>
+          
+          <h4>Karakteristik</h4>
+          <ul>
+            <li><strong>pH Asam (~5.0):</strong> Dipertahankan oleh pompa proton V-ATPase. Enzim lisosom optimal pada pH asam.</li>
+            <li><strong>50+ Enzim Hidrolitik:</strong> Protease, lipase, nuklease, glikosidase, fosfatase.</li>
+            <li><strong>Membran Lisosom:</strong> Sangat terglikosilasi untuk melindungi dari enzim di dalamnya.</li>
+          </ul>
+          
+          <h4>Fungsi</h4>
+          <ul>
+            <li><strong>Autofagi:</strong> Mendaur ulang organel tua atau rusak.</li>
+            <li><strong>Fagositosis:</strong> Mencerna patogen yang ditelan sel imun.</li>
+            <li><strong>Endositosis:</strong> Memproses material yang masuk sel.</li>
+            <li><strong>Krinafagi:</strong> Mendegradasi butiran sekretori yang tidak dilepaskan.</li>
+          </ul>
+          
+          <div class="highlight-box">
+            <strong>Gangguan:</strong> Penyakit Tay-Sachs disebabkan defisiensi enzim lisosom heksosaminidase A, menyebabkan akumulasi ganglioside di otak. Penyakit Gaucher disebabkan defisiensi glukoserebrosidase.
+          </div>
+        `);
+
+        add('cell-membrane', 'Membran Sel', oCat, '🧪', '#3498db', `
+          <h4>Definisi</h4>
+          <p>Membran sel (membran plasma) adalah lapisan ganda fosfolipid dengan protein tertanam yang membungkus seluruh sel, memisahkan isi sel dari lingkungan luar. Model strukturnya disebut "fluid mosaic model" yang diajukan oleh Singer dan Nicolson pada tahun 1972.</p>
+          
+          <h4>Komposisi</h4>
+          <ul>
+            <li><strong>Fosfolipid (50%):</strong> Kepala hidrofilik, ekor hidrofobik. Membentuk bilayer spontan.</li>
+            <li><strong>Kolesterol (20%):</strong> Menjaga fluiditas, mencegah kristalisasi saat dingin, mencegah terlalu cair saat panas.</li>
+            <li><strong>Protein (30%):</strong> Integral (transmembran) dan perifer. Fungsi: saluran, reseptor, enzim, penanda sel.</li>
+            <li><strong>Glikokaliks:</strong> Lapisan gula di permukaan luar untuk pengenalan sel.</li>
+          </ul>
+          
+          <h4>Fungsi</h4>
+          <ul>
+            <li><strong>Barier Selektif:</strong> Mengatur keluar masuk molekul.</li>
+            <li><strong>Komunikasi:</strong> Reseptor menerima sinyal dari luar.</li>
+            <li><strong>Adhesi Sel:</strong> Protein CAM menghubungkan sel satu sama lain.</li>
+            <li><strong>Potensial Membran:</strong> Perbedaan muatan listrik antara luar dan dalam.</li>
+          </ul>
+        `);
+
+        add('peroxisome', 'Peroksisom', 'organel-tambahan', '🧴', '#e74c3c', `
+          <h4>Definisi</h4>
+          <p>Peroksisom adalah organel kecil yang mengandung enzim oksidase dan katalase. Ditemukan oleh Christian de Duve pada tahun 1965. Berfungsi dalam detoksifikasi dan pemecahan asam lemak rantai sangat panjang (VLCFA).</p>
+          
+          <h4>Fungsi</h4>
+          <ul>
+            <li><strong>Beta-Oksidasi VLCFA:</strong> Asam lemak >22 karbon dipecah di sini.</li>
+            <li><strong>Detoksifikasi H2O2:</strong> Katalase mengubah H2O2 → H2O + O2.</li>
+            <li><strong>Sintesis Plasmalogen:</strong> Fosfolipid penting untuk myelin.</li>
+            <li><strong>Sintesis Asam Empedu:</strong> Di hati.</li>
+          </ul>
+          
+          <div class="highlight-box">
+            <strong>Gangguan:</strong> Sindrom Zellweger disebabkan kegagalan pembentukan peroksisom, menyebabkan akumulasi VLCFA dan kematian dini.
+          </div>
+        `);
+
+        add('centrosome', 'Sentrosom', 'organel-tambahan', '🎯', '#e74c3c', `
+          <h4>Definisi</h4>
+          <p>Sentrosom adalah pusat organisasi mikrotubulus (MTOC) utama sel hewan. Terdiri dari sepasang sentriol yang dikelilingi oleh materi perisentriolar (PCM). Berperan penting dalam pembentukan spindle mitosis dan organisasi sitoskeleton.</p>
+          
+          <h4>Struktur</h4>
+          <ul>
+            <li><strong>Sentriol:</strong> Silinder dengan struktur 9x3 mikrotubulus (9 triplet).</li>
+            <li><strong>PCM:</strong> Mengandung γ-tubulin ring complex yang menempelkan mikrotubulus.</li>
+          </ul>
+          
+          <h4>Fungsi</h4>
+          <ul>
+            <li><strong>Pembelahan Sel:</strong> Membentuk kutub spindle mitosis.</li>
+            <li><strong>Organisasi Sitoskeleton:</strong> Menempelkan dan mengatur mikrotubulus.</li>
+            <li><strong>Pembentukan Silia & Flagela:</strong> Sentriol menjadi badan basal.</li>
+          </ul>
+        `);
+
+        add('cytoskeleton', 'Sitoskeleton', 'organel-tambahan', '🏗️', '#7f8c8d', `
+          <h4>Definisi</h4>
+          <p>Sitoskeleton adalah jaringan serat protein yang memberikan bentuk, dukungan mekanis, dan jalur transportasi di dalam sel. Terdiri dari tiga jenis serat utama dengan ukuran dan fungsi berbeda.</p>
+          
+          <h4>Komponen</h4>
+          <ul>
+            <li><strong>Mikrofilamen (Aktin):</strong> Diameter 7 nm. Tersusun dari aktin. Fungsi: bentuk sel, kontraksi otot, sitokinesis, pseudopodia.</li>
+            <li><strong>Filamen Intermediet:</strong> Diameter 10 nm. Protein bervariasi (keratin, vimentin, lamin, neurofilamen). Fungsi: kekuatan mekanis.</li>
+            <li><strong>Mikrotubulus:</strong> Diameter 25 nm. Tersusun dari tubulin. Fungsi: jalur transport organel, spindle mitosis, silia/flagela.</li>
+          </ul>
+        `);
+
+        add('proteasome', 'Proteasom', 'organel-tambahan', '🗑️', '#c0392b', `
+          <h4>Definisi</h4>
+          <p>Proteasom adalah kompleks protein silinder yang mendegradasi protein yang rusak, salah lipat, atau tidak diperlukan. Merupakan bagian dari sistem ubiquitin-proteasome yang sangat penting untuk homeostasis protein.</p>
+          
+          <h4>Struktur</h4>
+          <ul>
+            <li><strong>20S Core:</strong> Silinder dengan aktivitas proteolitik (tripsin-like, kimotripsin-like, kaspase-like).</li>
+            <li><strong>19S Cap:</strong> Mengenali protein ter-ubiquitinasi, membuka lipatan, dan memasukkannya ke core.</li>
+          </ul>
+          
+          <div class="info-box">
+            <strong>Fakta:</strong> Inhibitor proteasom seperti bortezomib digunakan dalam terapi multiple myeloma karena sel kanker lebih sensitif terhadap akumulasi protein rusak.
+          </div>
+        `);
+
+        add('nucleolus', 'Nukleolus', oCat, '🎪', '#9b59b6', `
+          <h4>Definisi</h4>
+          <p>Nukleolus adalah struktur padat tanpa membran di dalam nukleus yang merupakan pusat produksi ribosom. Terbentuk di sekitar gen rRNA pada kromosom akrosentrik. Nukleolus adalah contoh condensate biomolekuler yang terbentuk melalui phase separation.</p>
+          
+          <h4>Fungsi</h4>
+          <ul>
+            <li><strong>Sintesis rRNA:</strong> RNA polimerase I mentranskripsi gen rRNA 45S.</li>
+            <li><strong>Pemrosesan rRNA:</strong> 45S → 18S, 5.8S, 28S.</li>
+            <li><strong>Perakitan Ribosom:</strong> rRNA + protein ribosom → subunit 40S dan 60S.</li>
+          </ul>
+        `);
+
+        add('nuclear-pore', 'Pori Inti', oCat, '🚪', '#9b59b6', `
+          <h4>Definisi</h4>
+          <p>Pori inti adalah saluran selektif pada membran inti yang mengatur lalu lintas molekul antara nukleus dan sitoplasma. Kompleks proteinnya disebut Nuclear Pore Complex (NPC).</p>
+          
+          <h4>Karakteristik</h4>
+          <ul>
+            <li><strong>Ukuran:</strong> ~120 MDa, terdiri dari ~30 protein nukleoporin.</li>
+            <li><strong>Jumlah:</strong> 3000-4000 per sel mamalia.</li>
+            <li><strong>Transport Pasif:</strong> Molekul <40 kDa dapat berdifusi bebas.</li>
+            <li><strong>Transport Aktif:</strong> Molekul besar memerlukan sinyal NLS/NES dan dimediasi importin/exportin.</li>
+          </ul>
+        `);
+
+        add('vesicle', 'Vesikel Transport', oCat, '📬', '#f39c12', `
+          <h4>Definisi</h4>
+          <p>Vesikel adalah kantung kecil bermembran yang mengangkut molekul antar kompartemen sel. Terbentuk melalui budding dari membran donor dan fusi dengan membran target.</p>
+          
+          <h4>Jenis Vesikel</h4>
+          <ul>
+            <li><strong>COPII:</strong> Dari RE ke Golgi.</li>
+            <li><strong>COPI:</strong> Retrograde Golgi ke RE.</li>
+            <li><strong>Clathrin-coated:</strong> Dari membran plasma (endositosis) dan TGN ke lisosom.</li>
+          </ul>
+        `);
+
+        add('vacuole', 'Vakuola Sel Hewan', 'organel-tambahan', '💧', '#3498db', `
+          <h4>Definisi</h4>
+          <p>Vakuola pada sel hewan lebih kecil dan lebih banyak dibanding sel tumbuhan. Berfungsi dalam penyimpanan sementara, transport, dan pencernaan intraseluler.</p>
+          
+          <h4>Fungsi</h4>
+          <ul>
+            <li><strong>Endositosis:</strong> Mencerna material yang masuk.</li>
+            <li><strong>Eksositosis:</strong> Melepaskan produk sel.</li>
+            <li><strong>Kontraktil:</strong> Pada protista air tawar, memompa kelebihan air.</li>
+          </ul>
+        `);
+
+        // KATEGORI 2: MEMBRAN & TRANSPORT (10 item)
+        const mCat = 'membran-transport';
+        add('phospholipid', 'Fosfolipid', mCat, '🧼', '#3498db', `
+          <h4>Definisi</h4>
+          <p>Fosfolipid adalah molekul amfipatik yang menjadi komponen utama membran sel. Memiliki kepala hidrofilik (gliserol-fosfat + gugus polar) dan dua ekor hidrofobik (asam lemak). Sifat amfipatik ini memungkinkan fosfolipid membentuk bilayer spontan di lingkungan air.</p>
+          
+          <h4>Jenis Fosfolipid</h4>
+          <ul>
+            <li><strong>Fosfatidilkolin (PC):</strong> Paling banyak, di lapisan luar.</li>
+            <li><strong>Fosfatidilserin (PS):</strong> Di lapisan dalam, muncul di luar saat apoptosis sebagai sinyal "makan saya" ke fagosit.</li>
+            <li><strong>Fosfatidiletanolamin (PE):</strong> Bentuk kerucut, mendorong kelengkungan membran.</li>
+            <li><strong>Fosfatidilinositol (PI):</strong> Prekursor second messenger IP3 dan DAG.</li>
+            <li><strong>Sfingomielin:</strong> Kaya di myelin sel saraf.</li>
+          </ul>
+        `);
+
+        add('diffusion', 'Difusi Sederhana', mCat, '🌊', '#16a085', `
+          <h4>Definisi</h4>
+          <p>Difusi adalah pergerakan molekul dari area konsentrasi tinggi ke rendah tanpa memerlukan energi. Molekul kecil nonpolar (O2, CO2, N2) dan molekul polar kecil tanpa muatan (air, urea) dapat berdifusi langsung melalui bilayer fosfolipid.</p>
+          
+          <h4>Hukum Fick</h4>
+          <p>Laju difusi = (Koefisien permeabilitas × Luas permukaan × Perbedaan konsentrasi) / Ketebalan membran. Molekul dengan koefisien partisi minyak/air tinggi lebih mudah melewati membran.</p>
+        `);
+
+        add('osmosis', 'Osmosis', mCat, '💦', '#16a085', `
+          <h4>Definisi</h4>
+          <p>Osmosis adalah difusi air melalui membran semipermeabel dari larutan hipotonik (konsentrasi zat terlarut rendah) ke hipertonik (konsentrasi tinggi). Air bergerak untuk menyamakan konsentrasi di kedua sisi membran.</p>
+          
+          <h4>Efek pada Sel</h4>
+          <ul>
+            <li><strong>Isotonik:</strong> Sel normal.</li>
+            <li><strong>Hipotonik:</strong> Sel membengkak, bisa lisis.</li>
+            <li><strong>Hipertonik:</strong> Sel mengerut (krenasi).</li>
+          </ul>
+        `);
+
+        add('active-transport', 'Transport Aktif', mCat, '⛽', '#e74c3c', `
+          <h4>Definisi</h4>
+          <p>Transport aktif adalah pergerakan molekul melawan gradien konsentrasi, memerlukan energi (ATP). Dilakukan oleh protein pompa.</p>
+          
+          <h4>Contoh</h4>
+          <ul>
+            <li><strong>Na+/K+ ATPase:</strong> 3 Na+ keluar, 2 K+ masuk per ATP. Menjaga gradien elektrokimia.</li>
+            <li><strong>Ca2+ ATPase:</strong> Memompa Ca2+ keluar sel atau ke RE.</li>
+            <li><strong>H+ ATPase:</strong> Mengasamkan lisosom dan lambung.</li>
+          </ul>
+        `);
+
+        add('endocytosis', 'Endositosis', mCat, '📥', '#8e44ad', `
+          <h4>Definisi</h4>
+          <p>Endositosis adalah proses memasukkan material ke dalam sel dengan melipat membran membentuk vesikel.</p>
+          
+          <h4>Jenis</h4>
+          <ul>
+            <li><strong>Fagositosis:</strong> "Makan sel" - menelan partikel besar seperti bakteri.</li>
+            <li><strong>Pinositosis:</strong> "Minum sel" - mengambil cairan dan molekul terlarut.</li>
+            <li><strong>Endositosis Bermediasi Reseptor:</strong> Pengambilan spesifik melalui reseptor di coated pit.</li>
+          </ul>
+        `);
+
+        add('exocytosis', 'Eksositosis', mCat, '📤', '#8e44ad', `
+          <h4>Definisi</h4>
+          <p>Eksositosis adalah proses mengeluarkan material dari sel dengan fusi vesikel ke membran plasma.</p>
+          
+          <h4>Jalur</h4>
+          <ul>
+            <li><strong>Konstitutif:</strong> Terus-menerus, untuk komponen membran dan protein ekstraseluler.</li>
+            <li><strong>Terregulasi:</strong> Dipicu sinyal, seperti pelepasan insulin atau neurotransmitter.</li>
+          </ul>
+        `);
+
+        add('gap-junction', 'Gap Junction', mCat, '🔗', '#1abc9c', `
+          <h4>Definisi</h4>
+          <p>Gap junction adalah saluran yang menghubungkan sitoplasma dua sel tetangga, memungkinkan lewatnya ion dan molekul kecil hingga ~1 kDa. Dibentuk oleh protein connexin yang membentuk connexon (hemichannel).</p>
+          
+          <h4>Fungsi</h4>
+          <ul>
+            <li><strong>Sinapsis Listrik:</strong> Di otot jantung dan neuron, memungkinkan propagasi cepat potensial aksi.</li>
+            <li><strong>Nutrisi:</strong> Di lensa mata dan tulang, sel berbagi metabolit.</li>
+          </ul>
+        `);
+
+        add('tight-junction', 'Tight Junction', mCat, '🔒', '#1abc9c', `
+          <h4>Definisi</h4>
+          <p>Tight junction adalah penghalang kedap yang menyegel ruang antar sel epitel, mencegah kebocoran molekul. Dibentuk oleh protein claudin dan occludin.</p>
+          
+          <h4>Fungsi</h4>
+          <ul>
+            <li><strong>Blood-Brain Barrier:</strong> Melindungi otak dari zat berbahaya.</li>
+            <li><strong>Epitel Usus:</strong> Mencegah bakteri masuk ke aliran darah.</li>
+          </ul>
+        `);
+
+        add('desmosome', 'Desmosom', mCat, '🧲', '#1abc9c', `
+          <h4>Definisi</h4>
+          <p>Desmosom adalah perekat kuat yang menghubungkan sel satu sama lain, memberikan kekuatan mekanis. Protein cadherin di membran sel terikat ke filamen intermediet di dalam sel.</p>
+          
+          <h4>Lokasi</h4>
+          <p>Banyak di jaringan yang mengalami tekanan mekanis: kulit, otot jantung, serviks. Pada penyakit autoimun pemfigus, antibodi menyerang desmoglein (protein desmosom) menyebabkan kulit melepuh.</p>
+        `);
+
+        add('sodium-potassium-pump', 'Pompa Na+/K+ ATPase', mCat, '🔋', '#e74c3c', `
+          <h4>Definisi</h4>
+          <p>Pompa Na+/K+ adalah protein transmembran yang menggunakan energi ATP untuk memompa 3 ion Na+ keluar dan 2 ion K+ masuk melawan gradien konsentrasi. Pompa ini bersifat elektrogenik karena menghasilkan perbedaan muatan.</p>
+          
+          <h4>Fungsi</h4>
+          <ul>
+            <li><strong>Potensial Membran:</strong> Menjaga gradien Na+ dan K+ untuk potensial istirahat neuron.</li>
+            <li><strong>Volume Sel:</strong> Mencegah pembengkakan sel dengan mengontrol osmolaritas.</li>
+            <li><strong>Transport Sekunder:</strong> Gradien Na+ digunakan untuk transport glukosa dan asam amino.</li>
+          </ul>
+          
+          <div class="info-box">
+            <strong>Fakta:</strong> Pompa Na+/K+ menggunakan sekitar 30% ATP sel saat istirahat, dan hingga 70% di neuron yang aktif!
+          </div>
+        `);
+
+        // KATEGORI 3: MOLEKUL PENTING (10 item)
+        const molCat = 'molekul';
+        add('dna', 'DNA', molCat, '🧬', '#8e44ad', `
+          <h4>Definisi</h4>
+          <p>Asam deoksiribonukleat (DNA) adalah molekul yang menyimpan informasi genetik semua organisme. Struktur double helix ditemukan oleh Watson dan Crick pada tahun 1953 berdasarkan data difraksi sinar-X dari Rosalind Franklin.</p>
+          
+          <h4>Struktur</h4>
+          <ul>
+            <li><strong>Double Helix:</strong> Dua untai antiparalel (5'→3' dan 3'→5').</li>
+            <li><strong>Nukleotida:</strong> Basa nitrogen (A, T, G, C) + deoksiribosa + fosfat.</li>
+            <li><strong>Pasangan Basa:</strong> A=T (2 ikatan hidrogen), G≡C (3 ikatan hidrogen).</li>
+            <li><strong>Major & Minor Groove:</strong> Tempat protein pengikat DNA berinteraksi.</li>
+          </ul>
+          
+          <h4>Fungsi</h4>
+          <ul>
+            <li><strong>Penyimpanan Informasi:</strong> Kode genetik tersimpan dalam urutan basa.</li>
+            <li><strong>Replikasi:</strong> Penggandaan sebelum pembelahan sel.</li>
+            <li><strong>Transkripsi:</strong> Template untuk sintesis RNA.</li>
+          </ul>
+          
+          <div class="info-box">
+            <strong>Fakta:</strong> Jika semua DNA dalam satu tubuh manusia direntangkan, panjangnya bisa mencapai 2x diameter tata surya (sekitar 120 miliar km)!
+          </div>
+        `);
+
+        add('atp', 'ATP (Adenosin Trifosfat)', molCat, '⚡', '#f1c40f', `
+          <h4>Definisi</h4>
+          <p>ATP adalah molekul pembawa energi utama sel. Terdiri dari adenin + ribosa + tiga gugus fosfat. Energi tersimpan dalam ikatan fosfoanhidrida antara fosfat kedua-ketiga dan pertama-kedua.</p>
+          
+          <h4>Karakteristik</h4>
+          <ul>
+            <li><strong>Hidrolisis ATP → ADP + Pi:</strong> Melepaskan 7.3 kcal/mol (30.5 kJ/mol).</li>
+            <li><strong>Daur Ulang:</strong> Setiap molekul ATP didaur ulang sekitar 1000-1500 kali per hari.</li>
+            <li><strong>Produksi Harian:</strong> Tubuh manusia menghasilkan dan menggunakan sekitar 40 kg ATP per hari!</li>
+          </ul>
+          
+          <h4>Fungsi</h4>
+          <ul>
+            <li>Sumber energi untuk reaksi biokimia.</li>
+            <li>Transport aktif (pompa ion).</li>
+            <li>Kontraksi otot (siklus aktin-miosin).</li>
+            <li>Sintesis makromolekul.</li>
+            <li>Sinyal sel (substrat untuk cAMP).</li>
+          </ul>
+        `);
+
+        add('mrna', 'mRNA (Messenger RNA)', molCat, '📝', '#e74c3c', `
+          <h4>Definisi</h4>
+          <p>mRNA adalah salinan gen yang membawa informasi dari DNA di nukleus ke ribosom di sitoplasma untuk sintesis protein. Ditemukan oleh Jacob dan Monod pada tahun 1961.</p>
+          
+          <h4>Struktur</h4>
+          <ul>
+            <li><strong>5' Cap:</strong> 7-metilguanosin untuk stabilitas dan inisiasi translasi.</li>
+            <li><strong>5' UTR:</strong> Mengandung sekuens Kozak untuk inisiasi.</li>
+            <li><strong>Coding Sequence:</strong> Kodon yang mengkode asam amino.</li>
+            <li><strong>3' UTR:</strong> Mengandung sekuens regulasi.</li>
+            <li><strong>Poly-A Tail:</strong> Ekor adenin untuk stabilitas.</li>
+          </ul>
+        `);
+
+        add('trna', 'tRNA (Transfer RNA)', molCat, '🚚', '#f39c12', `
+          <h4>Definisi</h4>
+          <p>tRNA adalah molekul RNA kecil (~76 nukleotida) yang membawa asam amino ke ribosom saat translasi. Memiliki struktur "cloverleaf" dengan antikodon yang berpasangan dengan kodon mRNA.</p>
+          
+          <h4>Karakteristik</h4>
+          <ul>
+            <li><strong>Aminoacyl-tRNA Synthetase:</strong> Enzim yang menempelkan asam amino yang tepat ke tRNA.</li>
+            <li><strong>Wobble Hypothesis:</strong> Basa ketiga antikodon dapat berpasangan longgar, memungkinkan satu tRNA membaca beberapa kodon.</li>
+          </ul>
+        `);
+
+        add('glucose', 'Glukosa', molCat, '🍬', '#e67e22', `
+          <h4>Definisi</h4>
+          <p>Glukosa (C6H12O6) adalah monosakarida dan sumber energi utama sel. Kadar glukosa darah normal 70-110 mg/dL (puasa).</p>
+          
+          <h4>Metabolisme</h4>
+          <ul>
+            <li><strong>Glikolisis:</strong> Glukosa → 2 piruvat + 2 ATP.</li>
+            <li><strong>Glikogenesis:</strong> Penyimpanan sebagai glikogen.</li>
+            <li><strong>Glikogenolisis:</strong> Pemecahan glikogen.</li>
+            <li><strong>Glukoneogenesis:</strong> Sintesis glukosa baru.</li>
+          </ul>
+        `);
+
+        add('calcium', 'Ion Kalsium (Ca2+)', molCat, '🦴', '#3498db', `
+          <h4>Definisi</h4>
+          <p>Kalsium adalah second messenger universal dalam sel. Konsentrasi Ca2+ sitosolik sangat rendah (~100 nM) dibanding di luar sel (~1-2 mM) dan di RE, menciptakan gradien besar untuk sinyal cepat.</p>
+          
+          <h4>Fungsi</h4>
+          <ul>
+            <li>Kontraksi otot (troponin-C).</li>
+            <li>Eksositosis neurotransmitter.</li>
+            <li>Aktivasi enzim (calmodulin).</li>
+            <li>Fertilisasi (cortical reaction).</li>
+            <li>Apoptosis (mitochondrial Ca2+ overload).</li>
+          </ul>
+        `);
+
+        add('nadh', 'NADH', molCat, '🔋', '#f39c12', `
+          <h4>Definisi</h4>
+          <p>Nicotinamide Adenine Dinucleotide (NADH) adalah pembawa elektron utama dalam metabolisme. Dibentuk dari NAD+ melalui reduksi.</p>
+          
+          <h4>Fungsi</h4>
+          <ul>
+            <li>Menyumbang elektron ke rantai transpor elektron (Kompleks I).</li>
+            <li>Menghasilkan ~2.5 ATP per NADH yang dioksidasi.</li>
+            <li>Juga digunakan dalam reaksi biosintesis.</li>
+          </ul>
+        `);
+
+        add('camp', 'cAMP', molCat, '📡', '#3498db', `
+          <h4>Definisi</h4>
+          <p>Siklik AMP (cAMP) adalah second messenger yang disintesis dari ATP oleh adenilat siklase. Didegradasi oleh fosfodiesterase.</p>
+          
+          <h4>Fungsi</h4>
+          <ul>
+            <li>Aktivasi Protein Kinase A (PKA).</li>
+            <li>Mediasi sinyal hormon (epinefrin, glukagon).</li>
+            <li>Regulasi ekspresi gen (CREB).</li>
+          </ul>
+        `);
+
+        add('ubiquitin', 'Ubiquitin', molCat, '🏷️', '#c0392b', `
+          <h4>Definisi</h4>
+          <p>Ubiquitin adalah protein kecil (76 asam amino) yang menempel ke protein target, menandainya untuk degradasi oleh proteasom. Ditemukan oleh Aaron Ciechanover, Avram Hershko, dan Irwin Rose (Nobel 2004).</p>
+          
+          <h4>Proses</h4>
+          <ul>
+            <li><strong>E1 (Activating):</strong> Mengaktifkan ubiquitin dengan ATP.</li>
+            <li><strong>E2 (Conjugating):</strong> Memindahkan ubiquitin.</li>
+            <li><strong>E3 (Ligase):</strong> Menempelkan ubiquitin ke target spesifik.</li>
+            <li><strong>Rantai Poliubiquitin:</strong> Sinyal degradasi oleh proteasom 26S.</li>
+          </ul>
+        `);
+
+        add('nitric-oxide', 'Nitrit Oksida (NO)', molCat, '💨', '#16a085', `
+          <h4>Definisi</h4>
+          <p>Nitrit oksida adalah gas yang berfungsi sebagai molekul sinyal. Dibuat dari L-arginin oleh enzim Nitric Oxide Synthase (NOS).</p>
+          
+          <h4>Fungsi</h4>
+          <ul>
+            <li><strong>Vasodilatasi:</strong> Merelaksasi otot polos pembuluh darah.</li>
+            <li><strong>Neurotransmiter:</strong> Di otak, berperan dalam memori.</li>
+            <li><strong>Imun:</strong> Makrofag menggunakan NO untuk membunuh patogen.</li>
+          </ul>
+          
+          <div class="info-box">
+            <strong>Fakta:</strong> Viagra bekerja dengan menghambat degradasi cGMP yang diproduksi sebagai respons terhadap NO, memperpanjang vasodilatasi!
+          </div>
+        `);
+
+        // KATEGORI 4: ENZIM (8 item)
+        const eCat = 'enzim';
+        add('catalase', 'Katalase', eCat, '🧪', '#e74c3c', `
+          <h4>Definisi</h4>
+          <p>Katalase adalah enzim yang mengkatalisis penguraian hidrogen peroksida (H2O2) menjadi air dan oksigen. Merupakan salah satu enzim dengan turnover number tertinggi: satu molekul katalase dapat menguraikan 5 juta molekul H2O2 per detik!</p>
+          
+          <h4>Reaksi</h4>
+          <p>2 H2O2 → 2 H2O + O2</p>
+          
+          <h4>Lokasi</h4>
+          <p>Peroksisom di hampir semua sel, terutama tinggi di hati dan eritrosit.</p>
+        `);
+
+        add('dna-polymerase', 'DNA Polimerase', eCat, '🔧', '#8e44ad', `
+          <h4>Definisi</h4>
+          <p>DNA polimerase adalah enzim yang mensintesis untai DNA baru menggunakan untai template. Membutuhkan primer dengan ujung 3'-OH bebas dan menambahkan nukleotida ke arah 5'→3'.</p>
+          
+          <h4>Jenis pada Eukariota</h4>
+          <ul>
+            <li><strong>DNA Pol α:</strong> Sintesis primer RNA.</li>
+            <li><strong>DNA Pol δ:</strong> Sintesis lagging strand.</li>
+            <li><strong>DNA Pol ε:</strong> Sintesis leading strand.</li>
+            <li><strong>DNA Pol γ:</strong> Replikasi mtDNA.</li>
+          </ul>
+          
+          <h4>Proofreading</h4>
+          <p>Aktivitas eksonuklease 3'→5' memungkinkan koreksi kesalahan, menurunkan tingkat kesalahan menjadi 1 per 10^9 basa.</p>
+        `);
+
+        add('atp-synthase', 'ATP Sintase', eCat, '⚙️', '#e74c3c', `
+          <h4>Definisi</h4>
+          <p>ATP sintase adalah motor molekuler yang menghasilkan ATP dari ADP + Pi menggunakan energi gradien proton. Terdiri dari F0 (saluran proton di membran) dan F1 (kepala katalitik di matriks).</p>
+          
+          <h4>Mekanisme</h4>
+          <p>Aliran proton melalui F0 memutar rotor, menyebabkan perubahan konformasi di F1 yang mengkatalisis sintesis ATP. Ini disebut mekanisme "binding change" atau "rotary catalysis".</p>
+        `);
+
+        add('helicase', 'Helikase', eCat, '🔓', '#2980b9', `
+          <h4>Definisi</h4>
+          <p>Helikase adalah enzim yang membuka untai ganda DNA dengan memutus ikatan hidrogen antar basa. Memerlukan energi dari hidrolisis ATP.</p>
+          
+          <h4>Fungsi</h4>
+          <ul>
+            <li>Replikasi DNA (MCM helicase).</li>
+            <li>Transkripsi.</li>
+            <li>Perbaikan DNA.</li>
+            <li>Rekombinasi.</li>
+          </ul>
+        `);
+
+        add('telomerase', 'Telomerase', eCat, '⏳', '#9b59b6', `
+          <h4>Definisi</h4>
+          <p>Telomerase adalah enzim yang memperpanjang telomer (ujung kromosom). Mengandung komponen RNA (TERC) yang berfungsi sebagai template dan komponen protein (TERT) dengan aktivitas reverse transcriptase.</p>
+          
+          <h4>Signifikansi</h4>
+          <ul>
+            <li><strong>Sel Punca & Germinal:</strong> Aktif, mempertahankan panjang telomer.</li>
+            <li><strong>Sel Somatik:</strong> Tidak aktif, telomer memendek setiap pembelahan → penuaan.</li>
+            <li><strong>Kanker:</strong> 85-90% kanker mengaktifkan kembali telomerase untuk immortalitas.</li>
+          </ul>
+        `);
+
+        add('hexokinase', 'Heksokinase', eCat, '🔑', '#e67e22', `
+          <h4>Definisi</h4>
+          <p>Heksokinase mengkatalisis langkah pertama glikolisis: fosforilasi glukosa menjadi glukosa-6-fosfat. Ini menjebak glukosa di dalam sel karena G6P tidak bisa melewati transporter glukosa.</p>
+          
+          <h4>Isoenzim</h4>
+          <ul>
+            <li><strong>Heksokinase I-III:</strong> Afinitas tinggi, dihambat G6P.</li>
+            <li><strong>Heksokinase IV (Glukokinase):</strong> Afinitas rendah, di hati dan pankreas, tidak dihambat G6P.</li>
+          </ul>
+        `);
+
+        add('ligase', 'DNA Ligase', eCat, '🪡', '#2980b9', `
+          <h4>Definisi</h4>
+          <p>DNA ligase menyambung fragmen DNA dengan membentuk ikatan fosfodiester. Penting untuk menyambung fragmen Okazaki di lagging strand dan dalam perbaikan DNA.</p>
+        `);
+
+        add('rna-polymerase', 'RNA Polimerase II', eCat, '📝', '#8e44ad', `
+          <h4>Definisi</h4>
+          <p>RNA Polimerase II mentranskripsi gen pengkode protein menjadi mRNA. Membutuhkan faktor transkripsi umum (TFIIA, B, D, E, F, H) untuk inisiasi.</p>
+          
+          <h4>Proses</h4>
+          <ul>
+            <li><strong>Inisiasi:</strong> TFIID mengikat TATA box, merekrut kompleks pre-inisiasi.</li>
+            <li><strong>Elongasi:</strong> RNA Pol II bergerak sepanjang template.</li>
+            <li><strong>Terminasi:</strong> Sinyal poliadenilasi memicu pelepasan.</li>
+          </ul>
+        `);
+
+        // KATEGORI 5: SIKLUS SEL (8 item)
+        const sCat = 'siklus-sel';
+        add('mitosis', 'Mitosis', sCat, '🔁', '#2ecc71', `
+          <h4>Definisi</h4>
+          <p>Mitosis adalah proses pembelahan sel yang menghasilkan dua sel anak identik secara genetik. Terdiri dari profase, metafase, anafase, dan telofase, diikuti sitokinesis.</p>
+          
+          <h4>Tahapan</h4>
+          <ul>
+            <li><strong>Profase:</strong> Kromosom memadat, membran inti hancur, spindle terbentuk.</li>
+            <li><strong>Metafase:</strong> Kromosom berjajar di ekuator.</li>
+            <li><strong>Anafase:</strong> Kromatid saudara terpisah ke kutub.</li>
+            <li><strong>Telofase:</strong> Membran inti terbentuk kembali.</li>
+            <li><strong>Sitokinesis:</strong> Pembelahan sitoplasma.</li>
+          </ul>
+        `);
+
+        add('meiosis', 'Meiosis', sCat, '🔄', '#9b59b6', `
+          <h4>Definisi</h4>
+          <p>Meiosis adalah pembelahan sel yang menghasilkan gamet haploid. Terdiri dari dua pembelahan berturut-turut: Meiosis I (reduksi) dan Meiosis II (ekuasi).</p>
+          
+          <h4>Fitur Unik</h4>
+          <ul>
+            <li><strong>Crossing Over:</strong> Pertukaran materi genetik antar kromosom homolog di profase I.</li>
+            <li><strong>Independent Assortment:</strong> Pemisahan acak kromosom menghasilkan variasi genetik.</li>
+          </ul>
+          
+          <div class="info-box">
+            <strong>Fakta:</strong> Satu sel germinal menghasilkan 4 sperma pada pria, tapi hanya 1 ovum fungsional pada wanita (3 badan polar didegradasi).
+          </div>
+        `);
+
+        add('p53', 'p53 - Guardian of the Genome', sCat, '🛡️', '#c0392b', `
+          <h4>Definisi</h4>
+          <p>p53 adalah protein tumor suppressor yang disebut "guardian of the genome". Diaktivasi saat kerusakan DNA, menghentikan siklus sel di G1/S checkpoint untuk perbaikan, atau memicu apoptosis jika kerusakan terlalu parah.</p>
+          
+          <h4>Signifikansi</h4>
+          <p>Mutasi p53 ditemukan di lebih dari 50% kanker manusia. Sindrom Li-Fraumeni disebabkan mutasi germline p53, menyebabkan risiko kanker sangat tinggi.</p>
+        `);
+
+        add('apoptosis', 'Apotosis', sCat, '💀', '#2c3e50', `
+          <h4>Definisi</h4>
+          <p>Apotosis adalah kematian sel terprogram yang terjadi secara teratur tanpa inflamasi. Berbeda dengan nekrosis yang tidak teratur dan menyebabkan peradangan.</p>
+          
+          <h4>Jalur</h4>
+          <ul>
+            <li><strong>Intrinsik (Mitokondria):</strong> Pelepasan sitokrom c → kaskade kaspase.</li>
+            <li><strong>Ekstrinsik (Reseptor Kematian):</strong> FasL/Fas, TNF.</li>
+          </ul>
+          
+          <h4>Signifikansi</h4>
+          <p>~50-70 miliar sel mengalami apoptosis per hari di tubuh manusia dewasa. Kegagalan apoptosis adalah ciri kanker, sementara apoptosis berlebihan terjadi di penyakit neurodegeneratif.</p>
+        `);
+
+        add('cyclin', 'Siklin', sCat, '⏰', '#f39c12', `
+          <h4>Definisi</h4>
+          <p>Siklin adalah protein yang levelnya berosilasi selama siklus sel, mengaktifkan Cyclin-Dependent Kinase (CDK).</p>
+          
+          <h4>Jenis</h4>
+          <ul>
+            <li><strong>Siklin D:</strong> G1, sensor mitogen.</li>
+            <li><strong>Siklin E:</strong> Transisi G1/S.</li>
+            <li><strong>Siklin A:</strong> S phase dan G2.</li>
+            <li><strong>Siklin B:</strong> Mitosis.</li>
+          </ul>
+        `);
+
+        add('cdk', 'CDK (Cyclin-Dependent Kinase)', sCat, '🔑', '#f39c12', `
+          <h4>Definisi</h4>
+          <p>CDK adalah kinase yang hanya aktif saat terikat siklin. Memfosforilasi protein target untuk mendorong progresi siklus sel.</p>
+        `);
+
+        add('interphase', 'Interfase', sCat, '⏸️', '#2ecc71', `
+          <h4>Definisi</h4>
+          <p>Interfase adalah periode antara pembelahan sel, terdiri dari G1 (pertumbuhan), S (replikasi DNA), dan G2 (persiapan mitosis). Mencakup ~90% waktu siklus sel.</p>
+        `);
+
+        add('cytokinesis', 'Sitokinesis', sCat, '✂️', '#2ecc71', `
+          <h4>Definisi</h4>
+          <p>Sitokinesis adalah pembelahan sitoplasma setelah mitosis. Pada sel hewan, cincin aktin-miosin membentuk cleavage furrow yang menjepit sel menjadi dua.</p>
+        `);
+
+        // KATEGORI 6: METABOLISME (8 item)
+        const metCat = 'metabolisme';
+        add('glycolysis', 'Glikolisis', metCat, '🔥', '#e67e22', `
+          <h4>Definisi</h4>
+          <p>Glikolisis adalah jalur metabolisme yang memecah 1 molekul glukosa menjadi 2 piruvat, menghasilkan 2 ATP dan 2 NADH. Terjadi di sitoplasma, tidak memerlukan oksigen.</p>
+          
+          <h4>Tahapan</h4>
+          <ul>
+            <li><strong>Fase Investasi Energi (5 langkah):</strong> Menggunakan 2 ATP.</li>
+            <li><strong>Fase Pembayaran (5 langkah):</strong> Menghasilkan 4 ATP dan 2 NADH.</li>
+          </ul>
+          
+          <h4>Enzim Kunci</h4>
+          <p>Heksokinase, fosfofruktokinase-1 (PFK-1), piruvat kinase. PFK-1 adalah enzim pengatur utama, dihambat ATP dan diaktifkan AMP.</p>
+        `);
+
+        add('krebs-cycle', 'Siklus Krebs', metCat, '🔄', '#e74c3c', `
+          <h4>Definisi</h4>
+          <p>Siklus Krebs (Siklus Asam Sitrat) mengoksidasi Asetil-KoA menjadi CO2, menghasilkan NADH, FADH2, dan GTP. Terjadi di matriks mitokondria.</p>
+          
+          <h4>Produk per Asetil-KoA</h4>
+          <p>3 NADH + 1 FADH2 + 1 GTP + 2 CO2</p>
+        `);
+
+        add('electron-transport-chain', 'Rantai Transpor Elektron', metCat, '⚡', '#e74c3c', `
+          <h4>Definisi</h4>
+          <p>Rantai transpor elektron adalah serangkaian kompleks protein di membran dalam mitokondria yang mentransfer elektron dari NADH dan FADH2 ke O2, memompa proton untuk membentuk gradien.</p>
+          
+          <h4>Kompleks</h4>
+          <ul>
+            <li><strong>Kompleks I:</strong> NADH dehidrogenase.</li>
+            <li><strong>Kompleks II:</strong> Suksinat dehidrogenase.</li>
+            <li><strong>Kompleks III:</strong> Sitokrom bc1.</li>
+            <li><strong>Kompleks IV:</strong> Sitokrom c oksidase.</li>
+            <li><strong>Kompleks V:</strong> ATP sintase.</li>
+          </ul>
+        `);
+
+        add('gluconeogenesis', 'Glukoneogenesis', metCat, '🔄', '#e67e22', `
+          <h4>Definisi</h4>
+          <p>Glukoneogenesis adalah sintesis glukosa dari prekursor non-karbohidrat (laktat, gliserol, asam amino). Terjadi terutama di hati.</p>
+        `);
+
+        add('beta-oxidation', 'Beta-Oksidasi', metCat, '🔥', '#f39c12', `
+          <h4>Definisi</h4>
+          <p>Beta-oksidasi adalah pemecahan asam lemak menjadi Asetil-KoA di matriks mitokondria. Setiap siklus memotong 2 karbon dan menghasilkan 1 NADH + 1 FADH2.</p>
+        `);
+
+        add('pentose-phosphate', 'Jalur Pentosa Fosfat', metCat, '🧪', '#16a085', `
+          <h4>Definisi</h4>
+          <p>Jalur alternatif glikolisis yang menghasilkan NADPH (untuk biosintesis dan antioksidan) dan ribosa-5-fosfat (untuk sintesis nukleotida).</p>
+        `);
+
+        add('urea-cycle', 'Siklus Urea', metCat, '🚽', '#8e44ad', `
+          <h4>Definisi</h4>
+          <p>Siklus urea mengubah amonia beracun menjadi urea yang diekskresi. Terjadi di hati, sebagian di mitokondria dan sebagian di sitoplasma.</p>
+        `);
+
+        add('oxidative-phosphorylation', 'Fosforilasi Oksidatif', metCat, '⚡', '#e74c3c', `
+          <h4>Definisi</h4>
+          <p>Proses sintesis ATP menggunakan energi gradien proton yang dihasilkan rantai transpor elektron. Kemosmosis menghasilkan ~26-28 ATP per glukosa.</p>
+        `);
+
+        // KATEGORI 7: SINTESIS PROTEIN (8 item)
+        const pCat = 'sintesis-protein';
+        add('transcription', 'Transkripsi', pCat, '📝', '#8e44ad', `
+          <h4>Definisi</h4>
+          <p>Transkripsi adalah proses penyalinan DNA menjadi mRNA oleh RNA polimerase. Terjadi di nukleus.</p>
+          
+          <h4>Tahapan</h4>
+          <ul>
+            <li><strong>Inisiasi:</strong> Faktor transkripsi mengikat promoter.</li>
+            <li><strong>Elongasi:</strong> RNA Pol membaca template 3'→5', mensintesis 5'→3'.</li>
+            <li><strong>Terminasi:</strong> Sinyal poliadenilasi.</li>
+          </ul>
+        `);
+
+        add('translation', 'Translasi', pCat, '🏭', '#2ecc71', `
+          <h4>Definisi</h4>
+          <p>Translasi adalah penerjemahan mRNA menjadi protein oleh ribosom. Kodon mRNA dibaca dan tRNA membawa asam amino yang sesuai.</p>
+          
+          <h4>Tahapan</h4>
+          <ul>
+            <li><strong>Inisiasi:</strong> Ribosom merakit di kodon start (AUG).</li>
+            <li><strong>Elongasi:</strong> tRNA masuk situs A, ikatan peptida terbentuk, translokasi.</li>
+            <li><strong>Terminasi:</strong> Kodon stop dikenali release factor.</li>
+          </ul>
+        `);
+
+        add('codon', 'Kodon', pCat, '🔤', '#3498db', `
+          <h4>Definisi</h4>
+          <p>Kodon adalah tiga basa nukleotida pada mRNA yang mengkode satu asam amino. Ada 64 kemungkinan kodon: 61 untuk asam amino, 3 stop (UAA, UAG, UGA). AUG adalah start (metionin).</p>
+          
+          <h4>Degenerasi</h4>
+          <p>Kode genetik bersifat degeneratif: beberapa kodon dapat mengkode asam amino yang sama. Ini mengurangi dampak mutasi.</p>
+        `);
+
+        add('chaperone', 'Chaperone', pCat, '🤲', '#9b59b6', `
+          <h4>Definisi</h4>
+          <p>Chaperone adalah protein yang membantu pelipatan protein lain agar mencapai konformasi yang benar. Mencegah agregasi dan misfolding.</p>
+          
+          <h4>Contoh</h4>
+          <ul>
+            <li><strong>Hsp70:</strong> Mengikat peptida hidrofobik yang terpapar.</li>
+            <li><strong>Hsp90:</strong> Membantu pelipatan protein sinyal (kinase, reseptor).</li>
+            <li><strong>Chaperonin (Hsp60):</strong> Ruang isolasi untuk pelipatan.</li>
+          </ul>
+        `);
+
+        add('splicing', 'Splicing RNA', pCat, '✂️', '#8e44ad', `
+          <h4>Definisi</h4>
+          <p>Splicing adalah pembuangan intron dari pre-mRNA dan penggabungan ekson. Dikatalisis oleh splicesome (snRNP U1, U2, U4, U5, U6).</p>
+          
+          <h4>Alternative Splicing</h4>
+          <p>Satu gen dapat menghasilkan beberapa protein melalui kombinasi ekson yang berbeda. ~95% gen manusia mengalami alternative splicing.</p>
+        `);
+
+        add('post-translational', 'Modifikasi Pasca-Translasi', pCat, '✨', '#e67e22', `
+          <h4>Definisi</h4>
+          <p>Modifikasi kimia pada protein setelah translasi yang mengubah fungsi, lokalisasi, atau stabilitasnya.</p>
+          
+          <h4>Jenis</h4>
+          <ul>
+            <li><strong>Fosforilasi:</strong> Oleh kinase, mengaktifkan/menonaktifkan.</li>
+            <li><strong>Glikosilasi:</strong> Penambahan gula, penting untuk protein sekretori.</li>
+            <li><strong>Asetilasi:</strong> Histon, p53.</li>
+            <li><strong>Ubiquitinasi:</strong> Penanda degradasi.</li>
+            <li><strong>Pemotongan Proteolitik:</strong> Proinsulin → insulin.</li>
+          </ul>
+        `);
+
+        add('signal-peptide', 'Signal Peptida', pCat, '🏷️', '#f1c40f', `
+          <h4>Definisi</h4>
+          <p>Signal peptida adalah urutan pendek (15-30 aa) di N-terminal protein yang mengarahkan ke RE. Dikenali oleh SRP, dibawa ke translokon.</p>
+        `);
+
+        add('proteasome-detail', 'Proteasom (Detail)', pCat, '🗑️', '#c0392b', `
+          <h4>Definisi</h4>
+          <p>Proteasom 26S mendegradasi protein ter-ubiquitinasi. Target meliputi protein regulator siklus sel (siklin), protein rusak, dan protein sinyal.</p>
+        `);
+
+        // KATEGORI 8: SEL IMUN (15 item) - FAVORIT!
+        const iCat = 'sel-imun';
+        add('macrophage', 'Makrofag - The Big Eater', iCat, '🦈', '#27ae60', `
+          <h4>Definisi</h4>
+          <p>Makrofag adalah sel imun fagositik profesional yang menelan patogen, debris seluler, dan sel mati. Nama "makrofag" berarti "pemakan besar", diperkenalkan oleh Ilya Mechnikov yang memenangkan Nobel tahun 1908. Makrofag berasal dari monosit yang bermigrasi dari darah ke jaringan.</p>
+          
+          <h4>Jenis & Nama Spesifik Jaringan</h4>
+          <ul>
+            <li><strong>Sel Kupffer:</strong> Hati.</li>
+            <li><strong>Mikroglia:</strong> Otak.</li>
+            <li><strong>Osteoklas:</strong> Tulang.</li>
+            <li><strong>Makrofag Alveolar:</strong> Paru-paru.</li>
+            <li><strong>Sel Langerhans:</strong> Kulit (sel dendritik).</li>
+            <li><strong>Makrofag Peritoneal:</strong> Rongga perut.</li>
+          </ul>
+          
+          <h4>Fungsi</h4>
+          <ul>
+            <li><strong>Fagositosis:</strong> Menelan dan mencerna patogen.</li>
+            <li><strong>Presentasi Antigen:</strong> Menampilkan fragmen patogen ke sel T via MHC-II.</li>
+            <li><strong>Sitokin:</strong> Melepaskan TNF-α, IL-1, IL-6 untuk inflamasi.</li>
+            <li><strong>Penyembuhan Luka:</strong> Membersihkan debris dan merangsang regenerasi.</li>
+            <li><strong>Homeostasis:</strong> Membersihkan sel mati (100 miliar per hari).</li>
+          </ul>
+          
+          <h4>Polarisasi</h4>
+          <ul>
+            <li><strong>M1 (Klasik):</strong> Pro-inflamasi, membunuh patogen.</li>
+            <li><strong>M2 (Alternatif):</strong> Anti-inflamasi, penyembuhan luka.</li>
+          </ul>
+          
+          <div class="info-box">
+            <strong>Fakta Keren:</strong> Satu makrofag dapat menelan hingga 100 bakteri sebelum mati. Makrofag juga "mengajari" sistem imun adaptif tentang ancaman melalui presentasi antigen!
+          </div>
+        `);
+
+        add('neutrophil', 'Neutrofil - First Responder', iCat, '🚨', '#e74c3c', `
+          <h4>Definisi</h4>
+          <p>Neutrofil adalah granulosit paling banyak (60-70% leukosit darah) dan merupakan garis pertahanan pertama melawan infeksi bakteri dan jamur. Mereka adalah sel pertama yang tiba di lokasi infeksi, biasanya dalam hitungan menit.</p>
+          
+          <h4>Mekanisme Pertahanan</h4>
+          <ul>
+            <li><strong>Fagositosis:</strong> Menelan patogen.</li>
+            <li><strong>Degranulasi:</strong> Melepaskan enzim antimikroba dari granula.</li>
+            <li><strong>NETosis:</strong> Membentuk Neutrophil Extracellular Traps (NETs) - jaring DNA yang menjebak dan membunuh bakteri.</li>
+            <li><strong>Reactive Oxygen Species (ROS):</strong> Ledakan oksidatif membunuh patogen.</li>
+          </ul>
+          
+          <h4>Karakteristik</h4>
+          <ul>
+            <li><strong>Masa Hidup:</strong> Hanya 1-4 hari dalam sirkulasi.</li>
+            <li><strong>Produksi:</strong> Sumsum tulang menghasilkan 10^11 neutrofil per hari.</li>
+            <li><strong>Kemotaksis:</strong> Bergerak mengikuti gradien IL-8, C5a, fMLP.</li>
+          </ul>
+          
+          <div class="highlight-box">
+            <strong>Fakta Keren:</strong> Neutrofil adalah "kamikaze" sistem imun. Setelah membunuh beberapa patogen, mereka mati membentuk nanah (pus) yang merupakan kumpulan neutrofil mati dan debris bakteri!
+          </div>
+        `);
+
+        add('nk-cell', 'Sel Natural Killer (NK)', iCat, '🎯', '#2ecc71', `
+          <h4>Definisi</h4>
+          <p>Sel NK adalah limfosit yang membunuh sel yang terinfeksi virus atau sel kanker tanpa perlu aktivasi sebelumnya. Mereka adalah bagian dari imun bawaan dan mengenali sel yang kehilangan MHC-I ("missing self").</p>
+          
+          <h4>Mekanisme</h4>
+          <ul>
+            <li><strong>Perforin:</strong> Membentuk pori di membran target.</li>
+            <li><strong>Granzim:</strong> Masuk melalui pori dan menginduksi apoptosis.</li>
+            <li><strong>ADCC:</strong> Antibody-Dependent Cellular Cytotoxicity - membunuh sel yang dilapisi antibodi.</li>
+          </ul>
+        `);
+
+        add('dendritic-cell', 'Sel Dendritik', iCat, '📡', '#3498db', `
+          <h4>Definisi</h4>
+          <p>Sel dendritik adalah penyaji antigen profesional yang menjembatani imun bawaan dan adaptif. Ditemukan oleh Ralph Steinman (Nobel 2011). Mereka menangkap antigen di jaringan, bermigrasi ke kelenjar limfa, dan mengaktivasi sel T naif.</p>
+        `);
+
+        add('helper-t', 'Limfosit T Helper (CD4+)', iCat, '⭐', '#2980b9', `
+          <h4>Definisi</h4>
+          <p>Sel T CD4+ adalah "konduktor orkestra" sistem imun. Mereka mengenali antigen via MHC-II dan mengaktivasi sel B, makrofag, dan sel T sitotoksik.</p>
+          
+          <h4>Subset</h4>
+          <ul>
+            <li><strong>Th1:</strong> Melawan patogen intraseluler.</li>
+            <li><strong>Th2:</strong> Melawan parasit, alergi.</li>
+            <li><strong>Th17:</strong> Melawan jamur, autoimun.</li>
+            <li><strong>Tfh:</strong> Membantu sel B di germinal center.</li>
+            <li><strong>Treg:</strong> Menekan respons imun.</li>
+          </ul>
+          
+          <div class="highlight-box">
+            <strong>Fakta Kritis:</strong> HIV menginfeksi sel T CD4+, menyebabkan penurunan jumlahnya. Ketika CD4+ <200 sel/μL, pasien berkembang menjadi AIDS.
+          </div>
+        `);
+
+        add('cytotoxic-t', 'Limfosit T Sitotoksik (CD8+)', iCat, '⚔️', '#e74c3c', `
+          <h4>Definisi</h4>
+          <p>Sel T CD8+ adalah "pembunuh" yang menghancurkan sel terinfeksi virus dan sel kanker. Mengenali antigen via MHC-I yang ada di semua sel berinti.</p>
+        `);
+
+        add('b-cell', 'Limfosit B', iCat, '🏭', '#9b59b6', `
+          <h4>Definisi</h4>
+          <p>Sel B memproduksi antibodi. Setiap sel B memiliki reseptor (BCR) yang spesifik untuk satu antigen. Saat teraktivasi, berdiferensiasi menjadi sel plasma atau sel memori.</p>
+        `);
+
+        add('plasma-cell', 'Sel Plasma', iCat, '🏭', '#8e44ad', `
+          <h4>Definisi</h4>
+          <p>Sel plasma adalah sel B yang teraktivasi penuh, didedikasikan untuk produksi antibodi massal. Satu sel plasma dapat menghasilkan 2000 molekul antibodi per detik!</p>
+        `);
+
+        add('mast-cell', 'Sel Mast', iCat, '🤧', '#f39c12', `
+          <h4>Definisi</h4>
+          <p>Sel mast adalah sel jaringan yang mengandung granula histamin dan heparin. Berperan dalam alergi dan pertahanan terhadap parasit.</p>
+        `);
+
+        add('eosinophil', 'Eosinofil', iCat, '🪱', '#f1c40f', `
+          <h4>Definisi</h4>
+          <p>Eosinofil melawan parasit multiseluler (cacing) dan terlibat dalam asma dan alergi. Granula mengandung Major Basic Protein yang toksik untuk parasit.</p>
+        `);
+
+        add('basophil', 'Basofil', iCat, '💢', '#8e44ad', `
+          <h4>Definisi</h4>
+          <p>Basofil adalah granulosit paling langka (<1% leukosit). Melepaskan histamin dan heparin, berperan dalam inflamasi dan alergi.</p>
+        `);
+
+        add('monocyte', 'Monosit', iCat, '🔄', '#e67e22', `
+          <h4>Definisi</h4>
+          <p>Monosit adalah prekursor makrofag dan sel dendritik di darah. Beredar 1-3 hari sebelum masuk jaringan. Terdiri dari monosit klasik (CD14++ CD16-) dan non-klasik.</p>
+        `);
+
+        add('memory-b', 'Sel Memori B', iCat, '💾', '#2980b9', `
+          <h4>Definisi</h4>
+          <p>Sel memori B hidup bertahun-tahun setelah infeksi, memberikan respons cepat dan kuat saat terpapar antigen yang sama. Inilah dasar vaksinasi.</p>
+        `);
+
+        add('memory-t', 'Sel Memori T', iCat, '💾', '#2980b9', `
+          <h4>Definisi</h4>
+          <p>Sel memori T (CD4+ dan CD8+) menyimpan "ingatan" imunologis. Saat re-infeksi, mereka berproliferasi cepat menjadi sel efektor.</p>
+        `);
+
+        add('regulatory-t', 'Sel T Regulator (Treg)', iCat, '🛑', '#16a085', `
+          <h4>Definisi</h4>
+          <p>Treg (CD4+ CD25+ FoxP3+) menekan respons imun berlebihan dan mencegah autoimunitas. Kekurangan Treg menyebabkan penyakit autoimun parah.</p>
+        `);
+
+        // KATEGORI 9: SEL TUBUH LAINNYA (10 item)
+        const tCat = 'sel-tubuh';
+        add('hepatocyte', 'Hepatosit', tCat, '🏭', '#e67e22', `
+          <h4>Definisi</h4>
+          <p>Hepatosit adalah sel utama hati, menyusun 70-80% massa hati. Memiliki kapasitas regenerasi luar biasa. Melakukan >500 fungsi metabolisme.</p>
+          
+          <h4>Fungsi</h4>
+          <ul>
+            <li>Detoksifikasi obat dan toksin (sitokrom P450).</li>
+            <li>Sintesis protein plasma (albumin, faktor pembekuan).</li>
+            <li>Metabolisme karbohidrat (glikogenesis, glukoneogenesis).</li>
+            <li>Metabolisme lipid (sintesis kolesterol, lipoprotein).</li>
+            <li>Produksi empedu.</li>
+          </ul>
+        `);
+
+        add('neuron', 'Neuron', tCat, '🧠', '#f1c40f', `
+          <h4>Definisi</h4>
+          <p>Neuron adalah sel yang terspesialisasi untuk menghantarkan sinyal listrik. Tubuh manusia memiliki sekitar 86 miliar neuron.</p>
+          
+          <h4>Struktur</h4>
+          <ul>
+            <li><strong>Dendrit:</strong> Menerima sinyal.</li>
+            <li><strong>Badan Sel (Soma):</strong> Mengandung nukleus.</li>
+            <li><strong>Akson:</strong> Menghantarkan potensial aksi.</li>
+            <li><strong>Terminal Sinaptik:</strong> Melepaskan neurotransmitter.</li>
+          </ul>
+        `);
+
+        add('erythrocyte', 'Eritrosit', tCat, '🔴', '#e74c3c', `
+          <h4>Definisi</h4>
+          <p>Eritrosit adalah sel darah merah yang mengangkut oksigen. Tidak memiliki nukleus dan organel untuk memaksimalkan kapasitas hemoglobin. Hidup ~120 hari.</p>
+        `);
+
+        add('fibroblast', 'Fibroblas', tCat, '🕸️', '#7f8c8d', `
+          <h4>Definisi</h4>
+          <p>Fibroblas adalah sel utama jaringan ikat yang mensintesis kolagen, elastin, dan matriks ekstraseluler. Penting dalam penyembuhan luka.</p>
+        `);
+
+        add('adipocyte', 'Adiposit', tCat, '🟡', '#f39c12', `
+          <h4>Definisi</h4>
+          <p>Adiposit menyimpan lemak. Adiposit putih menyimpan energi, adiposit coklat menghasilkan panas (termogenesis).</p>
+        `);
+
+        add('osteoblast', 'Osteoblas', tCat, '🏗️', '#d35400', `
+          <h4>Definisi</h4>
+          <p>Osteoblas adalah sel pembentuk tulang. Mensintesis kolagen tipe I dan menginisiasi mineralisasi. Berdiferensiasi menjadi osteosit.</p>
+        `);
+
+        add('chondrocyte', 'Kondrosit', tCat, '🦴', '#bdc3c7', `
+          <h4>Definisi</h4>
+          <p>Kondrosit adalah sel tulang rawan yang memelihara matriks kartilago. Hidup dalam lakuna.</p>
+        `);
+
+        add('keratinocyte', 'Keratinosit', tCat, '🧱', '#d35400', `
+          <h4>Definisi</h4>
+          <p>Keratinosit adalah sel utama epidermis (90%). Memproduksi keratin. Terus diperbarui dari lapisan basal ke permukaan.</p>
+        `);
+
+        add('melanocyte', 'Melanosit', tCat, '🎨', '#8e44ad', `
+          <h4>Definisi</h4>
+          <p>Melanosit menghasilkan melanin yang melindungi kulit dari UV. Terletak di basal epidermis. Satu melanosit menyuplai melanin ke ~36 keratinosit.</p>
+        `);
+
+        add('stem-cell', 'Sel Punca', tCat, '🌟', '#2ecc71', `
+          <h4>Definisi</h4>
+          <p>Sel punca memiliki kapasitas self-renewal dan diferensiasi menjadi berbagai tipe sel. Mulai dari totipoten (zigot), pluripoten (ES/iPS), multipoten (hematopoietik).</p>
+        `);
+
+        // KATEGORI 10: PATOLOGI & SEJARAH (8 item)
+        const patCat = 'siklus-sel';
+        add('cancer-cell', 'Sel Kanker', patCat, '⚠️', '#c0392b', `
+          <h4>Definisi</h4>
+          <p>Sel kanker memiliki pertumbuhan tidak terkendali akibat mutasi genetik. Ciri khas (hallmarks of cancer): proliferasi tanpa sinyal, menghindari penekan pertumbuhan, resistensi apoptosis, angiogenesis, invasi dan metastasis, imortalitas replikatif, reprogramming metabolisme, menghindari sistem imun.</p>
+        `);
+
+        add('senescent-cell', 'Sel Senesen', patCat, '👴', '#7f8c8d', `
+          <h4>Definisi</h4>
+          <p>Sel senesen berhenti membelah secara permanen. Mengakumulasi seiring penuaan. Mensekresi SASP (Senescence-Associated Secretory Phenotype) yang mempengaruhi sel sekitar.</p>
+        `);
+
+        add('robert-hooke', 'Robert Hooke (1665)', 'molekul', '📜', '#d4a017', `
+          <h4>Penemu Sel</h4>
+          <p>Robert Hooke mengamati irisan gabus di bawah mikroskop dan melihat struktur seperti kotak-kotak yang disebutnya "cells" (sel). Ini adalah pertama kalinya sel dideskripsikan. Bukunya "Micrographia" (1665) menjadi bestseller dan menginspirasi generasi ilmuwan.</p>
+        `);
+
+        add('leeuwenhoek', 'Antonie van Leeuwenhoek', 'molekul', '🔬', '#d4a017', `
+          <h4>Bapak Mikrobiologi</h4>
+          <p>Leeuwenhoek membuat mikroskop dengan pembesaran hingga 300x dan menjadi orang pertama yang mengamati bakteri, protozoa, sel darah merah, dan sperma. Sebutannya "animalcules" untuk mikroorganisme.</p>
+        `);
+
+        add('virchow', 'Rudolf Virchow (1855)', 'molekul', '📖', '#d4a017', `
+          <h4>Omnis Cellula e Cellula</h4>
+          <p>Virchow menyatakan bahwa setiap sel berasal dari sel sebelumnya. Ini menjadi pilar ketiga teori sel, melengkapi Schleiden dan Schwann.</p>
+        `);
+
+        add('golgi-discovery', 'Camillo Golgi (1898)', 'molekul', '🏅', '#d4a017', `
+          <h4>Penemu Badan Golgi</h4>
+          <p>Camillo Golgi menemukan Badan Golgi menggunakan pewarnaan perak nitrat. Metodenya (Golgi stain) juga digunakan oleh Santiago Ramón y Cajal untuk mempelajari neuron.</p>
+        `);
+
+        add('palade', 'George Palade (1950s)', 'molekul', '🏅', '#d4a017', `
+          <h4>Penemu Ribosom</h4>
+          <p>George Palade menggunakan mikroskop elektron untuk menemukan ribosom dan menjelaskan jalur sekretori (RE → Golgi → vesikel). Nobel 1974.</p>
+        `);
+
+        add('margulis', 'Lynn Margulis (1967)', 'molekul', '📖', '#d4a017', `
+          <h4>Teori Endosimbiosis</h4>
+          <p>Lynn Margulis mengajukan bahwa mitokondria dan kloroplas berasal dari bakteri yang ditelan sel eukariotik purba. Awalnya ditolak, kini diterima luas.</p>
+        `);
+
+        return items;
+      }
+
+      const allItems = generateItems();
+
+      // ==================== STATE ====================
+      let currentCategory = 'all';
+      let currentPage = 1;
+      const itemsPerPage = 20;
+      let filteredItems = [...allItems];
+      let currentOrganelle = null;
+
+      const sidebar = document.getElementById('sidebar');
+      const libraryGrid = document.getElementById('library-grid');
+      const pagination = document.getElementById('pagination');
+      const searchInput = document.getElementById('search-input');
+      const searchBtn = document.getElementById('search-btn');
+	  const searchExtInput = document.getElementById('search-ext-input');
+	  const searchExtBtn = document.getElementById('search-ext-btn');
+	  const externalResults = document.getElementById('external-results');
+	  let searchMode = 'internal';
+      const itemCount = document.getElementById('item-count');
+      const cellyMessage = document.getElementById('celly-message');
+      const detailOverlay = document.getElementById('detail-overlay');
+      const detailCloseBtn = document.getElementById('detail-close-btn');
+      const detailIcon = document.getElementById('detail-icon');
+      const detailTitle = document.getElementById('detail-title');
+      const detailCategory = document.getElementById('detail-category');
+      const detailContent = document.getElementById('detail-content');
+      const detailOpen3dBtn = document.getElementById('detail-open-3d');
+      const model3dOverlay = document.getElementById('model-3d-overlay');
+      const model3dTitle = document.getElementById('model-3d-title');
+      const model3dIframe = document.getElementById('model-3d-iframe');
+      const model3dCloseBtn = document.getElementById('model-3d-close-btn');
+      const model3dFallbackLink = document.getElementById('model-3d-fallback-link');
+      const themeToggleBtn = document.getElementById('theme-toggle-btn');
+      const backBtn = document.getElementById('back-btn');
+
+      function setTheme(theme) {
+        if (theme === 'light') {
+          document.body.classList.add('light-theme');
+          themeToggleBtn.innerHTML = '☾ Dark';
+        } else {
+          document.body.classList.remove('light-theme');
+          themeToggleBtn.innerHTML = '☀ Light';
+        }
+        localStorage.setItem('bioverse_theme', theme);
+      }
+      setTheme(localStorage.getItem('bioverse_theme') || 'dark');
+      themeToggleBtn.addEventListener('click', () => {
+        setTheme(document.body.classList.contains('light-theme') ? 'dark' : 'light');
+      });
+
+      function buildSidebar() {
+        const counts = {};
+        allItems.forEach(i => counts[i.category] = (counts[i.category] || 0) + 1);
+        categories.forEach(cat => {
+          const btn = document.createElement('button');
+          btn.className = 'category-btn' + (cat.id === 'all' ? ' active' : '');
+          btn.dataset.category = cat.id;
+          btn.innerHTML = `${cat.name} <span class="category-count">${cat.id==='all'?allItems.length:counts[cat.id]||0}</span>`;
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentCategory = cat.id;
+            currentPage = 1;
+            filterItems();
+          });
+          sidebar.appendChild(btn);
+        });
+      }
+
+      function filterItems() {
+        let items = [...allItems];
+        if (currentCategory !== 'all') items = items.filter(i => i.category === currentCategory);
+        const q = searchInput.value.trim().toLowerCase();
+        if (q) items = items.filter(i => i.name.toLowerCase().includes(q) || i.content.toLowerCase().includes(q));
+        filteredItems = items;
+        itemCount.textContent = items.length + ' item';
+        renderPage();
+      }
+
+      function renderPage() {
+        const tp = Math.ceil(filteredItems.length / itemsPerPage);
+        const start = (currentPage - 1) * itemsPerPage;
+        const pageItems = filteredItems.slice(start, start + itemsPerPage);
+        libraryGrid.innerHTML = '';
+        pageItems.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'organelle-card';
+          card.innerHTML = `
+            <div class="card-icon" style="background:${item.iconBg};color:white;">${item.icon}</div>
+            <div class="card-title">${item.name}</div>
+            <div class="card-function">${item.content.replace(/<[^>]*>/g,'').substring(0,120)}...</div>
+            <div class="card-actions">
+              <button class="btn-detail">Baca Detail</button>
+              <button class="btn-3d">3D</button>
+            </div>`;
+          card.addEventListener('click', () => openDetail(item));
+          card.querySelector('.btn-detail').addEventListener('click', e => { e.stopPropagation();
+            openDetail(item); });
+          card.querySelector('.btn-3d').addEventListener('click', e => { e.stopPropagation();
+            openModel3D(item); });
+          libraryGrid.appendChild(card);
+        });
+        renderPagination(tp);
+      }
+
+      function renderPagination(tp) {
+        pagination.innerHTML = '';
+        if (tp <= 1) return;
+        const prev = document.createElement('button');
+        prev.className = 'page-btn';
+        prev.textContent = '«';
+        prev.disabled = currentPage === 1;
+        prev.onclick = () => { currentPage--;
+          renderPage();
+          window.scrollTo(0, 0); };
+        pagination.appendChild(prev);
+        for (let i = 1; i <= tp; i++) {
+          const b = document.createElement('button');
+          b.className = 'page-btn' + (i === currentPage ? ' active' : '');
+          b.textContent = i;
+          b.onclick = () => { currentPage = i;
+            renderPage();
+            window.scrollTo(0, 0); };
+          pagination.appendChild(b);
+        }
+        const next = document.createElement('button');
+        next.className = 'page-btn';
+        next.textContent = '»';
+        next.disabled = currentPage === tp;
+        next.onclick = () => { currentPage++;
+          renderPage();
+          window.scrollTo(0, 0); };
+        pagination.appendChild(next);
+      }
+
+      function openDetail(item) {
+        currentOrganelle = item;
+        detailIcon.innerHTML = item.icon;
+        detailIcon.style.background = item.iconBg;
+        detailIcon.style.color = 'white';
+        detailTitle.textContent = item.name;
+        const catObj = categories.find(c => c.id === item.category);
+        detailCategory.textContent = catObj ? catObj.name : item.category;
+        detailContent.innerHTML = item.content;
+        detailOverlay.classList.add('active');
+        cellyMessage.innerHTML = `<span>Celly:</span> Membaca tentang <strong>${item.name}</strong>. Klik "3D" untuk model interaktif!`;
+      }
+
+      detailCloseBtn.addEventListener('click', () => detailOverlay.classList.remove('active'));
+      detailOverlay.addEventListener('click', e => { if (e.target === detailOverlay) detailOverlay.classList.remove(
+        'active'); });
+      detailOpen3dBtn.addEventListener('click', () => { if (currentOrganelle) openModel3D(currentOrganelle); });
+
+      function openModel3D(item) {
+        model3dTitle.textContent = 'Model 3D: ' + item.name;
+        const url = 'https://sketchfab.com/search?q=' + encodeURIComponent(item.sketchfabSearch) + '&type=models';
+        model3dIframe.src = url;
+        model3dFallbackLink.href = url;
+        model3dOverlay.classList.add('active');
+      }
+      model3dCloseBtn.addEventListener('click', () => { model3dOverlay.classList.remove('active');
+        model3dIframe.src = ''; });
+      model3dOverlay.addEventListener('click', e => { if (e.target === model3dOverlay) { model3dOverlay.classList
+            .remove('active');
+          model3dIframe.src = ''; } });
+
+      function performSearch() { currentPage = 1;
+        externalResults.classList.remove('active');
+		filterItems(); }
+      searchBtn.addEventListener('click', performSearch);
+      searchInput.addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(); });
+      backBtn.addEventListener('click', () => { window.location.href = 'index.html'; });
+
+      buildSidebar();
+      filterItems();
+
+// SEARCH EKSTERNAL (Wikipedia API)
+async function performExternalSearch() {
+  const q = searchExtInput.value.trim();
+  if (!q) return;
+  
+  externalResults.innerHTML = '<p class="external-loading">🔍 Mencari di Wikipedia...</p>';
+  externalResults.classList.add('active');
+  cellyMessage.innerHTML = `<span>Celly:</span> Mencari info tentang "<em>${q}</em>" dari Wikipedia...`;
+  
+  try {
+    const resp = await fetch(`https://id.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*`);
+    const data = await resp.json();
+    
+    if (data.query.search.length === 0) {
+      externalResults.innerHTML = '<p style="text-align:center;color:var(--text-secondary);">Tidak ditemukan hasil. Coba kata kunci lain.</p>';
+      cellyMessage.innerHTML = `<span>Celly:</span> Maaf, tidak ada hasil untuk "<em>${q}</em>". Coba kata kunci lain ya.`;
+      return;
+    }
+    
+    let html = '';
+    for (let i = 0; i < Math.min(data.query.search.length, 5); i++) {
+      const r = data.query.search[i];
+      html += `
+        <div class="external-result-item">
+          <h5>📖 ${r.title}</h5>
+          <p>${r.snippet.replace(/<\/?[^>]+(>|$)/g, '').substring(0, 300)}...</p>
+          <a href="https://id.wikipedia.org/wiki/${encodeURIComponent(r.title)}" target="_blank" rel="noopener">Baca selengkapnya di Wikipedia →</a>
+        </div>`;
+    }
+    externalResults.innerHTML = html;
+    cellyMessage.innerHTML = `<span>Celly:</span> Aku menemukan ${Math.min(data.query.search.length, 5)} hasil dari Wikipedia untuk "<em>${q}</em>". Klik link untuk membaca lengkapnya!`;
+  } catch (e) {
+    externalResults.innerHTML = '<p style="text-align:center;color:#e74c3c;">Gagal menghubungi Wikipedia. Periksa koneksi internetmu.</p>';
+    cellyMessage.innerHTML = `<span>Celly:</span> Ups, gagal mencari. Pastikan kamu terhubung ke internet ya.`;
+  }
+}
+
+// Event listener search external
+searchExtBtn.addEventListener('click', performExternalSearch);
+searchExtInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') performExternalSearch();
+});
+
+// TAB SWITCHING
+document.querySelectorAll('.search-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.search-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    searchMode = tab.dataset.tab;
+    
+    document.getElementById('search-internal').style.display = searchMode === 'internal' ? 'flex' : 'none';
+    document.getElementById('search-external').style.display = searchMode === 'external' ? 'flex' : 'none';
+    
+    if (searchMode === 'internal') {
+      externalResults.classList.remove('active');
+      cellyMessage.innerHTML = '<span>Celly:</span> Mode pencarian internal. Cari di 100 item MicroVerse 1.';
+    } else {
+      cellyMessage.innerHTML = '<span>Celly:</span> Mode pencarian web. Aku akan mencari di Wikipedia untukmu!';
+    }
+  });
+});
+
+      const greetings = [
+        '<span>Celly:</span> MicroVerse 1 siap! 101 item dengan penjelasan super detail. Klik kartu untuk belajar!',
+        '<span>Celly:</span> Makrofag, Neutrofil, dan sel imun favoritmu ada di sini dengan penjelasan lengkap!',
+        '<span>Celly:</span> Setiap item sekarang punya penjelasan seperti Wikipedia. Bedanya, ada aku yang memandu!'
+      ];
+      let gi = 0;
+      setInterval(() => {
+        if (!detailOverlay.classList.contains('active') && !model3dOverlay.classList.contains('active')) {
+          cellyMessage.innerHTML = greetings[gi % greetings.length];
+          gi++;
+        }
+      }, 15000);
+    })();
+  </script>
+</body>
+</html>

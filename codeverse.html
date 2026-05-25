@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>CodeVerse | Ensiklopedia DNA & Genetika BioVerse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #111827;
+      --bg-card: rgba(15, 25, 45, 0.85);
+      --text-primary: #e2e8f0;
+      --text-secondary: #b0bec5;
+      --accent: #1E90FF;
+      --accent-glow: 0 0 25px rgba(30, 144, 255, 0.5);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --font-display: 'Orbitron', sans-serif;
+      --font-body: 'Poppins', sans-serif;
+      --card-hover: rgba(30, 144, 255, 0.1);
+      --panel-bg: rgba(10, 20, 35, 0.98);
+      --sidebar-bg: rgba(12, 22, 38, 0.9);
+    }
+    .light-theme {
+      --bg-primary: #f0f4f8;
+      --bg-secondary: #e2e8f0;
+      --bg-card: rgba(255, 255, 255, 0.92);
+      --text-primary: #1a202c;
+      --text-secondary: #4a5568;
+      --accent-glow: 0 0 25px rgba(30, 100, 200, 0.3);
+      --border-subtle: rgba(0, 0, 0, 0.1);
+      --card-hover: rgba(30, 144, 255, 0.1);
+      --panel-bg: rgba(255, 255, 255, 0.98);
+      --sidebar-bg: rgba(240, 244, 248, 0.95);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: var(--font-body); background: var(--bg-primary); color: var(--text-primary);
+      min-height: 100vh; transition: background 0.4s, color 0.4s; overflow-x: hidden;
+    }
+    .code-header {
+      display: flex; align-items: center; justify-content: space-between; padding: 14px 24px;
+      background: var(--bg-secondary); border-bottom: 1px solid var(--border-subtle);
+      backdrop-filter: blur(15px); position: sticky; top:0; z-index:100; flex-wrap: wrap; gap:10px;
+    }
+    .header-left { display:flex; align-items:center; gap:12px; }
+    .back-btn {
+      background: var(--bg-card); border:1px solid var(--accent); color:var(--accent);
+      padding:8px 16px; border-radius:25px; cursor:pointer; font-weight:600;
+      font-family:var(--font-body); font-size:0.85rem; transition:0.3s;
+    }
+    .back-btn:hover { background:var(--accent); color:#fff; }
+    .library-title {
+      font-family:var(--font-display); font-size:1.3rem; font-weight:700;
+      color:var(--accent); letter-spacing:1px;
+    }
+    .item-count { font-size:0.8rem; color:var(--text-secondary); font-weight:500; }
+    .header-right { display:flex; align-items:center; gap:10px; }
+    .theme-toggle {
+      background:var(--bg-card); border:1px solid var(--border-subtle); color:var(--text-primary);
+      padding:8px 14px; border-radius:25px; cursor:pointer; font-family:var(--font-body);
+      font-size:0.8rem; font-weight:600; transition:0.3s;
+    }
+    .theme-toggle:hover { border-color:var(--accent); }
+    .main-layout { display:flex; min-height:calc(100vh - 70px); }
+    .sidebar {
+      width:260px; background:var(--sidebar-bg); border-right:1px solid var(--border-subtle);
+      padding:20px 16px; overflow-y:auto; position:sticky; top:70px;
+      height:calc(100vh - 70px); backdrop-filter:blur(10px); flex-shrink:0;
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .sidebar h4 { font-family:var(--font-display); font-size:0.85rem; color:var(--accent); letter-spacing:1px; margin-bottom:4px; }
+    .category-btn {
+      background:transparent; border:1px solid var(--border-subtle); color:var(--text-secondary);
+      padding:10px 14px; border-radius:12px; cursor:pointer; font-family:var(--font-body);
+      font-size:0.8rem; text-align:left; transition:0.3s; font-weight:500;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .category-btn:hover,.category-btn.active { border-color:var(--accent); color:var(--accent); background:var(--card-hover); }
+    .category-count { background:rgba(30,144,255,0.2); padding:2px 8px; border-radius:12px; font-size:0.7rem; }
+    .content-area { flex:1; padding:20px 24px; overflow-y:auto; }
+    .search-container { display:flex; gap:10px; margin-bottom:16px; }
+    .search-input {
+      flex:1; padding:14px 20px; border-radius:35px; border:2px solid var(--border-subtle);
+      background:var(--bg-card); color:var(--text-primary); font-family:var(--font-body);
+      font-size:0.95rem; outline:none; transition:0.3s;
+    }
+    .search-input:focus { border-color:var(--accent); box-shadow:var(--accent-glow); }
+    .search-btn {
+      background:var(--accent); border:none; color:#fff; padding:14px 22px;
+      border-radius:30px; font-weight:700; cursor:pointer; font-family:var(--font-body); transition:0.3s;
+    }
+    .search-btn:hover { box-shadow:var(--accent-glow); }
+    .helix-banner {
+      display:flex; align-items:center; gap:12px; padding:12px 18px; margin-bottom:16px;
+      background:var(--bg-card); border-radius:18px; border:1px solid var(--accent); backdrop-filter:blur(10px);
+    }
+    .helix-avatar { width:55px; height:55px; flex-shrink:0; }
+    .helix-message { font-size:0.85rem; font-weight:500; color:var(--text-primary); line-height:1.5; }
+    .helix-message span { color:var(--accent); font-weight:700; }
+    .library-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; }
+    .organelle-card {
+      background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:18px;
+      padding:20px; cursor:pointer; transition:all 0.35s; backdrop-filter:blur(10px);
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .organelle-card:hover { transform:translateY(-5px); border-color:var(--accent); box-shadow:var(--accent-glow); background:var(--card-hover); }
+    .card-icon { width:50px; height:50px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; }
+    .card-title { font-family:var(--font-display); font-size:0.95rem; font-weight:700; letter-spacing:0.5px; }
+    .card-function { font-size:0.8rem; color:var(--text-secondary); line-height:1.5; flex-grow:1; }
+    .card-actions { display:flex; gap:8px; }
+    .btn-detail { background:var(--accent); color:#fff; border:none; padding:8px 14px; border-radius:20px; font-weight:700; cursor:pointer; font-size:0.75rem; transition:0.3s; }
+    .btn-detail:hover { box-shadow:var(--accent-glow); }
+    .btn-3d { background:transparent; border:2px solid #FF6B6B; color:#FF6B6B; padding:8px 14px; border-radius:20px; font-weight:700; cursor:pointer; font-size:0.75rem; transition:0.3s; }
+    .btn-3d:hover { background:#FF6B6B; color:white; }
+    .pagination { display:flex; justify-content:center; align-items:center; gap:8px; margin-top:24px; flex-wrap:wrap; }
+    .page-btn { background:var(--bg-card); border:1px solid var(--border-subtle); color:var(--text-primary); padding:10px 16px; border-radius:12px; cursor:pointer; font-weight:600; font-size:0.85rem; transition:0.3s; }
+    .page-btn:hover,.page-btn.active { border-color:var(--accent); color:var(--accent); background:var(--card-hover); }
+    .detail-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:200; display:none; justify-content:flex-end; }
+    .detail-overlay.active { display:flex; }
+    .detail-panel { width:100%; max-width:650px; height:100%; background:var(--panel-bg); backdrop-filter:blur(25px); border-left:2px solid var(--accent); padding:28px 24px; overflow-y:auto; animation:slideIn 0.35s ease-out; display:flex; flex-direction:column; gap:20px; }
+    @keyframes slideIn { from{transform:translateX(100%);} to{transform:translateX(0);} }
+    .detail-close { align-self:flex-end; background:transparent; border:1px solid var(--accent); color:var(--accent); padding:8px 18px; border-radius:25px; cursor:pointer; font-weight:700; transition:0.3s; }
+    .detail-close:hover { background:var(--accent); color:#fff; }
+    .detail-icon-large { width:80px; height:80px; border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:2.2rem; align-self:center; }
+    .detail-title { font-family:var(--font-display); font-size:1.5rem; font-weight:800; text-align:center; color:var(--accent); }
+    .detail-category { text-align:center; font-size:0.8rem; color:var(--text-secondary); font-weight:500; }
+    .detail-section { background:var(--bg-card); border-radius:14px; padding:18px; border:1px solid var(--border-subtle); line-height:1.8; }
+    .detail-section h4 { font-family:var(--font-display); font-size:0.9rem; color:var(--accent); margin-bottom:10px; letter-spacing:1px; border-bottom:1px solid var(--accent); padding-bottom:6px; }
+    .detail-section p { font-size:0.9rem; color:var(--text-secondary); line-height:1.9; text-align:justify; }
+    .detail-section ul { padding-left:18px; font-size:0.9rem; color:var(--text-secondary); line-height:1.9; }
+    .detail-section ul li { margin-bottom:6px; }
+    .info-box { background:rgba(30,144,255,0.08); border-left:3px solid var(--accent); padding:12px 16px; border-radius:8px; margin:10px 0; font-size:0.85rem; color:var(--text-secondary); }
+    .highlight-box { background:rgba(255,215,0,0.15); border-left:3px solid #FFD700; padding:12px 16px; border-radius:8px; margin:10px 0; font-size:0.85rem; color:var(--text-secondary); }
+    .cross-link { background:rgba(0,229,160,0.08); border-left:3px solid #00E5A0; padding:12px 16px; border-radius:8px; margin:10px 0; font-size:0.85rem; }
+    .cross-link a { color:#00E5A0; font-weight:600; }
+    .model-3d-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); backdrop-filter:blur(10px); z-index:300; display:none; align-items:center; justify-content:center; }
+    .model-3d-overlay.active { display:flex; }
+    .model-3d-container { width:90%; max-width:850px; height:80vh; background:var(--bg-secondary); border-radius:22px; border:2px solid var(--accent); overflow:hidden; display:flex; flex-direction:column; box-shadow:0 0 50px rgba(30,144,255,0.5); animation:popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275); }
+    @keyframes popIn { from{transform:scale(0.8);opacity:0;} to{transform:scale(1);opacity:1;} }
+    .model-3d-header { display:flex; justify-content:space-between; align-items:center; padding:14px 20px; background:var(--bg-card); border-bottom:1px solid var(--accent); }
+    .model-3d-title { font-family:var(--font-display); color:var(--accent); font-weight:700; font-size:0.95rem; }
+    .model-3d-close { background:transparent; border:1px solid var(--accent); color:var(--accent); padding:8px 16px; border-radius:25px; cursor:pointer; font-weight:700; transition:0.3s; }
+    .model-3d-close:hover { background:var(--accent); color:#fff; }
+    .model-3d-iframe { flex:1; width:100%; border:none; }
+    .model-3d-fallback { text-align:center; padding:12px; font-size:0.8rem; color:var(--text-secondary); }
+    .model-3d-fallback a { color:var(--accent); font-weight:600; }
+    .search-tabs { display:flex; gap:8px; margin-bottom:8px; }
+    .search-tab { background:var(--bg-card); border:1px solid var(--border-subtle); color:var(--text-secondary); padding:8px 16px; border-radius:20px; cursor:pointer; font-size:0.8rem; font-weight:600; transition:0.3s; }
+    .search-tab.active { border-color:var(--accent); color:var(--accent); background:var(--card-hover); }
+    .external-results { display:none; background:var(--bg-card); border-radius:16px; padding:20px; margin-bottom:16px; border:1px solid var(--accent); }
+    .external-results.active { display:block; }
+    .external-result-item { padding:12px 0; border-bottom:1px solid var(--border-subtle); }
+    .external-result-item:last-child { border-bottom:none; }
+    .external-result-item h5 { color:var(--accent); margin-bottom:4px; }
+    .external-result-item p { font-size:0.85rem; color:var(--text-secondary); line-height:1.6; }
+    .external-result-item a { color:#4285F4; font-size:0.8rem; }
+    @media (max-width:768px) {
+      .main-layout { flex-direction:column; }
+      .sidebar { width:100%; height:auto; position:relative; top:0; flex-direction:row; flex-wrap:wrap; gap:6px; padding:12px; }
+      .library-grid { grid-template-columns:1fr; }
+      .detail-panel { max-width:100%; }
+    }
+  </style>
+</head>
+<body class="dark-theme">
+
+  <header class="code-header">
+    <div class="header-left">
+      <button class="back-btn" id="back-btn">← Peta</button>
+      <span class="library-title">CODEVERSE</span>
+      <span class="item-count" id="item-count">62 item</span>
+    </div>
+    <div class="header-right">
+      <a href="microverse1.html" style="color:#00E5A0;text-decoration:none;font-weight:600;font-size:0.8rem;">MicroVerse</a>
+      <button class="theme-toggle" id="theme-toggle-btn">☀ Light</button>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <aside class="sidebar" id="sidebar">
+      <h4>KATEGORI</h4>
+      <button class="category-btn active" data-category="all">Semua <span class="category-count">62</span></button>
+    </aside>
+
+    <main class="content-area" id="content-area">
+      <div class="search-tabs">
+        <button class="search-tab active" data-tab="internal">🔍 Cari Internal</button>
+        <button class="search-tab" data-tab="external">🌐 Cari di Web</button>
+      </div>
+      <div class="search-container" id="search-internal">
+        <input type="text" class="search-input" id="search-input" placeholder="Cari di 62 item CodeVerse...">
+        <button class="search-btn" id="search-btn">Cari</button>
+      </div>
+      <div class="search-container" id="search-external" style="display:none;">
+        <input type="text" class="search-input" id="search-ext-input" placeholder="Cari info DNA/Genetika dari web...">
+        <button class="search-btn" id="search-ext-btn">Cari Web</button>
+      </div>
+      <div class="external-results" id="external-results"></div>
+
+      <div class="helix-banner" id="helix-box">
+        <svg class="helix-avatar" viewBox="0 0 60 60" fill="none">
+          <rect x="8" y="14" width="14" height="4" rx="2" fill="#1E90FF"/>
+          <rect x="38" y="14" width="14" height="4" rx="2" fill="#1E90FF"/>
+          <rect x="8" y="42" width="14" height="4" rx="2" fill="#1E90FF"/>
+          <rect x="38" y="42" width="14" height="4" rx="2" fill="#1E90FF"/>
+          <line x1="15" y1="18" x2="45" y2="42" stroke="#1E90FF" stroke-width="3"/>
+          <line x1="45" y1="18" x2="15" y2="42" stroke="#1E90FF" stroke-width="3"/>
+          <circle cx="22" cy="30" r="5" fill="white"/><circle cx="22" cy="30" r="2" fill="#1a1a2e"/>
+          <circle cx="38" cy="30" r="5" fill="white"/><circle cx="38" cy="30" r="2" fill="#1a1a2e"/>
+          <rect x="17" y="28" width="10" height="4" rx="2" fill="none" stroke="#1a1a2e" stroke-width="1.5"/>
+          <rect x="33" y="28" width="10" height="4" rx="2" fill="none" stroke="#1a1a2e" stroke-width="1.5"/>
+        </svg>
+        <div class="helix-message" id="helix-message">
+          <span>Helix:</span> Interesting! Selamat datang di CodeVerse. Aku Profesor Helix, siap memandumu menjelajahi dunia DNA dan genetika. Ada 62 topik seru yang bisa kamu pelajari!
+        </div>
+      </div>
+
+      <div class="library-grid" id="library-grid"></div>
+      <div class="pagination" id="pagination"></div>
+    </main>
+  </div>
+
+  <div class="detail-overlay" id="detail-overlay">
+    <div class="detail-panel" id="detail-panel">
+      <button class="detail-close" id="detail-close-btn">Tutup</button>
+      <div class="detail-icon-large" id="detail-icon"></div>
+      <div class="detail-title" id="detail-title"></div>
+      <div class="detail-category" id="detail-category"></div>
+      <div class="detail-section" id="detail-content"></div>
+      <button class="btn-3d" id="detail-open-3d" style="width:100%;justify-content:center;padding:14px;">🔍 Lihat Model 3D di Sketchfab</button>
+    </div>
+  </div>
+
+  <div class="model-3d-overlay" id="model-3d-overlay">
+    <div class="model-3d-container">
+      <div class="model-3d-header">
+        <span class="model-3d-title" id="model-3d-title">Model 3D</span>
+        <button class="model-3d-close" id="model-3d-close-btn">Tutup</button>
+      </div>
+      <iframe class="model-3d-iframe" id="model-3d-iframe" allowfullscreen allow="autoplay; fullscreen; xr-spatial-tracking" title="Model 3D"></iframe>
+      <div class="model-3d-fallback">Model tidak muncul? <a id="model-3d-fallback-link" href="#" target="_blank" rel="noopener">Buka di Sketchfab</a></div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const categories = [
+        { id: 'struktur', name: 'Struktur DNA & RNA', icon: '🧬', color: '#1E90FF' },
+        { id: 'replikasi', name: 'Replikasi DNA', icon: '🔁', color: '#3498db' },
+        { id: 'transkripsi', name: 'Transkripsi & Regulasi', icon: '📝', color: '#8e44ad' },
+        { id: 'translasi', name: 'Translasi Lanjutan', icon: '🏭', color: '#2ecc71' },
+        { id: 'mutasi', name: 'Mutasi & Variasi', icon: '⚠️', color: '#e74c3c' },
+        { id: 'mendel', name: 'Genetika Mendel', icon: '📊', color: '#f39c12' },
+        { id: 'biotek', name: 'Bioteknologi DNA', icon: '🔬', color: '#e67e22' },
+        { id: 'genomika', name: 'Genomika', icon: '🌐', color: '#1abc9c' },
+        { id: 'transposon', name: 'Virus & Elemen Bergerak', icon: '🦠', color: '#c0392b' }
+      ];
+
+      function generateItems() {
+        const items = [];
+        function add(id, name, category, icon, iconBg, content) {
+          items.push({ id, name, category, icon, iconBg, content, sketchfabSearch: name.replace(/\s+/g,'+')+'+3d+model' });
+        }
+
+        const sCat = 'struktur';
+        add('dna-structure', 'DNA - Double Helix', sCat, '🧬', '#1E90FF', `
+          <h4>Definisi & Sejarah Penemuan</h4>
+          <p>DNA (Deoxyribonucleic Acid) adalah molekul yang menyimpan informasi genetik semua organisme hidup dan banyak virus. Struktur double helix DNA ditemukan oleh James Watson dan Francis Crick pada tahun 1953, berdasarkan data difraksi sinar-X yang dihasilkan oleh Rosalind Franklin dan Maurice Wilkins. Penemuan ini revolusioner karena segera menjelaskan bagaimana informasi genetik disalin dan diwariskan.</p>
+          <p>Sebelum penemuan Watson-Crick, para ilmuwan sudah tahu bahwa gen terbuat dari DNA, tetapi tidak ada yang bisa menjelaskan bagaimana molekul sederhana bisa menyimpan informasi kompleks dan menggandakan diri dengan akurat. Struktur double helix memberikan jawaban elegan: dua untai saling melengkapi, sehingga masing-masing bisa menjadi template untuk sintesis untai baru.</p>
+
+          <h4>Struktur Double Helix</h4>
+          <p>DNA terdiri dari dua untai polinukleotida yang melilit satu sama lain membentuk heliks ganda (double helix). Setiap untai memiliki backbone gula-fosfat yang berselang-seling, dengan basa nitrogen yang menonjol ke dalam. Dua untai berjalan antiparalel: satu untai berarah 5'→3', yang lain 3'→5'.</p>
+          <p>Diameter double helix adalah sekitar 2 nanometer. Satu putaran penuh heliks (360 derajat) mencakup 10 pasangan basa dan memiliki panjang 3.4 nanometer. Ini disebut bentuk B-DNA, yang merupakan bentuk paling umum di sel. Ada juga bentuk A-DNA (lebih pendek dan lebar, terbentuk saat dehidrasi) dan Z-DNA (heliks kiri, mungkin berperan dalam regulasi gen).</p>
+
+          <h4>Major & Minor Groove</h4>
+          <p>Karena geometri ikatan glikosidik antara basa dan gula tidak simetris, double helix memiliki dua alur (groove) dengan ukuran berbeda: major groove (lebar 2.2 nm) dan minor groove (lebar 1.2 nm). Major groove adalah situs utama pengikatan protein karena pola atom yang terekspos di sana memungkinkan protein "membaca" urutan basa tanpa membuka heliks. Banyak faktor transkripsi dan protein pengikat DNA mengenali sekuens spesifik melalui interaksi di major groove.</p>
+
+          <h4>Komponen Nukleotida</h4>
+          <p>Setiap nukleotida DNA terdiri dari tiga komponen: gula deoksiribosa (gula 5-karbon tanpa gugus -OH di posisi 2'), gugus fosfat yang terikat ke karbon 5' gula, dan basa nitrogen (adenin, timin, guanin, atau sitosin) yang terikat ke karbon 1' gula. Gugus fosfat menghubungkan karbon 3' satu nukleotida ke karbon 5' nukleotida berikutnya melalui ikatan fosfodiester, membentuk backbone yang bermuatan negatif.</p>
+
+          <div class="info-box"><strong>Tahukah Kamu?</strong> Jika semua DNA dalam satu sel manusia direntangkan, panjangnya sekitar 2 meter. Dalam seluruh tubuh manusia (sekitar 37 triliun sel), total panjang DNA mencapai sekitar 74 triliun meter - cukup untuk mencapai Matahari dan kembali sebanyak 250 kali!</div>
+        `);
+
+        add('nucleotide', 'Nukleotida', sCat, '🧩', '#3498db', `
+          <h4>Definisi & Komponen</h4>
+          <p>Nukleotida adalah blok pembangun (monomer) asam nukleat DNA dan RNA. Setiap nukleotida terdiri dari tiga komponen yang terikat secara kovalen: basa nitrogen (purin atau pirimidin), gula pentosa (deoksiribosa untuk DNA, ribosa untuk RNA), dan satu hingga tiga gugus fosfat.</p>
+          <p>Nukleotida tidak hanya berfungsi sebagai blok pembangun DNA dan RNA, tetapi juga memiliki peran penting sebagai pembawa energi (ATP, GTP), second messenger (cAMP, cGMP), dan kofaktor enzim (NAD+, FAD, koenzim A). ATP (adenosin trifosfat) adalah mata uang energi universal sel, menyimpan energi dalam ikatan fosfoanhidrida antara gugus fosfatnya.</p>
+
+          <h4>Struktur Kimia</h4>
+          <p>Gula pentosa pada DNA adalah 2'-deoksiribosa, yang tidak memiliki gugus hidroksil (-OH) di posisi 2'. Pada RNA, gulanya adalah ribosa yang memiliki gugus -OH di posisi 2'. Perbedaan ini sangat penting: gugus -OH pada RNA membuatnya lebih reaktif dan kurang stabil secara kimia dibanding DNA, menjelaskan mengapa DNA adalah molekul penyimpan informasi jangka panjang sementara RNA lebih cocok untuk fungsi jangka pendek.</p>
+          <p>Basa nitrogen terikat ke karbon 1' gula melalui ikatan N-glikosidik. Gugus fosfat pertama terikat ke karbon 5' gula melalui ikatan ester. Nukleotida dapat memiliki satu, dua, atau tiga gugus fosfat (misalnya AMP, ADP, ATP). Penambahan gugus fosfat kedua dan ketiga memerlukan energi, yang disimpan dalam ikatan fosfoanhidrida.</p>
+
+          <h4>Fungsi Biologis</h4>
+          <ul>
+            <li><strong>Blok Pembangun DNA & RNA:</strong> Nukleotida trifosfat (dATP, dGTP, dCTP, dTTP) adalah substrat untuk DNA polimerase. NTP (ATP, GTP, CTP, UTP) adalah substrat untuk RNA polimerase.</li>
+            <li><strong>Pembawa Energi:</strong> ATP menyimpan ~7.3 kcal/mol dalam ikatan fosfoanhidrida. GTP digunakan dalam translasi dan sinyal sel.</li>
+            <li><strong>Second Messenger:</strong> cAMP mengaktivasi PKA; cGMP terlibat dalam sinyal visual dan vasodilatasi.</li>
+            <li><strong>Kofaktor:</strong> NAD+ dan FAD adalah pembawa elektron dalam metabolisme. Koenzim A membawa gugus asil.</li>
+          </ul>
+        `);
+
+        add('nitrogenous-bases', 'Basa Nitrogen', sCat, '🔤', '#8e44ad', `
+          <h4>Definisi & Klasifikasi</h4>
+          <p>Basa nitrogen adalah molekul heterosiklik yang mengandung nitrogen dan merupakan komponen kunci nukleotida. Ada dua kelas basa nitrogen: purin (struktur cincin ganda) dan pirimidin (struktur cincin tunggal). Adenin (A) dan Guanin (G) adalah purin. Timin (T), Sitosin (C), dan Urasil (U) adalah pirimidin.</p>
+          <p>Struktur cincin purin terdiri dari cincin pirimidin yang berfusi dengan cincin imidazol. Penomoran atom pada purin berbeda dengan pirimidin. Pada purin, atom nitrogen berada di posisi 1, 3, 7, dan 9. Pada pirimidin, nitrogen di posisi 1 dan 3.</p>
+
+          <h4>Pasangan Basa Watson-Crick</h4>
+          <p>Dalam double helix DNA, basa nitrogen dari dua untai berpasangan melalui ikatan hidrogen spesifik: Adenin selalu berpasangan dengan Timin (A=T) melalui dua ikatan hidrogen, dan Guanin selalu berpasangan dengan Sitosin (G≡C) melalui tiga ikatan hidrogen. Aturan ini disebut aturan Chargaff, dinamakan dari Erwin Chargaff yang menemukan bahwa jumlah A selalu sama dengan T, dan jumlah G selalu sama dengan C.</p>
+          <p>Pasangan G≡C dengan tiga ikatan hidrogen lebih stabil secara termal dibanding A=T dengan dua ikatan. Akibatnya, DNA dengan kandungan GC tinggi memiliki suhu leleh (Tm) yang lebih tinggi. Organisme termofilik yang hidup di suhu tinggi sering memiliki genom dengan GC content tinggi.</p>
+
+          <h4>Perbedaan DNA vs RNA</h4>
+          <ul>
+            <li><strong>DNA:</strong> Menggunakan Timin (T). Timin adalah 5-metilurasil.</li>
+            <li><strong>RNA:</strong> Menggunakan Urasil (U). Urasil tidak memiliki gugus metil di posisi 5.</li>
+            <li><strong>Keuntungan Timin:</strong> Gugus metil pada timin membantu enzim perbaikan DNA membedakan timin dari urasil yang terbentuk dari deaminasi spontan sitosin. Ini mencegah mutasi.</li>
+          </ul>
+        `);
+
+        add('hydrogen-bonds-dna', 'Ikatan Hidrogen Basa DNA', sCat, '🔗', '#2ecc71', `
+          <h4>Definisi & Peran</h4>
+          <p>Ikatan hidrogen antara pasangan basa nitrogen adalah gaya non-kovalen yang menyatukan dua untai double helix DNA. Meskipun individual lemah (2-7 kJ/mol per ikatan), jumlahnya yang banyak (ribuan hingga miliaran dalam satu kromosom) memberikan stabilitas luar biasa pada struktur DNA. Ikatan hidrogen juga memungkinkan pemisahan untai yang reversibel selama replikasi dan transkripsi.</p>
+          <p>Ikatan hidrogen terbentuk antara atom hidrogen yang terikat ke atom elektronegatif (donor) dan atom elektronegatif lain (akseptor). Pada DNA, gugus amino (-NH2) dan gugus karbonil (C=O) pada basa berpartisipasi dalam ikatan hidrogen.</p>
+
+          <h4>Pasangan A=T vs G≡C</h4>
+          <ul>
+            <li><strong>Adenin-Timin:</strong> Dua ikatan hidrogen. A-T memiliki dua situs ikatan: N6 amino adenin ke O4 karbonil timin, dan N1 adenin ke N3 timin.</li>
+            <li><strong>Guanin-Sitosin:</strong> Tiga ikatan hidrogen. Lebih kuat dan stabil.</li>
+            <li><strong>Implikasi Biologis:</strong> Daerah kaya GC lebih sulit dibuka, mempengaruhi inisiasi replikasi dan transkripsi. PCR memerlukan suhu lebih tinggi untuk membuka template kaya GC.</li>
+          </ul>
+
+          <h4>Stacking Interactions</h4>
+          <p>Selain ikatan hidrogen antar basa, stabilitas double helix juga ditentukan oleh interaksi tumpukan (stacking interactions) antara cincin aromatik basa yang bertumpuk. Interaksi ini adalah gaya van der Waals dan efek hidrofobik. Faktanya, stacking interactions menyumbang sebagian besar stabilitas termal DNA, lebih dari ikatan hidrogen.</p>
+        `);
+
+        add('chromosome', 'Kromosom', sCat, '🧶', '#e74c3c', `
+          <h4>Definisi & Struktur</h4>
+          <p>Kromosom adalah struktur terorganisir dari DNA dan protein yang membawa informasi genetik organisme. Pada eukariota, kromosom terletak di dalam nukleus dan terdiri dari kromatin (kompleks DNA dan protein histon). Manusia memiliki 46 kromosom (23 pasang): 22 pasang autosom dan 1 pasang kromosom seks (XX untuk perempuan, XY untuk laki-laki).</p>
+          <p>Setiap kromosom memiliki struktur esensial: sentromer (tempat perlekatan spindle mitosis), telomer (ujung pelindung), dan origin of replication (tempat dimulainya replikasi DNA). Setelah replikasi, kromosom terdiri dari dua kromatid saudara identik yang disatukan di sentromer.</p>
+
+          <h4>Tingkat Organisasi Kromatin</h4>
+          <ul>
+            <li><strong>Nukleosom:</strong> Unit dasar: 147 bp DNA melilit oktamer histon. "Beads on a string".</li>
+            <li><strong>Serat 30nm:</strong> Nukleosom terlipat dengan bantuan histon H1.</li>
+            <li><strong>Loop domain:</strong> Serat 30nm membentuk loop yang terikat ke scaffold protein.</li>
+            <li><strong>Kromosom metafase:</strong> Tingkat pemadatan tertinggi, terlihat di bawah mikroskop cahaya.</li>
+          </ul>
+
+          <h4>Kariotip</h4>
+          <p>Kariotip adalah tampilan lengkap kromosom individu yang diatur berdasarkan ukuran dan bentuk. Digunakan untuk diagnosis kelainan kromosom seperti sindrom Down (trisomi 21), sindrom Turner (monosomi X), dan sindrom Klinefelter (XXY). Teknik pewarnaan seperti Giemsa banding (G-banding) menghasilkan pola pita karakteristik yang membantu identifikasi setiap kromosom.</p>
+
+          <div class="info-box"><strong>Tahukah Kamu?</strong> Kromosom manusia terbesar adalah kromosom 1 dengan sekitar 249 juta pasangan basa dan 2.000-2.100 gen. Kromosom terkecil adalah kromosom 21 dengan sekitar 48 juta pasangan basa, meskipun kromosom Y lebih kecil dengan sekitar 59 juta pasangan basa.</div>
+        `);
+
+        add('chromatin-nucleosome', 'Kromatin & Nukleosom', sCat, '🧶', '#f39c12', `
+          <h4>Definisi Kromatin</h4>
+          <p>Kromatin adalah kompleks DNA dan protein yang membentuk kromosom eukariotik. Fungsi utamanya adalah mengemas DNA secara efisien ke dalam nukleus (rasio pemadatan ~10.000 kali) sambil tetap memungkinkan akses untuk transkripsi, replikasi, dan perbaikan. Kromatin terdiri dari DNA (~40%), protein histon (~40%), dan protein non-histon (~20%).</p>
+          <p>Kromatin hadir dalam dua bentuk: eukromatin (longgar, aktif ditranskripsi, terwarnai pucat) dan heterokromatin (padat, tidak aktif, terwarnai gelap). Heterokromatin dibagi lagi menjadi konstitutif (selalu padat, seperti di sentromer dan telomer) dan fakultatif (dapat berubah antara padat dan longgar, seperti kromosom X yang diinaktivasi).</p>
+
+          <h4>Struktur Nukleosom</h4>
+          <p>Nukleosom adalah unit dasar pengemasan DNA. Terdiri dari oktamer histon (2 salinan masing-masing H2A, H2B, H3, dan H4) yang dililit oleh DNA sepanjang 147 pasangan basa dalam 1.67 putaran kiri. Histon H1 (linker histone) mengikat DNA di luar nukleosom, membantu pemadatan lebih lanjut menjadi serat 30nm. DNA linker (sekitar 20-80 bp) menghubungkan nukleosom yang berdekatan, membentuk struktur "beads on a string".</p>
+          <p>Ekor N-terminal histon menonjol dari nukleosom dan menjadi subjek berbagai modifikasi pasca-translasi (asetilasi, metilasi, fosforilasi, ubiquitinasi) yang membentuk "kode histon". Modifikasi ini mengatur aksesibilitas DNA dan ekspresi gen. Asetilasi lisin menetralkan muatan positif histon, mengurangi interaksi dengan DNA negatif, dan membuka kromatin untuk transkripsi.</p>
+        `);
+
+        add('rna-structure', 'RNA - Struktur', sCat, '📜', '#1abc9c', `
+          <h4>Definisi & Perbedaan dengan DNA</h4>
+          <p>RNA (Ribonucleic Acid) adalah asam nukleat yang berperan dalam berbagai fungsi biologis: pembawa pesan genetik (mRNA), adaptor translasi (tRNA), komponen struktural ribosom (rRNA), regulator ekspresi gen (miRNA, siRNA), dan katalis (ribozim). Berbeda dengan DNA, RNA biasanya untai tunggal meskipun dapat membentuk struktur sekunder kompleks melalui pasangan basa internal.</p>
+          <p>Perbedaan kimia utama RNA dari DNA: (1) gula ribosa (bukan deoksiribosa) memiliki -OH di posisi 2', (2) menggunakan urasil (U) sebagai pengganti timin (T). Gugus 2'-OH membuat RNA lebih reaktif dan kurang stabil secara kimia, menjelaskan mengapa RNA memiliki umur paruh lebih pendek di dalam sel (menit hingga jam) dibanding DNA (tahun untuk DNA genomik).</p>
+
+          <h4>Struktur Sekunder & Tersier</h4>
+          <p>Meskipun untai tunggal, RNA dapat melipat menjadi struktur kompleks melalui pasangan basa internal, membentuk stem-loop, pseudoknot, dan struktur tiga dimensi. tRNA adalah contoh klasik dengan struktur "cloverleaf" yang memiliki 4 lengan. Ribozim seperti RNase P dan intron self-splicing memiliki aktivitas katalitik yang bergantung pada strukturnya.</p>
+
+          <div class="info-box"><strong>Hipotesis Dunia RNA:</strong> RNA diyakini sebagai molekul genetik pertama dalam evolusi kehidupan karena dapat menyimpan informasi (seperti DNA) dan mengkatalisis reaksi (seperti protein). Ribosom, yang mengkatalisis sintesis protein, pada dasarnya adalah ribozim besar di mana rRNA adalah komponen katalitik.</div>
+        `);
+
+        add('dna-vs-rna', 'DNA vs RNA - Perbandingan', sCat, '⚖️', '#e67e22', `
+          <h4>Tabel Perbandingan Lengkap</h4>
+          <ul>
+            <li><strong>Gula:</strong> DNA = deoksiribosa (tidak ada -OH di 2'). RNA = ribosa (ada -OH di 2').</li>
+            <li><strong>Basa:</strong> DNA = A, T, G, C. RNA = A, U, G, C.</li>
+            <li><strong>Struktur:</strong> DNA = double helix (untai ganda). RNA = biasanya untai tunggal.</li>
+            <li><strong>Stabilitas:</strong> DNA = sangat stabil (bertahun-tahun). RNA = kurang stabil (menit-jam).</li>
+            <li><strong>Lokasi:</strong> DNA = terutama nukleus. RNA = nukleus dan sitoplasma.</li>
+            <li><strong>Fungsi:</strong> DNA = penyimpanan informasi jangka panjang. RNA = berbagai fungsi (pembawa pesan, adaptor, struktural, katalitik, regulasi).</li>
+            <li><strong>Ukuran:</strong> DNA = sangat panjang (hingga ratusan juta bp). RNA = lebih pendek (ratusan hingga ribuan nukleotida).</li>
+            <li><strong>Reaktivitas:</strong> DNA = rendah, tahan hidrolisis basa. RNA = tinggi, mudah terhidrolisis dalam basa.</li>
+          </ul>
+
+          <h4>Mengapa DNA Lebih Stabil?</h4>
+          <p>Gugus 2'-OH pada RNA dapat menyerang ikatan fosfodiester secara intramolekuler dalam kondisi basa, menyebabkan pemutusan rantai. DNA, tanpa 2'-OH, tahan terhadap hidrolisis basa. Inilah mengapa DNA adalah molekul pilihan untuk penyimpanan informasi genetik jangka panjang. Namun, RNA lebih fleksibel secara fungsional karena ketidakstabilannya memungkinkan regulasi dinamis ekspresi gen.</p>
+        `);
+
+        add('histone-proteins', 'Histon & Protein Kromosom', sCat, '🧱', '#9b59b6', `
+          <h4>Definisi & Jenis Histon</h4>
+          <p>Histon adalah protein kecil yang sangat basa (kaya lisin dan arginin) yang berfungsi sebagai protein pengemas DNA pada eukariota. Muatan positif histon berinteraksi kuat dengan backbone fosfat DNA yang bermuatan negatif. Ada lima jenis histon utama: H1 (linker histone), H2A, H2B, H3, dan H4 (core histones).</p>
+          <p>Histon adalah beberapa protein paling terkonservasi dalam evolusi. Histon H4 pada manusia dan kacang polong hanya berbeda 2 dari 102 asam amino, menunjukkan bahwa hampir semua perubahan pada histon bersifat letal. Ini mencerminkan peran kritis histon dalam pengemasan dan regulasi DNA.</p>
+
+          <h4>Oktamer Histon & Nukleosom</h4>
+          <p>Dua salinan masing-masing H2A, H2B, H3, dan H4 membentuk oktamer histon, yang merupakan inti protein nukleosom. DNA melilit oktamer dalam 1.67 putaran kiri, mencakup 147 bp. Histon H1 mengikat DNA linker di luar nukleosom dan berperan dalam pembentukan serat 30nm. H1 memiliki struktur tripartit: domain globular sentral dengan ekor N-terminal dan C-terminal yang tidak terstruktur.</p>
+
+          <h4>Varian Histon</h4>
+          <p>Selain histon kanonikal, ada varian histon yang memiliki fungsi khusus: H2A.X terlibat dalam respons kerusakan DNA (difosforilasi menjadi γH2AX), H2A.Z ditemukan di promoter gen aktif, CENP-A adalah varian H3 yang membentuk nukleosom khusus di sentromer, dan H3.3 dikaitkan dengan gen yang aktif ditranskripsi.</p>
+        `);
+
+        const rCat = 'replikasi';
+        add('dna-replication-overview', 'Replikasi DNA - Overview', rCat, '🔁', '#3498db', `
+          <h4>Definisi & Prinsip Semi-Konservatif</h4>
+          <p>Replikasi DNA adalah proses penggandaan molekul DNA untuk menghasilkan dua salinan identik. Ini terjadi sebelum pembelahan sel agar setiap sel anak menerima salinan lengkap genom. Replikasi DNA bersifat semi-konservatif, dibuktikan oleh eksperimen Meselson-Stahl pada tahun 1958 menggunakan isotop nitrogen (N14 dan N15).</p>
+          <p>Dalam replikasi semi-konservatif, setiap untai DNA induk berfungsi sebagai template untuk sintesis untai baru. Hasilnya, setiap molekul DNA anak terdiri dari satu untai lama (parental) dan satu untai baru (daughter). Ini berbeda dengan model konservatif (DNA induk tetap utuh) atau dispersif (DNA anak adalah campuran fragmen lama dan baru).</p>
+
+          <h4>Origin of Replication & Bidirectionality</h4>
+          <p>Replikasi dimulai di origin of replication, sekuens DNA spesifik yang dikenali oleh protein inisiator. Pada prokariota, biasanya ada satu origin (oriC pada E. coli). Pada eukariota, ada ribuan origin yang diaktivasi secara terprogram selama fase S. Replikasi berlangsung bidirectional - dua garpu replikasi bergerak ke arah berlawanan dari origin.</p>
+
+          <div class="cross-link"><strong>Baca juga di MicroVerse 1:</strong> DNA Polimerase, Helikase, dan enzim replikasi lainnya sudah dibahas detail di <a href="microverse1.html" target="_blank">MicroVerse 1 - Enzim & Katalisis</a>.</div>
+        `);
+
+        add('primase', 'Primase & Primer RNA', rCat, '🧪', '#2ecc71', `
+          <h4>Definisi & Fungsi</h4>
+          <p>Primase adalah enzim RNA polimerase khusus yang mensintesis primer RNA pendek (10-12 nukleotida) yang diperlukan untuk inisiasi replikasi DNA. Tidak seperti DNA polimerase, primase dapat memulai sintesis de novo tanpa memerlukan ujung 3'-OH bebas. Primer RNA menyediakan ujung 3'-OH yang dibutuhkan DNA polimerase untuk mulai menambahkan nukleotida DNA.</p>
+          <p>Pada prokariota, primase adalah protein tunggal DnaG yang berasosiasi dengan helikase DnaB. Pada eukariota, primase adalah bagian dari kompleks DNA polimerase α/primase. DNA Pol α memiliki subunit primase yang mensintesis primer RNA pendek, lalu subunit polimerase memperpanjangnya dengan ~20 nukleotida DNA sebelum diserahkan ke DNA Pol δ atau ε.</p>
+
+          <h4>Mengapa Primer RNA?</h4>
+          <p>Penggunaan primer RNA (bukan DNA) memberikan mekanisme kontrol: primer RNA mudah dikenali dan dihapus oleh RNase H dan exonuclease, lalu celah diisi oleh DNA polimerase dan disambung oleh ligase. Ini memastikan bahwa tidak ada ribonukleotida yang tertinggal di genom yang dapat menyebabkan ketidakstabilan.</p>
+        `);
+
+        add('leading-lagging', 'Leading & Lagging Strand', rCat, '🏃', '#e74c3c', `
+          <h4>Masalah Arah Sintesis</h4>
+          <p>Semua DNA polimerase hanya dapat mensintesis DNA dalam arah 5'→3'. Karena dua untai DNA antiparalel dan garpu replikasi bergerak ke satu arah, ini menciptakan tantangan topologis. Satu untai (leading strand) dapat disintesis secara kontinu searah dengan pergerakan garpu. Untai lainnya (lagging strand) harus disintesis secara diskontinu dalam fragmen pendek yang disebut fragmen Okazaki (100-200 nukleotida pada eukariota, 1000-2000 pada prokariota).</p>
+
+          <h4>Fragmen Okazaki & Ligasi</h4>
+          <p>Setiap fragmen Okazaki dimulai dengan primer RNA yang disintesis oleh primase. DNA Pol δ (pada eukariota) memperpanjang primer hingga mencapai fragmen sebelumnya. Kemudian primer RNA dihapus oleh RNase H dan exonuclease FEN1, celah diisi oleh DNA polimerase, dan DNA ligase menyambung fragmen-fragmen tersebut menjadi untai kontinu. Proses ini terjadi ribuan kali selama replikasi genom manusia.</p>
+
+          <div class="info-box"><strong>Tahukah Kamu?</strong> Koordinasi antara leading dan lagging strand dicapai melalui dimer DNA polimerase III pada prokariota. Dua molekul DNA Pol III terikat bersama, satu mensintesis leading strand dan satu mensintesis lagging strand. Lagging strand membentuk loop agar arah sintesis tetap 5'→3' sementara garpu bergerak.</div>
+        `);
+
+        add('telomere-telomerase', 'Telomer & Telomerase', rCat, '⏳', '#9b59b6', `
+          <h4>End Replication Problem</h4>
+          <p>Telomer adalah struktur nukleoprotein di ujung kromosom linear yang melindungi DNA dari degradasi dan mencegah fusi antar kromosom. Pada manusia, telomer terdiri dari pengulangan heksanukleotida TTAGGG sepanjang 5-15 kilobasa. Masalah replikasi ujung muncul karena: (1) primer RNA di ujung 5' lagging strand tidak bisa diganti dengan DNA setelah dihapus, dan (2) DNA polimerase memerlukan primer yang tidak bisa disintesis di ujung paling akhir. Akibatnya, telomer memendek 50-150 bp per pembelahan sel.</p>
+
+          <h4>Telomerase</h4>
+          <p>Telomerase adalah enzim reverse transcriptase yang memperpanjang telomer. Terdiri dari komponen RNA (TERC) yang berfungsi sebagai template untuk sintesis pengulangan telomerik, dan komponen protein (TERT) dengan aktivitas katalitik. Telomerase aktif di sel germinal, sel punca, dan 85-90% sel kanker, memungkinkan mereka membelah tanpa batas. Di sel somatik normal, telomerase tidak aktif, membatasi kapasitas proliferatif (batas Hayflick, ~50-70 pembelahan).</p>
+
+          <div class="highlight-box"><strong>Kanker & Penuaan:</strong> Inhibitor telomerase sedang dikembangkan sebagai terapi anti-kanker. Strategi lain: vaksin yang menargetkan TERT untuk merangsang sistem imun melawan sel kanker yang mengekspresikan telomerase.</div>
+
+          <div class="cross-link"><strong>Baca juga di MicroVerse 2:</strong> Pemendekan telomer dan hubungannya dengan penuaan seluler dibahas di <a href="microverse2.html" target="_blank">MicroVerse 2 - Aging Seluler</a>.</div>
+        `);
+
+        add('topoisomerase', 'Topoisomerase', rCat, '🌀', '#1abc9c', `
+          <h4>Definisi & Masalah Supercoiling</h4>
+          <p>Topoisomerase adalah enzim yang mengatasi masalah topologis DNA selama replikasi dan transkripsi. Saat heliks DNA dibuka oleh helikase, puntiran berlebih (supercoiling) terjadi di depan garpu replikasi. Tanpa topoisomerase, tegangan torsional akan menghentikan progresi garpu replikasi.</p>
+          <p>Topoisomerase bekerja dengan memotong backbone DNA, melewatkan untai lain melalui celah, dan menyambung kembali. Topoisomerase I memotong satu untai (single-strand break), tidak memerlukan ATP. Topoisomerase II memotong kedua untai (double-strand break), memerlukan ATP.</p>
+
+          <h4>Target Obat</h4>
+          <ul>
+            <li><strong>Inhibitor Topoisomerase I:</strong> Camptothecin, irinotecan, topotecan (obat kemoterapi).</li>
+            <li><strong>Inhibitor Topoisomerase II:</strong> Etoposide, doxorubicin, ciprofloxacin (antibiotik yang menarget topoisomerase bakteri).</li>
+          </ul>
+        `);
+
+        add('origin-of-replication', 'Origin of Replication', rCat, '🚀', '#f39c12', `
+          <h4>Definisi & Struktur</h4>
+          <p>Origin of replication adalah sekuens DNA spesifik tempat replikasi DNA dimulai. Pada prokariota, biasanya ada satu origin (oriC pada E. coli, panjang ~245 bp) yang mengandung sekuens pengikatan untuk protein inisiator DnaA. Pada eukariota, ada ribuan origin yang tidak memiliki sekuens konsensus yang ketat seperti prokariota.</p>
+          <p>Pada eukariota, Origin Recognition Complex (ORC) berikatan dengan origin dan merekrut protein Cdc6 dan Cdt1 yang memuat helikase MCM2-7 ke DNA. Proses ini disebut "licensing" dan hanya terjadi di fase G1, memastikan setiap origin hanya diaktivasi sekali per siklus sel. Setelah fase S dimulai, Cdt1 didegradasi dan ORC difosforilasi, mencegah re-replikasi.</p>
+        `);
+
+        const tCat = 'transkripsi';
+        add('rna-polymerase-code', 'RNA Polimerase', tCat, '📝', '#8e44ad', `
+          <h4>Definisi & Jenis</h4>
+          <p>RNA polimerase adalah enzim yang mensintesis RNA menggunakan DNA sebagai template dalam proses transkripsi. Berbeda dengan DNA polimerase, RNA polimerase dapat memulai sintesis de novo tanpa primer dan tidak memiliki aktivitas proofreading (sehingga tingkat kesalahan lebih tinggi, ~1 per 10^4-10^5 nukleotida).</p>
+          <p>Pada eukariota, ada tiga RNA polimerase utama: RNA Pol I (mentranskripsi rRNA 28S, 18S, 5.8S di nukleolus), RNA Pol II (mentranskripsi mRNA dan beberapa ncRNA), RNA Pol III (mentranskripsi tRNA, 5S rRNA, dan RNA kecil lainnya). RNA Pol II adalah yang paling kompleks dengan 12 subunit pada yeast.</p>
+
+          <h4>Mekanisme Transkripsi</h4>
+          <p>RNA polimerase mengikat promoter dengan bantuan faktor transkripsi, membuka DNA membentuk "transcription bubble" (~14 bp DNA terbuka), dan mensintesis RNA dalam arah 5'→3' menggunakan untai template 3'→5'. Kecepatan elongasi sekitar 20-50 nukleotida per detik pada eukariota.</p>
+
+          <div class="cross-link"><strong>Baca juga di MicroVerse 1:</strong> Transkripsi secara umum sudah dibahas di <a href="microverse1.html" target="_blank">MicroVerse 1 - Sintesis Protein</a>.</div>
+        `);
+
+        add('promoter-enhancer', 'Promoter & Enhancer', tCat, '🎯', '#3498db', `
+          <h4>Definisi Promoter</h4>
+          <p>Promoter adalah sekuens DNA di dekat gen yang berfungsi sebagai tempat pengikatan RNA polimerase dan inisiasi transkripsi. Pada eukariota, promoter inti (core promoter) mengandung elemen-elemen seperti TATA box (konsensus TATAAA, terletak ~25-30 bp upstream dari transcription start site), Initiator (Inr), dan Downstream Promoter Element (DPE).</p>
+          <p>Promoter proksimal (~50-200 bp upstream) mengandung binding site untuk faktor transkripsi spesifik seperti Sp1 (GC box) dan C/EBP (CAAT box). Kombinasi elemen-elemen ini menentukan tingkat basal transkripsi dan regulasi oleh aktivator atau represor.</p>
+
+          <h4>Enhancer & Silencer</h4>
+          <p>Enhancer adalah elemen regulasi yang dapat meningkatkan transkripsi gen dari jarak jauh (hingga ratusan kilobasa) dan bekerja independen dari orientasi. Enhancer mengandung cluster binding sites untuk faktor transkripsi aktivator. DNA looping memungkinkan enhancer berinteraksi dengan promoter meskipun terpisah jauh secara linear. Silencer adalah elemen serupa yang merepresi transkripsi.</p>
+          <p>Contoh terkenal: Locus Control Region (LCR) pada kluster globin mengatur ekspresi gen globin selama perkembangan. Mutasi pada enhancer dapat menyebabkan penyakit meskipun gen target tetap utuh.</p>
+        `);
+
+        add('transcription-factors', 'Faktor Transkripsi', tCat, '👔', '#e74c3c', `
+          <h4>Definisi & Klasifikasi</h4>
+          <p>Faktor transkripsi adalah protein yang mengikat DNA secara sekuens-spesifik dan mengatur transkripsi gen. Mereka memiliki setidaknya dua domain: domain pengikat DNA (DNA-binding domain/DBD) dan domain aktivasi (activation domain/AD). Beberapa juga memiliki domain pengikatan ligan (ligand-binding domain/LBD) atau domain dimerisasi.</p>
+          <p>Faktor transkripsi umum (general transcription factors/GTFs) diperlukan untuk transkripsi semua gen oleh RNA Pol II: TFIIA, TFIIB, TFIID (mengandung TBP yang mengenali TATA box), TFIIE, TFIIF, dan TFIIH (memiliki aktivitas helikase dan kinase). Faktor transkripsi spesifik mengatur gen tertentu sebagai respons terhadap sinyal.</p>
+
+          <h4>Contoh & Signifikansi</h4>
+          <ul>
+            <li><strong>p53:</strong> "Guardian of the genome", diaktivasi oleh kerusakan DNA.</li>
+            <li><strong>Myc:</strong> Onkogen, mengatur proliferasi sel.</li>
+            <li><strong>NF-κB:</strong> Regulator utama respons imun dan inflamasi.</li>
+            <li><strong>HIF-1:</strong> Respons terhadap hipoksia.</li>
+          </ul>
+        `);
+
+        add('capping-polyadenylation', "5' Capping & 3' Polyadenylation", tCat, '🎩', '#2ecc71', `
+          <h4>5' Capping</h4>
+          <p>5' cap adalah modifikasi yang terjadi segera setelah transkripsi dimulai (~20-30 nukleotida pertama). Enzim capping (RNA triphosphatase, guanylyltransferase, methyltransferase) menambahkan 7-metilguanosin ke ujung 5' mRNA melalui ikatan 5'-5' trifosfat yang tidak biasa. Cap melindungi mRNA dari degradasi 5'→3' exonuclease, membantu ekspor dari nukleus, dan diperlukan untuk inisiasi translasi.</p>
+
+          <h4>3' Polyadenylation</h4>
+          <p>Polyadenylation adalah penambahan ekor poly(A) (~200-250 adenin pada mamalia) ke ujung 3' mRNA. Dipicu oleh sinyal poliadenilasi (AAUAAA) yang dikenali oleh kompleks CPSF (Cleavage and Polyadenylation Specificity Factor). Poly(A) tail melindungi mRNA dari degradasi 3'→5' dan berinteraksi dengan Poly(A) Binding Protein (PABP) yang meningkatkan efisiensi translasi. Pemendekan poly(A) tail (deadenylation) adalah langkah pertama degradasi mRNA.</p>
+        `);
+
+        add('operon-lac', 'Operon Lac', tCat, '🥛', '#f39c12', `
+          <h4>Definisi & Model Klasik</h4>
+          <p>Operon lac adalah sistem regulasi gen pada bakteri E. coli yang mengontrol metabolisme laktosa. Ditemukan oleh François Jacob dan Jacques Monod pada tahun 1961 (Nobel 1965), operon lac menjadi model klasik regulasi gen. Operon ini terdiri dari tiga gen struktural (lacZ: β-galaktosidase, lacY: permease, lacA: transasetilase) yang ditranskripsi sebagai satu mRNA polisistronik.</p>
+
+          <h4>Regulasi Ganda</h4>
+          <ul>
+            <li><strong>Represi Katabolit (CAP):</strong> Saat glukosa tersedia, cAMP rendah, CAP tidak aktif, transkripsi minimal. Saat glukosa habis, cAMP naik, cAMP-CAP mengaktifkan transkripsi.</li>
+            <li><strong>Induksi oleh Laktosa:</strong> Tanpa laktosa, represor LacI mengikat operator dan memblok transkripsi. Saat laktosa ada, alolaktosa (inducer) mengikat LacI dan melepaskannya dari operator, memungkinkan transkripsi.</li>
+          </ul>
+          <p>Jadi operon lac hanya aktif saat glukosa tidak ada DAN laktosa ada - logika Boolean AND yang elegan!</p>
+        `);
+
+        add('epigenetic-regulation', 'Regulasi Epigenetik', tCat, '🧬', '#e67e22', `
+          <h4>Definisi Epigenetika</h4>
+          <p>Epigenetika adalah studi tentang perubahan ekspresi gen yang diwariskan tanpa perubahan sekuens DNA. Mekanisme epigenetik meliputi metilasi DNA, modifikasi histon, dan non-coding RNA. Epigenetika menjelaskan bagaimana sel dengan genom identik (seperti semua sel tubuh kita) dapat memiliki fenotip yang sangat berbeda.</p>
+
+          <div class="cross-link"><strong>Baca juga di MicroVerse 2:</strong> Metilasi DNA, modifikasi histon, dan remodeling kromatin sudah dibahas detail di <a href="microverse2.html" target="_blank">MicroVerse 2 - Epigenetika Sel</a>.</div>
+        `);
+
+        add('rna-editing', 'RNA Editing', tCat, '✂️', '#1abc9c', `
+          <h4>Definisi</h4>
+          <p>RNA editing adalah modifikasi pasca-transkripsi yang mengubah sekuens RNA, membuatnya berbeda dari template DNA. Dua jenis utama: A-to-I editing (adenosin diubah menjadi inosin oleh enzim ADAR) dan C-to-U editing (sitosin diubah menjadi urasil oleh enzim APOBEC).</p>
+          <p>Contoh penting: gen apolipoprotein B (ApoB) mengalami C-to-U editing di usus, menciptakan kodon stop prematur dan menghasilkan ApoB48 (usus) yang berbeda dari ApoB100 (hati). Pada otak, A-to-I editing pada reseptor glutamat mengubah permeabilitas kalsiumnya, mempengaruhi plastisitas sinaptik.</p>
+        `);
+
+        add('mrna-degradation', 'Degradasi mRNA', tCat, '🗑️', '#c0392b', `
+          <h4>Mekanisme Degradasi</h4>
+          <p>Degradasi mRNA adalah proses penting yang mengontrol level ekspresi gen. mRNA memiliki umur paruh bervariasi: dari beberapa menit (mRNA onkogen c-fos) hingga beberapa jam (mRNA globin). Degradasi biasanya dimulai dengan pemendekan poly(A) tail (deadenylation) oleh enzim deadenylase.</p>
+          <p>Setelah deadenylation, mRNA didegradasi melalui dua jalur utama: decapping oleh Dcp1/Dcp2 diikuti degradasi 5'→3' oleh exonuclease Xrn1, atau degradasi 3'→5' oleh exosome. Nonsense-mediated decay (NMD) secara khusus mendegradasi mRNA dengan kodon stop prematur, mencegah produksi protein terpotong yang berpotensi berbahaya.</p>
+        `);
+
+        const tlCat = 'translasi';
+        add('translation-initiation', 'Inisiasi Translasi', tlCat, '🚀', '#2ecc71', `
+          <h4>Definisi & Kompleksitas</h4>
+          <p>Inisiasi translasi adalah langkah paling diatur dalam sintesis protein. Pada eukariota, ini melibatkan setidaknya 12 eukaryotic Initiation Factors (eIFs). Proses dimulai dengan pembentukan kompleks pre-inisiasi 43S (subunit 40S + eIF1, eIF1A, eIF3, eIF5 + Met-tRNAi-eIF2-GTP).</p>
+          <p>Kompleks ini direkrut ke ujung 5' mRNA melalui interaksi eIF3 dengan eIF4G yang terikat ke eIF4E (protein pengikat cap). Kompleks kemudian memindai mRNA dalam arah 5'→3' hingga menemukan kodon start AUG dalam konteks sekuens Kozak (GCCRCCAUGG). Saat AUG dikenali, GTP dihidrolisis, eIFs dilepaskan, dan subunit 60S bergabung membentuk ribosom 80S.</p>
+
+          <div class="cross-link"><strong>Baca juga di MicroVerse 1:</strong> Translasi secara umum sudah dibahas di <a href="microverse1.html" target="_blank">MicroVerse 1 - Sintesis Protein</a>.</div>
+        `);
+
+        add('translation-elongation', 'Elongasi Translasi', tlCat, '🏃', '#3498db', `
+          <h4>Siklus Elongasi</h4>
+          <p>Elongasi translasi adalah siklus berulang yang menambahkan asam amino ke rantai polipeptida yang sedang tumbuh. Setiap siklus terdiri dari tiga langkah: (1) pengikatan aminoacyl-tRNA ke situs A ribosom (dibantu oleh eEF1A-GTP), (2) pembentukan ikatan peptida di pusat peptidil transferase (dikatalisis oleh rRNA 28S), dan (3) translokasi ribosom sepanjang mRNA (dibantu oleh eEF2-GTP).</p>
+          <p>Kecepatan elongasi pada eukariota sekitar 2-6 asam amino per detik. Akurasi dijaga oleh proofreading: eEF1A-GTP menghidrolisis GTP lebih cepat saat tRNA yang salah masuk, memberikan kesempatan untuk koreksi. Fidelitas translasi sekitar 1 kesalahan per 10^3-10^4 asam amino.</p>
+        `);
+
+        add('translation-termination', 'Terminasi Translasi', tlCat, '🏁', '#e74c3c', `
+          <h4>Mekanisme</h4>
+          <p>Terminasi terjadi saat ribosom mencapai salah satu dari tiga kodon stop (UAA, UAG, UGA). Tidak ada tRNA yang mengenali kodon stop. Sebaliknya, eukaryotic Release Factor 1 (eRF1) memasuki situs A dan mengenali ketiga kodon stop melalui motif tripeptida NIKS, GGQ, dan YxCxxxF yang sangat terkonservasi.</p>
+          <p>eRF1 berikatan dengan eRF3-GTP. Hidrolisis GTP oleh eRF3 menyebabkan perubahan konformasi yang memungkinkan eRF1 memicu hidrolisis ikatan ester antara tRNA di situs P dan rantai polipeptida. Rantai polipeptida dilepaskan, dan ribosom didaur ulang oleh faktor ABCE1.</p>
+        `);
+
+        add('protein-folding-code', 'Pelipatan Protein', tlCat, '🧶', '#f39c12', `
+          <h4>Paradoks Levinthal</h4>
+          <p>Protein harus melipat ke konformasi tiga dimensi yang tepat untuk berfungsi. Paradoks Levinthal menyatakan bahwa jika protein mencoba semua konformasi yang mungkin secara acak, waktu yang dibutuhkan akan melebihi usia alam semesta. Namun protein melipat dalam milidetik hingga detik, menunjukkan bahwa pelipatan bukanlah pencarian acak melainkan mengikuti jalur terarah.</p>
+
+          <div class="cross-link"><strong>Baca juga di MicroVerse 1:</strong> Chaperone dan mekanisme pelipatan protein sudah dibahas detail di <a href="microverse1.html" target="_blank">MicroVerse 1 - Sintesis Protein</a>.</div>
+        `);
+
+        add('polysome', 'Polisom (Poliribosom)', tlCat, '🔗', '#9b59b6', `
+          <h4>Definisi</h4>
+          <p>Polisom adalah struktur di mana banyak ribosom menerjemahkan satu molekul mRNA secara bersamaan. Setelah ribosom pertama bergerak cukup jauh dari kodon start, ribosom kedua dapat memulai inisiasi. Ini memungkinkan produksi protein yang sangat efisien: satu mRNA dapat menghasilkan banyak salinan protein dalam waktu singkat.</p>
+          <p>Polisom dapat berbentuk melingkar (circular polysome) di mana ribosom yang menyelesaikan translasi dapat segera memulai kembali pada mRNA yang sama. Interaksi antara PABP di poly(A) tail dan eIF4G di 5' cap memediasi sirkularisasi ini, meningkatkan efisiensi translasi.</p>
+        `);
+
+        const mCat = 'mutasi';
+        add('point-mutation', 'Mutasi Titik', mCat, '⚠️', '#e74c3c', `
+          <h4>Jenis-Jenis Mutasi Titik</h4>
+          <ul>
+            <li><strong>Silent (Sinonim):</strong> Perubahan basa yang tidak mengubah asam amino karena degenerasi kode genetik. Biasanya netral, tapi bisa mempengaruhi splicing atau efisiensi translasi.</li>
+            <li><strong>Missense (Non-Sinonim):</strong> Mengubah asam amino. Contoh: mutasi E6V pada gen β-globin menyebabkan sickle cell anemia. Bisa bersifat konservatif (asam amino mirip) atau non-konservatif.</li>
+            <li><strong>Nonsense:</strong> Menciptakan kodon stop prematur. Menghasilkan protein terpotong yang biasanya tidak fungsional dan didegradasi oleh NMD.</li>
+            <li><strong>Frameshift:</strong> Insersi atau delesi yang menggeser kerangka baca. Menghasilkan sekuens asam amino yang sama sekali berbeda setelah titik mutasi.</li>
+          </ul>
+        `);
+
+        add('chromosome-mutation', 'Mutasi Kromosom', mCat, '🏗️', '#c0392b', `
+          <h4>Jenis Aberasi Kromosom</h4>
+          <ul>
+            <li><strong>Delesi:</strong> Kehilangan segmen kromosom. Contoh: sindrom Cri-du-chat (delesi 5p).</li>
+            <li><strong>Duplikasi:</strong> Penggandaan segmen. Sumber materi genetik baru untuk evolusi.</li>
+            <li><strong>Inversi:</strong> Segmen terbalik. Perisentrik (melibatkan sentromer) vs parasentrik.</li>
+            <li><strong>Translokasi:</strong> Pertukaran segmen antar kromosom non-homolog. Resiprokal vs Robertsonian. Kromosom Philadelphia (t(9;22)) pada CML.</li>
+            <li><strong>Aneuploidi:</strong> Jumlah kromosom abnormal. Monosomi (2n-1), trisomi (2n+1).</li>
+          </ul>
+        `);
+
+        add('snp', 'SNP (Single Nucleotide Polymorphism)', mCat, '📍', '#f39c12', `
+          <h4>Definisi</h4>
+          <p>SNP adalah variasi genetik paling umum pada manusia, terjadi rata-rata setiap 300-1000 nukleotida. SNP adalah posisi dalam genom di mana dua atau lebih basa alternatif hadir dalam populasi dengan frekuensi >1%. Manusia memiliki sekitar 10 juta SNP. SNP dapat terletak di daerah pengkode (exonic), non-pengkode (intronic), atau intergenik.</p>
+          <p>Genome-Wide Association Studies (GWAS) menggunakan SNP untuk mengidentifikasi varian genetik yang terkait dengan penyakit. Contoh: varian pada gen FTO terkait dengan obesitas, varian pada CFH terkait dengan degenerasi makula.</p>
+        `);
+
+        add('mutagen', 'Mutagen', mCat, '☢️', '#e67e22', `
+          <h4>Jenis-Jenis Mutagen</h4>
+          <ul>
+            <li><strong>Fisik:</strong> Radiasi UV (dimer pirimidin), radiasi ionisasi (X-ray, gamma - pemutusan untai ganda).</li>
+            <li><strong>Kimia:</strong> Base analog (5-bromourasil), agen alkilasi (EMS), agen interkalasi (ethidium bromide), agen deaminasi (asam nitrit).</li>
+            <li><strong>Biologis:</strong> Virus (HPV, HBV mengintegrasi ke genom), transposon.</li>
+          </ul>
+        `);
+
+        add('ames-test', 'Ames Test', mCat, '🧪', '#1abc9c', `
+          <h4>Definisi</h4>
+          <p>Ames test adalah uji mutagenisitas yang menggunakan bakteri Salmonella typhimurium untuk mendeteksi senyawa mutagenik. Dikembangkan oleh Bruce Ames pada tahun 1970-an. Bakteri yang digunakan memiliki mutasi pada gen histidin sehingga tidak dapat tumbuh tanpa histidin. Jika senyawa menyebabkan mutasi balik (reversion) yang mengembalikan kemampuan mensintesis histidin, koloni akan tumbuh.</p>
+          <p>Ames test adalah skrining awal untuk karsinogenisitas karena banyak mutagen juga bersifat karsinogenik. Kelebihannya cepat, murah, dan dapat mendeteksi mutagen dalam campuran kompleks.</p>
+        `);
+
+        add('somatic-vs-germline', 'Mutasi Somatik vs Germline', mCat, '🧬', '#8e44ad', `
+          <h4>Perbedaan Kunci</h4>
+          <ul>
+            <li><strong>Mutasi Germline:</strong> Terjadi di sel germinal (sperma, ovum). Diwariskan ke keturunan. Contoh: mutasi BRCA1/2 pada kanker payudara familial.</li>
+            <li><strong>Mutasi Somatik:</strong> Terjadi di sel tubuh setelah fertilisasi. Tidak diwariskan. Merupakan penyebab utama kanker. Akumulasi mutasi somatik seiring usia.</li>
+          </ul>
+        `);
+
+        add('molecular-evolution', 'Evolusi Molekuler', mCat, '🕰️', '#2ecc71', `
+          <h4>Jam Molekuler</h4>
+          <p>Jam molekuler adalah teknik yang menggunakan laju mutasi untuk memperkirakan waktu divergensi antar spesies. Diasumsikan bahwa mutasi netral terakumulasi pada laju konstan seiring waktu. Gen yang berbeda memiliki laju evolusi berbeda: gen histon sangat terkonservasi (mutasi letal), sementara pseudogen berevolusi cepat (tidak ada seleksi).</p>
+          <p>Contoh: perbandingan sekuens DNA mitokondria menunjukkan bahwa manusia dan simpanse berpisah sekitar 6-7 juta tahun lalu. Jam molekuler juga digunakan dalam epidemiologi molekuler untuk melacak penyebaran virus.</p>
+        `);
+
+        const menCat = 'mendel';
+        add('mendel-law-1', 'Hukum Mendel I (Segregasi)', menCat, '📊', '#f39c12', `
+          <h4>Definisi & Eksperimen</h4>
+          <p>Hukum Segregasi Mendel menyatakan bahwa setiap individu memiliki dua alel untuk setiap gen, dan alel-alel ini memisah (bersegregasi) selama pembentukan gamet sehingga setiap gamet hanya membawa satu alel. Mendel menemukan ini melalui persilangan tanaman kacang ercis (Pisum sativum) dengan sifat kontras (tinggi vs pendek, biji bulat vs keriput).</p>
+          <p>Saat Mendel menyilangkan tanaman tinggi murni (TT) dengan pendek murni (tt), semua keturunan F1 tinggi (Tt). Saat F1 disilangkan sesamanya, keturunan F2 menunjukkan rasio 3:1 (3 tinggi : 1 pendek). Ini menunjukkan bahwa alel untuk tinggi (T) dominan terhadap alel pendek (t).</p>
+        `);
+
+        add('mendel-law-2', 'Hukum Mendel II (Independent Assortment)', menCat, '🎲', '#e67e22', `
+          <h4>Definisi</h4>
+          <p>Hukum Independent Assortment menyatakan bahwa alel dari gen berbeda memisah secara independen satu sama lain selama pembentukan gamet. Ini berlaku untuk gen yang terletak di kromosom berbeda atau berjauhan pada kromosom yang sama. Mendel menemukan ini dengan persilangan dihibrid (dua sifat): tanaman dengan biji bulat kuning (RRYY) vs keriput hijau (rryy).</p>
+          <p>Hasil F2 menunjukkan rasio 9:3:3:1 (9 bulat kuning : 3 bulat hijau : 3 keriput kuning : 1 keriput hijau). Ini hanya mungkin jika alel untuk bentuk biji (R/r) dan warna biji (Y/y) memisah secara independen.</p>
+          <div class="info-box"><strong>Pengecualian:</strong> Gen yang terletak berdekatan pada kromosom yang sama cenderung diwariskan bersama (linkage), melanggar hukum independent assortment. Frekuensi rekombinasi antara dua gen terkait digunakan untuk memetakan posisi gen pada kromosom.</div>
+        `);
+
+        add('dominant-recessive', 'Dominan vs Resesif', menCat, '⚖️', '#3498db', `
+          <h4>Definisi</h4>
+          <p>Alel dominan adalah alel yang fenotipnya muncul pada individu heterozigot. Alel resesif hanya muncul pada individu homozigot resesif. Dominansi terjadi karena alel dominan menghasilkan protein fungsional, sementara alel resesif menghasilkan protein non-fungsional atau tidak menghasilkan protein sama sekali (loss-of-function).</p>
+          <p>Ada beberapa pola dominansi: dominansi penuh (fenotip heterozigot = homozigot dominan), dominansi tidak penuh (fenotip heterozigot intermediate, contoh: bunga snapdragon merah x putih = merah muda), dan kodominansi (kedua alel diekspresikan, contoh: golongan darah AB).</p>
+        `);
+
+        add('pedigree-analysis', 'Pedigree Analysis', menCat, '👨‍👩‍👧‍👦', '#8e44ad', `
+          <h4>Definisi & Pola Pewarisan</h4>
+          <p>Pedigree adalah diagram yang menunjukkan riwayat keluarga untuk sifat atau penyakit tertentu. Analisis pedigree digunakan untuk menentukan pola pewarisan: autosomal dominan, autosomal resesif, X-linked, atau mitokondria.</p>
+          <ul>
+            <li><strong>Autosomal Dominan:</strong> Muncul di setiap generasi, pria dan wanita terkena sama. Contoh: Huntington, achondroplasia.</li>
+            <li><strong>Autosomal Resesif:</strong> Sering melompati generasi, orang tua pembawa (carrier) tidak terkena. Contoh: fibrosis kistik, sickle cell.</li>
+            <li><strong>X-Linked Resesif:</strong> Lebih banyak pria terkena. Wanita carrier. Contoh: hemofilia, buta warna.</li>
+          </ul>
+        `);
+
+        add('genetic-diseases', 'Penyakit Genetik', menCat, '🏥', '#e74c3c', `
+          <h4>Contoh Penyakit Genetik</h4>
+          <ul>
+            <li><strong>Fibrosis Kistik:</strong> Mutasi gen CFTR (kromosom 7). Protein channel klorida rusak, menyebabkan lendir kental di paru dan pankreas.</li>
+            <li><strong>Sickle Cell Anemia:</strong> Mutasi missense E6V pada gen β-globin. Eritrosit berbentuk sabit, menyumbat pembuluh darah.</li>
+            <li><strong>Huntington:</strong> Ekspansi triplet CAG pada gen huntingtin. Neurodegeneratif, onset dewasa.</li>
+            <li><strong>Hemofilia A:</strong> Defisiensi faktor VIII. X-linked resesif.</li>
+          </ul>
+        `);
+
+        add('multiple-alleles', 'Alel Ganda', menCat, '🔢', '#1abc9c', `
+          <h4>Definisi & Contoh</h4>
+          <p>Alel ganda terjadi ketika lebih dari dua alel untuk satu gen hadir dalam populasi. Contoh klasik: golongan darah ABO. Gen I memiliki tiga alel: IA (menghasilkan antigen A), IB (antigen B), dan i (tidak menghasilkan antigen). IA dan IB kodominan, keduanya dominan terhadap i. Ini menghasilkan empat golongan darah: A (IAIA atau IAi), B (IBIB atau IBi), AB (IAIB), O (ii).</p>
+          <p>Contoh lain: warna bulu kelinci (alel C, cch, ch, c dengan hierarki dominansi), MHC (Human Leukocyte Antigen) dengan ratusan alel per lokus - sistem paling polimorfik pada genom manusia.</p>
+        `);
+
+        add('epistasis', 'Epistasis', menCat, '🎭', '#2ecc71', `
+          <h4>Definisi</h4>
+          <p>Epistasis adalah interaksi antar gen di mana alel pada satu lokus menutupi atau memodifikasi efek alel pada lokus lain. Berbeda dengan dominansi yang terjadi antar alel pada lokus yang sama. Gen yang menutupi disebut epistatik, gen yang ditutupi disebut hipostatik.</p>
+          <p>Contoh: warna bulu Labrador retriever. Gen B (hitam/coklat) dan gen E (deposisi pigmen). Anjing dengan genotipe ee tidak dapat mendepositkan pigmen apapun, menjadi kuning terlepas dari genotipe B. Jadi gen E epistatik terhadap gen B.</p>
+        `);
+
+        add('pleiotropy', 'Pleiotropi', menCat, '🕸️', '#9b59b6', `
+          <h4>Definisi</h4>
+          <p>Pleiotropi terjadi ketika satu gen mempengaruhi banyak fenotip yang tampaknya tidak terkait. Ini karena produk gen (protein) mungkin berfungsi di berbagai jalur atau jaringan. Contoh: gen β-globin. Mutasi pada gen ini menyebabkan sickle cell anemia yang mempengaruhi bentuk eritrosit, menyebabkan anemia, nyeri, kerusakan organ, dan meningkatkan kerentanan terhadap infeksi.</p>
+          <p>Contoh lain: fenilketonuria (PKU) - mutasi pada gen PAH menyebabkan defisiensi enzim fenilalanin hidroksilase, mengakibatkan akumulasi fenilalanin yang merusak otak, menyebabkan keterbelakangan mental, dan mengurangi pigmentasi (karena fenilalanin menghambat tirosinase).</p>
+        `);
+
+        add('penetrance-expressivity', 'Penetrasi & Ekspresivitas', menCat, '📏', '#d35400', `
+          <h4>Definisi</h4>
+          <ul>
+            <li><strong>Penetrasi:</strong> Proporsi individu dengan genotipe tertentu yang menunjukkan fenotip terkait. Penetrasi lengkap (100%) berarti semua pembawa mutasi menunjukkan fenotip. Penetrasi tidak lengkap (<100%) berarti beberapa pembawa tidak menunjukkan fenotip.</li>
+            <li><strong>Ekspresivitas:</strong> Tingkat atau keparahan fenotip pada individu yang menunjukkan fenotip. Ekspresivitas bervariasi berarti fenotip dapat berkisar dari ringan hingga parah.</li>
+          </ul>
+          <p>Contoh: mutasi BRCA1 memiliki penetrasi sekitar 60-80% untuk kanker payudara (tidak semua pembawa mengembangkan kanker). Neurofibromatosis tipe 1 memiliki penetrasi 100% tetapi ekspresivitas sangat bervariasi.</p>
+        `);
+
+        add('non-mendelian', 'Non-Mendelian Inheritance', menCat, '🔄', '#1E90FF', `
+          <h4>Jenis Pewarisan Non-Mendelian</h4>
+          <ul>
+            <li><strong>Maternal Inheritance (mtDNA):</strong> Mitokondria hanya diwariskan dari ibu karena sperma tidak menyumbang mitokondria ke zigot. Semua anak dari ibu yang terkena akan mewarisi mutasi mtDNA.</li>
+            <li><strong>Genomic Imprinting:</strong> Ekspresi gen bergantung pada asal parental. Contoh: sindrom Prader-Willi (delesi paternal 15q11-13) vs Angelman (delesi maternal pada region yang sama).</li>
+            <li><strong>Uniparental Disomy:</strong> Kedua salinan kromosom berasal dari satu orang tua.</li>
+            <li><strong>Trinucleotide Repeat Expansion:</strong> Jumlah pengulangan meningkat pada generasi berikutnya, menyebabkan fenomena antisipasi (penyakit muncul lebih awal dan lebih parah).</li>
+          </ul>
+        `);
+
+        const bCat = 'biotek';
+        add('pcr-code', 'PCR (Polymerase Chain Reaction)', bCat, '🔬', '#e67e22', `
+          <h4>Definisi & Prinsip</h4>
+          <p>PCR adalah teknik amplifikasi DNA in vitro yang dapat menghasilkan jutaan salinan sekuens DNA target dari jumlah awal yang sangat sedikit (bahkan satu molekul). Ditemukan oleh Kary Mullis pada tahun 1983 (Nobel 1993). PCR menggunakan siklus termal berulang yang terdiri dari tiga langkah: denaturasi (94-98°C, memisahkan untai DNA), annealing (50-65°C, primer menempel ke template), dan ekstensi (72°C, Taq polimerase mensintesis DNA baru).</p>
+          <p>Jumlah DNA target berlipat ganda setiap siklus, menghasilkan amplifikasi eksponensial. Setelah 30 siklus, secara teoritis dihasilkan 2^30 ≈ 1 miliar salinan. Taq polimerase diisolasi dari bakteri termofilik Thermus aquaticus, sehingga tahan terhadap suhu denaturasi tinggi.</p>
+        `);
+
+        add('crispr-code', 'CRISPR-Cas9', bCat, '✂️', '#e74c3c', `
+          <h4>Definisi & Sejarah</h4>
+          <p>CRISPR (Clustered Regularly Interspaced Short Palindromic Repeats) adalah sistem editing gen yang diadaptasi dari mekanisme imun adaptif bakteri melawan virus. Cas9 adalah nuklease yang dipandu oleh single guide RNA (sgRNA) untuk memotong DNA di lokasi spesifik yang mengandung sekuens PAM (Protospacer Adjacent Motif, 5'-NGG-3' untuk Cas9 dari Streptococcus pyogenes).</p>
+          <p>Ditemukan oleh Jennifer Doudna dan Emmanuelle Charpentier (Nobel Kimia 2020). Setelah pemotongan, sel memperbaiki kerusakan melalui NHEJ (rawan kesalahan, menyebabkan knockout gen) atau HDR (presisi, memungkinkan knock-in menggunakan template donor).</p>
+          <h4>Aplikasi</h4>
+          <ul>
+            <li>Terapi gen untuk penyakit genetik (sickle cell, β-thalassemia).</li>
+            <li>Pembuatan model penyakit pada hewan.</li>
+            <li>Pertanian: tanaman tahan hama, lebih bergizi.</li>
+            <li>Diagnostik: deteksi SARS-CoV-2 (SHERLOCK, DETECTR).</li>
+          </ul>
+        `);
+
+        add('dna-sequencing', 'Sekuensing DNA', bCat, '📜', '#3498db', `
+          <h4>Metode Sanger</h4>
+          <p>Sekuensing Sanger (dideoxy method) menggunakan dideoksinukleotida (ddNTP) terminator rantai yang tidak memiliki gugus 3'-OH, menghentikan sintesis DNA. Empat reaksi terpisah (satu untuk setiap ddNTP) menghasilkan fragmen dengan panjang berbeda yang dipisahkan dengan elektroforesis. Dikembangkan oleh Frederick Sanger pada tahun 1977 (Nobel 1980).</p>
+          <h4>Next-Generation Sequencing (NGS)</h4>
+          <p>NGS memungkinkan sekuensing jutaan fragmen DNA secara paralel. Platform utama: Illumina (sequencing by synthesis, paling banyak digunakan), PacBio (long-read, deteksi modifikasi basa), Oxford Nanopore (ultra-long-read, portabel). Biaya sekuensing genom manusia turun dari $100 juta (2001) menjadi <$1000 (2023).</p>
+        `);
+
+        add('gene-cloning', 'Kloning Gen', bCat, '🧫', '#2ecc71', `
+          <h4>Definisi & Proses</h4>
+          <p>Kloning gen adalah proses membuat salinan identik dari sekuens DNA spesifik. Langkah-langkah: (1) isolasi DNA target dan vektor (plasmid), (2) pemotongan dengan enzim restriksi yang sama, (3) ligasi DNA target ke vektor, (4) transformasi ke bakteri kompeten, (5) seleksi bakteri yang mengandung plasmid rekombinan menggunakan resistensi antibiotik.</p>
+          <p>Enzim restriksi mengenali sekuens palindromik spesifik (4-8 bp) dan memotong DNA menghasilkan ujung lengket (sticky ends) atau ujung tumpul (blunt ends). EcoRI mengenali GAATTC. DNA ligase menyambung backbone DNA.</p>
+        `);
+
+        add('gel-electrophoresis-code', 'Elektroforesis Gel', bCat, '📊', '#7f8c8d', `
+          <h4>Definisi & Prinsip</h4>
+          <p>Elektroforesis gel memisahkan fragmen DNA berdasarkan ukuran. DNA bermuatan negatif bergerak menuju elektroda positif melalui gel agarosa atau poliakrilamid. Fragmen kecil bergerak lebih cepat melalui pori-pori gel. Ukuran fragmen diperkirakan dengan membandingkan dengan DNA ladder (marker ukuran).</p>
+          <p>Pewarnaan dengan ethidium bromide atau SYBR Safe memungkinkan visualisasi DNA di bawah sinar UV. Elektroforesis gel adalah teknik fundamental dalam biologi molekuler, digunakan untuk analisis PCR, kloning, dan fingerprinting.</p>
+        `);
+
+        add('southern-blot', 'Southern Blot', bCat, '📋', '#8e44ad', `
+          <h4>Definisi</h4>
+          <p>Southern blot adalah teknik untuk mendeteksi sekuens DNA spesifik dalam sampel kompleks. Dinamakan dari Edwin Southern yang mengembangkannya pada tahun 1975. Langkah: (1) DNA dipotong dengan enzim restriksi, (2) dipisahkan dengan elektroforesis gel, (3) ditransfer ke membran nilon, (4) dihibridisasi dengan probe berlabel (radioaktif atau fluoresen) yang komplementer dengan target.</p>
+          <p>Aplikasi: analisis struktur gen, deteksi mutasi, DNA fingerprinting, dan konfirmasi keberadaan transgen.</p>
+        `);
+
+        add('northern-blot', 'Northern Blot', bCat, '📋', '#9b59b6', `
+          <h4>Definisi</h4>
+          <p>Northern blot adalah teknik serupa Southern blot tetapi untuk mendeteksi RNA. RNA dipisahkan dengan elektroforesis gel agarosa-formaldehida (kondisi denaturasi), ditransfer ke membran, dan dihibridisasi dengan probe DNA atau RNA berlabel. Northern blot mengukur ukuran dan jumlah mRNA spesifik, memberikan informasi tentang ekspresi gen.</p>
+        `);
+
+        add('microarray', 'Microarray', bCat, '📊', '#1abc9c', `
+          <h4>Definisi</h4>
+          <p>DNA microarray (gene chip) adalah teknologi yang memungkinkan analisis ekspresi ribuan gen secara simultan. Ribuan probe DNA oligonukleotida ditempatkan di permukaan chip. cDNA sampel diberi label fluoresen dan dihibridisasi ke chip. Intensitas fluoresensi di setiap spot menunjukkan level ekspresi gen yang sesuai.</p>
+          <p>Microarray telah banyak digantikan oleh RNA-seq (sekuensing RNA) yang memberikan data lebih komprehensif, tetapi microarray masih digunakan untuk aplikasi spesifik karena lebih murah dan analisis data lebih sederhana.</p>
+        `);
+
+        add('dna-fingerprinting', 'DNA Fingerprinting', bCat, '🕵️', '#d35400', `
+          <h4>Definisi & Prinsip</h4>
+          <p>DNA fingerprinting (profil DNA) adalah teknik untuk mengidentifikasi individu berdasarkan pola unik DNA mereka. Dikembangkan oleh Alec Jeffreys pada tahun 1984. Menggunakan analisis Short Tandem Repeats (STR) - sekuens pendek (2-7 bp) yang diulang beberapa kali. Jumlah pengulangan bervariasi antar individu, menciptakan profil unik.</p>
+          <p>Aplikasi: forensik (identifikasi tersangka/korban), tes paternitas, identifikasi korban bencana, dan konservasi (identifikasi individu hewan). CODIS (Combined DNA Index System) menggunakan 20 lokus STR standar untuk database DNA kriminal.</p>
+        `);
+
+        add('transgenic-organisms', 'Organisme Transgenik', bCat, '🐭', '#27ae60', `
+          <h4>Definisi</h4>
+          <p>Organisme transgenik (Genetically Modified Organism/GMO) adalah organisme yang genomnya telah dimodifikasi dengan penambahan DNA dari spesies lain. Contoh: bakteri yang memproduksi insulin manusia, tanaman tahan hama (Bt corn), tikus knockout untuk penelitian, dan salmon AquAdvantage yang tumbuh lebih cepat.</p>
+          <p>Metode pembuatan: mikroinjeksi DNA ke pronukleus zigot, transformasi menggunakan Agrobacterium (untuk tanaman), atau elektroporasi. Isu etika dan keamanan GMO menjadi perdebatan global, meskipun konsensus ilmiah menyatakan GMO yang disetujui aman untuk dikonsumsi.</p>
+        `);
+
+        const gCat = 'genomika';
+        add('human-genome-project', 'Human Genome Project', gCat, '🌐', '#1E90FF', `
+          <h4>Definisi & Sejarah</h4>
+          <p>Human Genome Project (HGP) adalah proyek internasional untuk mensekuensing seluruh genom manusia. Dimulai tahun 1990, selesai tahun 2003 (2 tahun lebih cepat dari jadwal). Melibatkan 20 institusi dari 6 negara. Total biaya sekitar $2.7 miliar. Hasil: genom referensi manusia, 3 miliar pasangan basa, sekitar 20.000-25.000 gen.</p>
+          <p>Temuan mengejutkan: hanya ~1.5% genom mengkode protein. Sisanya terdiri dari elemen regulator, intron, dan repetitive sequences. Jumlah gen jauh lebih sedikit dari perkiraan awal (100.000+). Banyak gen manusia juga ditemukan di organisme sederhana, menunjukkan konservasi evolusioner yang mendalam.</p>
+        `);
+
+        add('comparative-genomics', 'Genomik Komparatif', gCat, '🔍', '#3498db', `
+          <h4>Definisi</h4>
+          <p>Genomik komparatif membandingkan genom spesies berbeda untuk mengidentifikasi sekuens yang terkonservasi (penting secara fungsional) dan memahami evolusi genom. Perbandingan genom manusia dengan simpanse (98.8% identitas sekuens), tikus (85%), dan zebrafish (70%) mengungkapkan gen dan elemen regulator yang terkonservasi.</p>
+          <p>Genomik komparatif juga mengidentifikasi gen yang unik pada manusia (seperti gen HAR1 yang terlibat dalam perkembangan korteks serebral, menunjukkan evolusi cepat di garis keturunan manusia) dan perubahan genomik yang mendasari adaptasi spesifik.</p>
+        `);
+
+        add('metagenomics', 'Metagenomik', gCat, '🦠', '#2ecc71', `
+          <h4>Definisi</h4>
+          <p>Metagenomik adalah analisis DNA yang diisolasi langsung dari sampel lingkungan (tanah, air, usus manusia) tanpa perlu mengkultur organisme. Ini memungkinkan studi mikrobioma - komunitas mikroorganisme yang hidup di lingkungan tertentu. Proyek Human Microbiome Project (2008) mengkatalogkan mikrobioma manusia.</p>
+          <p>Metagenomik telah mengungkapkan keragaman mikroba yang luar biasa (99% spesies mikroba tidak dapat dikultur), menemukan enzim baru untuk industri, dan menunjukkan peran mikrobioma usus dalam kesehatan manusia (obesitas, diabetes, depresi).</p>
+        `);
+
+        add('bioinformatics', 'Bioinformatika', gCat, '💻', '#e67e22', `
+          <h4>Definisi</h4>
+          <p>Bioinformatika adalah aplikasi komputasi dan statistik untuk menganalisis data biologis, terutama data sekuens DNA, RNA, dan protein. Alat utama: BLAST (Basic Local Alignment Search Tool) untuk mencari kemiripan sekuens di database, Clustal Omega untuk multiple sequence alignment, dan database seperti GenBank (NCBI), UniProt, dan PDB.</p>
+          <p>Bioinformatika sangat penting dalam genomika: assembly genom, anotasi gen, prediksi struktur protein, analisis filogenetik, dan analisis data RNA-seq. Bidang ini telah berkembang pesat seiring dengan ledakan data dari teknologi sekuensing generasi baru.</p>
+        `);
+
+        add('pharmacogenomics', 'Farmakogenomik', gCat, '💊', '#e74c3c', `
+          <h4>Definisi</h4>
+          <p>Farmakogenomik adalah studi tentang bagaimana variasi genetik mempengaruhi respons individu terhadap obat. Tujuan: "personalized medicine" - memberikan obat yang tepat pada dosis yang tepat untuk pasien yang tepat berdasarkan profil genetik mereka.</p>
+          <p>Contoh: varian gen CYP2D6 mempengaruhi metabolisme tamoxifen (obat kanker payudara). "Poor metabolizers" tidak dapat mengaktifkan tamoxifen dan tidak mendapat manfaat. Tes genetik sebelum pengobatan dapat mengidentifikasi pasien ini. Contoh lain: HLA-B*5701 screening sebelum pemberian abacavir (obat HIV) untuk mencegah reaksi hipersensitivitas yang mengancam jiwa.</p>
+        `);
+
+        add('synthetic-biology-code', 'Synthetic Biology', gCat, '🏗️', '#9b59b6', `
+          <h4>Definisi</h4>
+          <p>Biologi sintetik adalah disiplin yang merancang dan membangun sistem biologis baru atau memodifikasi yang sudah ada. Berbeda dengan bioteknologi tradisional, biologi sintetik menggunakan prinsip engineering: standardisasi, modularitas, dan desain rasional.</p>
+          <p>Pencapaian utama: JCVI-syn3.0 (2016) - bakteri dengan genom minimal (473 gen, 531 kb), sintesis kromosom yeast (Sc2.0 project), produksi artemisinin (obat malaria) oleh ragi yang direkayasa, dan sirkuit genetik yang dapat diprogram (toggle switch, oscillator).</p>
+        `);
+
+        const vCat = 'transposon';
+        add('transposon', 'Transposon & Retrotransposon', vCat, '🦠', '#c0392b', `
+          <h4>Definisi & Sejarah</h4>
+          <p>Transposon adalah elemen genetik bergerak (jumping genes) yang dapat berpindah lokasi dalam genom. Ditemukan oleh Barbara McClintock pada jagung tahun 1940-an (Nobel 1983). Transposon menyusun sekitar 45% genom manusia dan telah memainkan peran besar dalam evolusi genom.</p>
+          <h4>Jenis Transposon</h4>
+          <ul>
+            <li><strong>DNA Transposon:</strong> Bergerak melalui mekanisme "cut-and-paste" atau "copy-and-paste" menggunakan enzim transposase. Contoh: elemen P pada Drosophila.</li>
+            <li><strong>Retrotransposon:</strong> Bergerak melalui intermediate RNA menggunakan reverse transcriptase. LINE (Long Interspersed Nuclear Elements, 6 kb, otonom), SINE (Short Interspersed Nuclear Elements, ~300 bp, non-otonom, contoh: Alu elements dengan 1 juta salinan di genom manusia).</li>
+          </ul>
+          <p>Transposon dapat menyebabkan mutasi jika menyisip ke dalam gen fungsional. Namun, mereka juga sumber variasi genetik dan inovasi evolusioner. Elemen Alu yang ada di genom manusia berkontribusi pada evolusi primata dan variasi genetik individu.</p>
+        `);
+
+        return items;
+      }
+
+      const allItems = generateItems();
+      let currentCategory = 'all', currentPage = 1;
+      const itemsPerPage = 20;
+      let filteredItems = [...allItems];
+      let currentOrganelle = null;
+      let searchMode = 'internal';
+
+      const sidebar = document.getElementById('sidebar');
+      const libraryGrid = document.getElementById('library-grid');
+      const pagination = document.getElementById('pagination');
+      const searchInput = document.getElementById('search-input');
+      const searchBtn = document.getElementById('search-btn');
+      const searchExtInput = document.getElementById('search-ext-input');
+      const searchExtBtn = document.getElementById('search-ext-btn');
+      const externalResults = document.getElementById('external-results');
+      const itemCount = document.getElementById('item-count');
+      const helixMessage = document.getElementById('helix-message');
+      const detailOverlay = document.getElementById('detail-overlay');
+      const detailCloseBtn = document.getElementById('detail-close-btn');
+      const detailIcon = document.getElementById('detail-icon');
+      const detailTitle = document.getElementById('detail-title');
+      const detailCategory = document.getElementById('detail-category');
+      const detailContent = document.getElementById('detail-content');
+      const detailOpen3dBtn = document.getElementById('detail-open-3d');
+      const model3dOverlay = document.getElementById('model-3d-overlay');
+      const model3dTitle = document.getElementById('model-3d-title');
+      const model3dIframe = document.getElementById('model-3d-iframe');
+      const model3dCloseBtn = document.getElementById('model-3d-close-btn');
+      const model3dFallbackLink = document.getElementById('model-3d-fallback-link');
+      const themeToggleBtn = document.getElementById('theme-toggle-btn');
+      const backBtn = document.getElementById('back-btn');
+
+      function setTheme(t) {
+        if(t==='light'){document.body.classList.add('light-theme');themeToggleBtn.innerHTML='☾ Dark';}
+        else{document.body.classList.remove('light-theme');themeToggleBtn.innerHTML='☀ Light';}
+        localStorage.setItem('bioverse_theme',t);
+      }
+      setTheme(localStorage.getItem('bioverse_theme')||'dark');
+      themeToggleBtn.addEventListener('click',()=>setTheme(document.body.classList.contains('light-theme')?'dark':'light'));
+
+      function buildSidebar(){
+        const counts={}; allItems.forEach(i=>counts[i.category]=(counts[i.category]||0)+1);
+        categories.forEach(cat=>{
+          const btn=document.createElement('button');
+          btn.className='category-btn'+(cat.id==='all'?' active':'');
+          btn.dataset.category=cat.id;
+          btn.innerHTML=`${cat.name} <span class="category-count">${cat.id==='all'?allItems.length:counts[cat.id]||0}</span>`;
+          btn.addEventListener('click',()=>{
+            document.querySelectorAll('.category-btn').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            currentCategory=cat.id; currentPage=1; filterItems();
+          });
+          sidebar.appendChild(btn);
+        });
+      }
+
+      function filterItems(){
+        let items=[...allItems];
+        if(currentCategory!=='all') items=items.filter(i=>i.category===currentCategory);
+        const q=searchInput.value.trim().toLowerCase();
+        if(q) items=items.filter(i=>i.name.toLowerCase().includes(q)||i.content.toLowerCase().includes(q));
+        filteredItems=items; itemCount.textContent=items.length+' item'; renderPage();
+      }
+
+      function renderPage(){
+        const tp=Math.ceil(filteredItems.length/itemsPerPage);
+        const start=(currentPage-1)*itemsPerPage;
+        const pageItems=filteredItems.slice(start,start+itemsPerPage);
+        libraryGrid.innerHTML='';
+        pageItems.forEach(item=>{
+          const card=document.createElement('div'); card.className='organelle-card';
+          card.innerHTML=`<div class="card-icon" style="background:${item.iconBg};color:white;">${item.icon}</div><div class="card-title">${item.name}</div><div class="card-function">${item.content.replace(/<[^>]*>/g,'').substring(0,120)}...</div><div class="card-actions"><button class="btn-detail">Detail</button><button class="btn-3d">3D</button></div>`;
+          card.addEventListener('click',()=>openDetail(item));
+          card.querySelector('.btn-detail').addEventListener('click',e=>{e.stopPropagation();openDetail(item);});
+          card.querySelector('.btn-3d').addEventListener('click',e=>{e.stopPropagation();openModel3D(item);});
+          libraryGrid.appendChild(card);
+        });
+        renderPagination(tp);
+      }
+
+      function renderPagination(tp){
+        pagination.innerHTML=''; if(tp<=1) return;
+        const prev=document.createElement('button'); prev.className='page-btn'; prev.textContent='«'; prev.disabled=currentPage===1; prev.onclick=()=>{currentPage--;renderPage();window.scrollTo(0,0);}; pagination.appendChild(prev);
+        for(let i=1;i<=tp;i++){const b=document.createElement('button');b.className='page-btn'+(i===currentPage?' active':'');b.textContent=i;b.onclick=()=>{currentPage=i;renderPage();window.scrollTo(0,0);};pagination.appendChild(b);}
+        const next=document.createElement('button');next.className='page-btn';next.textContent='»';next.disabled=currentPage===tp;next.onclick=()=>{currentPage++;renderPage();window.scrollTo(0,0);};pagination.appendChild(next);
+      }
+
+      function openDetail(item){
+        currentOrganelle=item; detailIcon.innerHTML=item.icon; detailIcon.style.background=item.iconBg; detailIcon.style.color='white';
+        detailTitle.textContent=item.name; const co=categories.find(c=>c.id===item.category); detailCategory.textContent=co?co.name:item.category;
+        detailContent.innerHTML=item.content; detailOverlay.classList.add('active');
+        helixMessage.innerHTML=`<span>Helix:</span> Interesting! Kamu sedang mempelajari <strong>${item.name}</strong>. Pengetahuan DNA itu mengagumkan bukan?`;
+      }
+      detailCloseBtn.addEventListener('click',()=>detailOverlay.classList.remove('active'));
+      detailOverlay.addEventListener('click',e=>{if(e.target===detailOverlay)detailOverlay.classList.remove('active');});
+      detailOpen3dBtn.addEventListener('click',()=>{if(currentOrganelle)openModel3D(currentOrganelle);});
+
+      function openModel3D(item){
+        model3dTitle.textContent='Model 3D: '+item.name;
+        const url='https://sketchfab.com/search?q='+encodeURIComponent(item.sketchfabSearch)+'&type=models';
+        model3dIframe.src=url; model3dFallbackLink.href=url; model3dOverlay.classList.add('active');
+      }
+      model3dCloseBtn.addEventListener('click',()=>{model3dOverlay.classList.remove('active');model3dIframe.src='';});
+      model3dOverlay.addEventListener('click',e=>{if(e.target===model3dOverlay){model3dOverlay.classList.remove('active');model3dIframe.src='';}});
+
+      function performSearch(){currentPage=1;filterItems();externalResults.classList.remove('active');}
+      searchBtn.addEventListener('click',performSearch);
+      searchInput.addEventListener('keypress',e=>{if(e.key==='Enter')performSearch();});
+
+      async function performExternalSearch(){
+        const q=searchExtInput.value.trim();
+        if(!q) return;
+        externalResults.innerHTML='<p style="text-align:center;">🔍 Mencari di Wikipedia...</p>';
+        externalResults.classList.add('active');
+        helixMessage.innerHTML=`<span>Helix:</span> Mencari info tentang "<em>${q}</em>" dari sumber eksternal...`;
+        try{
+          const resp=await fetch(`https://id.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*`);
+          const data=await resp.json();
+          if(data.query.search.length===0){externalResults.innerHTML='<p>Tidak ditemukan hasil.</p>';return;}
+          let html='';
+          for(let i=0;i<Math.min(data.query.search.length,5);i++){
+            const r=data.query.search[i];
+            html+=`<div class="external-result-item"><h5>${r.title}</h5><p>${r.snippet.replace(/<\/?[^>]+(>|$)/g,'').substring(0,300)}...</p><a href="https://id.wikipedia.org/wiki/${encodeURIComponent(r.title)}" target="_blank">Baca di Wikipedia →</a></div>`;
+          }
+          externalResults.innerHTML=html;
+          helixMessage.innerHTML=`<span>Helix:</span> Aku menemukan ${Math.min(data.query.search.length,5)} hasil dari Wikipedia untuk "<em>${q}</em>". Interesting! Klik link untuk membaca lengkapnya.`;
+        }catch(e){externalResults.innerHTML='<p>Gagal mencari. Coba lagi nanti.</p>';}
+      }
+      searchExtBtn.addEventListener('click',performExternalSearch);
+      searchExtInput.addEventListener('keypress',e=>{if(e.key==='Enter')performExternalSearch();});
+
+      document.querySelectorAll('.search-tab').forEach(tab=>{
+        tab.addEventListener('click',()=>{
+          document.querySelectorAll('.search-tab').forEach(t=>t.classList.remove('active'));
+          tab.classList.add('active');
+          searchMode=tab.dataset.tab;
+          document.getElementById('search-internal').style.display=searchMode==='internal'?'flex':'none';
+          document.getElementById('search-external').style.display=searchMode==='external'?'flex':'none';
+          if(searchMode==='internal') externalResults.classList.remove('active');
+        });
+      });
+
+      backBtn.addEventListener('click',()=>{window.location.href='index.html';});
+      buildSidebar(); filterItems();
+
+      const greetings=[
+        '<span>Helix:</span> Interesting! Selamat datang di CodeVerse. Aku Profesor Helix, siap memandumu menjelajahi dunia DNA dan genetika!',
+        '<span>Helix:</span> DNA itu seperti buku resep kehidupan. Setiap gen adalah satu resep, dan genom adalah seluruh buku masaknya!',
+        '<span>Helix:</span> Tahukah kamu? Jika semua DNA dalam tubuhmu direntangkan, panjangnya bisa bolak-balik ke Matahari 250 kali! Interesting, kan?',
+        '<span>Helix:</span> Coba fitur "Cari di Web" untuk mencari info DNA dari Wikipedia. Pengetahuan tidak pernah ada batasnya!'
+      ];
+      let gi=0;
+      setInterval(()=>{if(!detailOverlay.classList.contains('active')&&!model3dOverlay.classList.contains('active')){helixMessage.innerHTML=greetings[gi%greetings.length];gi++;}},15000);
+    })();
+  </script>
+</body>
+</html>
