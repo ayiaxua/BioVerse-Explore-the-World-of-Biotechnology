@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>BuildVerse | Ensiklopedia Protein & Biokimia BioVerse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0f1a; --bg-secondary: #111827; --bg-card: rgba(15, 25, 45, 0.85);
+      --text-primary: #e2e8f0; --text-secondary: #b0bec5; --accent: #FFD700;
+      --accent-glow: 0 0 25px rgba(255, 215, 0, 0.5); --border-subtle: rgba(255, 255, 255, 0.08);
+      --font-display: 'Orbitron', sans-serif; --font-body: 'Poppins', sans-serif;
+      --card-hover: rgba(255, 215, 0, 0.1); --panel-bg: rgba(10, 20, 35, 0.98); --sidebar-bg: rgba(12, 22, 38, 0.9);
+    }
+    .light-theme {
+      --bg-primary: #f0f4f8; --bg-secondary: #e2e8f0; --bg-card: rgba(255, 255, 255, 0.92);
+      --text-primary: #1a202c; --text-secondary: #4a5568; --accent-glow: 0 0 25px rgba(200, 160, 0, 0.3);
+      --border-subtle: rgba(0, 0, 0, 0.1); --card-hover: rgba(255, 215, 0, 0.1);
+      --panel-bg: rgba(255, 255, 255, 0.98); --sidebar-bg: rgba(240, 244, 248, 0.95);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: var(--font-body); background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; transition: background 0.4s, color 0.4s; overflow-x: hidden; }
+    .build-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: var(--bg-secondary); border-bottom: 1px solid var(--border-subtle); backdrop-filter: blur(15px); position: sticky; top:0; z-index:100; flex-wrap: wrap; gap:10px; }
+    .header-left { display:flex; align-items:center; gap:12px; }
+    .back-btn { background: var(--bg-card); border:1px solid var(--accent); color:var(--accent); padding:8px 16px; border-radius:25px; cursor:pointer; font-weight:600; font-family:var(--font-body); font-size:0.85rem; transition:0.3s; }
+    .back-btn:hover { background:var(--accent); color:#0a1a2a; }
+    .library-title { font-family:var(--font-display); font-size:1.3rem; font-weight:700; color:var(--accent); letter-spacing:1px; }
+    .item-count { font-size:0.8rem; color:var(--text-secondary); font-weight:500; }
+    .header-right { display:flex; align-items:center; gap:10px; }
+    .theme-toggle { background:var(--bg-card); border:1px solid var(--border-subtle); color:var(--text-primary); padding:8px 14px; border-radius:25px; cursor:pointer; font-family:var(--font-body); font-size:0.8rem; font-weight:600; transition:0.3s; }
+    .theme-toggle:hover { border-color:var(--accent); }
+    .main-layout { display:flex; min-height:calc(100vh - 70px); }
+    .sidebar { width:260px; background:var(--sidebar-bg); border-right:1px solid var(--border-subtle); padding:20px 16px; overflow-y:auto; position:sticky; top:70px; height:calc(100vh - 70px); backdrop-filter:blur(10px); flex-shrink:0; display:flex; flex-direction:column; gap:8px; }
+    .sidebar h4 { font-family:var(--font-display); font-size:0.85rem; color:var(--accent); letter-spacing:1px; margin-bottom:4px; }
+    .category-btn { background:transparent; border:1px solid var(--border-subtle); color:var(--text-secondary); padding:10px 14px; border-radius:12px; cursor:pointer; font-family:var(--font-body); font-size:0.8rem; text-align:left; transition:0.3s; font-weight:500; display:flex; justify-content:space-between; align-items:center; }
+    .category-btn:hover,.category-btn.active { border-color:var(--accent); color:var(--accent); background:var(--card-hover); }
+    .category-count { background:rgba(255,215,0,0.2); padding:2px 8px; border-radius:12px; font-size:0.7rem; }
+    .content-area { flex:1; padding:20px 24px; overflow-y:auto; }
+    .search-container { display:flex; gap:10px; margin-bottom:16px; }
+    .search-input { flex:1; padding:14px 20px; border-radius:35px; border:2px solid var(--border-subtle); background:var(--bg-card); color:var(--text-primary); font-family:var(--font-body); font-size:0.95rem; outline:none; transition:0.3s; }
+    .search-input:focus { border-color:var(--accent); box-shadow:var(--accent-glow); }
+    .search-btn { background:var(--accent); border:none; color:#0a1a2a; padding:14px 22px; border-radius:30px; font-weight:700; cursor:pointer; font-family:var(--font-body); transition:0.3s; }
+    .search-btn:hover { box-shadow:var(--accent-glow); }
+    .proteus-banner { display:flex; align-items:center; gap:12px; padding:12px 18px; margin-bottom:16px; background:var(--bg-card); border-radius:18px; border:1px solid var(--accent); backdrop-filter:blur(10px); }
+    .proteus-avatar { width:55px; height:55px; flex-shrink:0; }
+    .proteus-message { font-size:0.85rem; font-weight:500; color:var(--text-primary); line-height:1.5; }
+    .proteus-message span { color:var(--accent); font-weight:700; }
+    .library-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; }
+    .organelle-card { background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:18px; padding:20px; cursor:pointer; transition:all 0.35s; backdrop-filter:blur(10px); display:flex; flex-direction:column; gap:10px; }
+    .organelle-card:hover { transform:translateY(-5px); border-color:var(--accent); box-shadow:var(--accent-glow); background:var(--card-hover); }
+    .card-icon { width:50px; height:50px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; }
+    .card-title { font-family:var(--font-display); font-size:0.95rem; font-weight:700; letter-spacing:0.5px; }
+    .card-function { font-size:0.8rem; color:var(--text-secondary); line-height:1.5; flex-grow:1; }
+    .card-actions { display:flex; gap:8px; }
+    .btn-detail { background:var(--accent); color:#0a1a2a; border:none; padding:8px 14px; border-radius:20px; font-weight:700; cursor:pointer; font-size:0.75rem; transition:0.3s; }
+    .btn-detail:hover { box-shadow:var(--accent-glow); }
+    .btn-3d { background:transparent; border:2px solid #FF6B6B; color:#FF6B6B; padding:8px 14px; border-radius:20px; font-weight:700; cursor:pointer; font-size:0.75rem; transition:0.3s; }
+    .btn-3d:hover { background:#FF6B6B; color:white; }
+    .pagination { display:flex; justify-content:center; align-items:center; gap:8px; margin-top:24px; flex-wrap:wrap; }
+    .page-btn { background:var(--bg-card); border:1px solid var(--border-subtle); color:var(--text-primary); padding:10px 16px; border-radius:12px; cursor:pointer; font-weight:600; font-size:0.85rem; transition:0.3s; }
+    .page-btn:hover,.page-btn.active { border-color:var(--accent); color:var(--accent); background:var(--card-hover); }
+    .detail-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:200; display:none; justify-content:flex-end; }
+    .detail-overlay.active { display:flex; }
+    .detail-panel { width:100%; max-width:650px; height:100%; background:var(--panel-bg); backdrop-filter:blur(25px); border-left:2px solid var(--accent); padding:28px 24px; overflow-y:auto; animation:slideIn 0.35s ease-out; display:flex; flex-direction:column; gap:20px; }
+    @keyframes slideIn { from{transform:translateX(100%);} to{transform:translateX(0);} }
+    .detail-close { align-self:flex-end; background:transparent; border:1px solid var(--accent); color:var(--accent); padding:8px 18px; border-radius:25px; cursor:pointer; font-weight:700; transition:0.3s; }
+    .detail-close:hover { background:var(--accent); color:#0a1a2a; }
+    .detail-icon-large { width:80px; height:80px; border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:2.2rem; align-self:center; }
+    .detail-title { font-family:var(--font-display); font-size:1.5rem; font-weight:800; text-align:center; color:var(--accent); }
+    .detail-category { text-align:center; font-size:0.8rem; color:var(--text-secondary); font-weight:500; }
+    .detail-section { background:var(--bg-card); border-radius:14px; padding:18px; border:1px solid var(--border-subtle); line-height:1.8; }
+    .detail-section h4 { font-family:var(--font-display); font-size:0.9rem; color:var(--accent); margin-bottom:10px; letter-spacing:1px; border-bottom:1px solid var(--accent); padding-bottom:6px; }
+    .detail-section p { font-size:0.9rem; color:var(--text-secondary); line-height:1.9; text-align:justify; }
+    .detail-section ul { padding-left:18px; font-size:0.9rem; color:var(--text-secondary); line-height:1.9; }
+    .detail-section ul li { margin-bottom:6px; }
+    .info-box { background:rgba(255,215,0,0.08); border-left:3px solid var(--accent); padding:12px 16px; border-radius:8px; margin:10px 0; font-size:0.85rem; color:var(--text-secondary); }
+    .highlight-box { background:rgba(255,152,0,0.15); border-left:3px solid #FF9800; padding:12px 16px; border-radius:8px; margin:10px 0; font-size:0.85rem; color:var(--text-secondary); }
+    .cross-link { background:rgba(0,229,160,0.08); border-left:3px solid #00E5A0; padding:12px 16px; border-radius:8px; margin:10px 0; font-size:0.85rem; }
+    .cross-link a { color:#00E5A0; font-weight:600; }
+    .model-3d-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); backdrop-filter:blur(10px); z-index:300; display:none; align-items:center; justify-content:center; }
+    .model-3d-overlay.active { display:flex; }
+    .model-3d-container { width:90%; max-width:850px; height:80vh; background:var(--bg-secondary); border-radius:22px; border:2px solid var(--accent); overflow:hidden; display:flex; flex-direction:column; box-shadow:0 0 50px rgba(255,215,0,0.5); animation:popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275); }
+    @keyframes popIn { from{transform:scale(0.8);opacity:0;} to{transform:scale(1);opacity:1;} }
+    .model-3d-header { display:flex; justify-content:space-between; align-items:center; padding:14px 20px; background:var(--bg-card); border-bottom:1px solid var(--accent); }
+    .model-3d-title { font-family:var(--font-display); color:var(--accent); font-weight:700; font-size:0.95rem; }
+    .model-3d-close { background:transparent; border:1px solid var(--accent); color:var(--accent); padding:8px 16px; border-radius:25px; cursor:pointer; font-weight:700; transition:0.3s; }
+    .model-3d-close:hover { background:var(--accent); color:#0a1a2a; }
+    .model-3d-iframe { flex:1; width:100%; border:none; }
+    .model-3d-fallback { text-align:center; padding:12px; font-size:0.8rem; color:var(--text-secondary); }
+    .model-3d-fallback a { color:var(--accent); font-weight:600; }
+    .search-tabs { display:flex; gap:8px; margin-bottom:8px; }
+    .search-tab { background:var(--bg-card); border:1px solid var(--border-subtle); color:var(--text-secondary); padding:8px 16px; border-radius:20px; cursor:pointer; font-size:0.8rem; font-weight:600; transition:0.3s; }
+    .search-tab.active { border-color:var(--accent); color:var(--accent); background:var(--card-hover); }
+    .external-results { display:none; background:var(--bg-card); border-radius:16px; padding:20px; margin-bottom:16px; border:1px solid var(--accent); }
+    .external-results.active { display:block; }
+    .external-result-item { padding:12px 0; border-bottom:1px solid var(--border-subtle); }
+    .external-result-item:last-child { border-bottom:none; }
+    .external-result-item h5 { color:var(--accent); margin-bottom:4px; }
+    .external-result-item p { font-size:0.85rem; color:var(--text-secondary); line-height:1.6; }
+    .external-result-item a { color:#4285F4; font-size:0.8rem; }
+    @media (max-width:768px) { .main-layout { flex-direction:column; } .sidebar { width:100%; height:auto; position:relative; top:0; flex-direction:row; flex-wrap:wrap; gap:6px; padding:12px; } .library-grid { grid-template-columns:1fr; } .detail-panel { max-width:100%; } }
+  </style>
+</head>
+<body class="dark-theme">
+
+  <header class="build-header">
+    <div class="header-left">
+      <button class="back-btn" id="back-btn">← Peta</button>
+      <span class="library-title">BUILDVERSE</span>
+      <span class="item-count" id="item-count">78 item</span>
+    </div>
+    <div class="header-right">
+      <a href="codeverse.html" style="color:#1E90FF;text-decoration:none;font-weight:600;font-size:0.8rem;">CodeVerse</a>
+      <button class="theme-toggle" id="theme-toggle-btn">Light</button>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <aside class="sidebar" id="sidebar"><h4>KATEGORI</h4><button class="category-btn active" data-category="all">Semua <span class="category-count">78</span></button></aside>
+    <main class="content-area" id="content-area">
+      <div class="search-tabs"><button class="search-tab active" data-tab="internal">🔍 Cari Internal</button><button class="search-tab" data-tab="external">🌐 Cari di Web</button></div>
+      <div class="search-container" id="search-internal"><input type="text" class="search-input" id="search-input" placeholder="Cari di 78 item BuildVerse..."><button class="search-btn" id="search-btn">Cari</button></div>
+      <div class="search-container" id="search-external" style="display:none;"><input type="text" class="search-input" id="search-ext-input" placeholder="Cari info protein/biokimia dari web..."><button class="search-btn" id="search-ext-btn">Cari Web</button></div>
+      <div class="external-results" id="external-results"></div>
+
+      <div class="proteus-banner" id="proteus-box">
+        <svg class="proteus-avatar" viewBox="0 0 60 60" fill="none"><rect x="10" y="10" width="8" height="40" rx="4" fill="#FFD700"/><rect x="22" y="10" width="8" height="40" rx="4" fill="#FFD700"/><rect x="34" y="10" width="8" height="40" rx="4" fill="#FFD700"/><rect x="46" y="10" width="8" height="40" rx="4" fill="#FFD700"/><path d="M14 50 Q30 55 54 50" stroke="#FFD700" stroke-width="3" fill="none"/><circle cx="22" cy="24" r="5" fill="white"/><circle cx="22" cy="24" r="2" fill="#1a1a2e"/><circle cx="38" cy="24" r="5" fill="white"/><circle cx="38" cy="24" r="2" fill="#1a1a2e"/><rect x="17" y="28" width="10" height="4" rx="2" fill="none" stroke="#1a1a2e" stroke-width="1.5"/><rect x="33" y="28" width="10" height="4" rx="2" fill="none" stroke="#1a1a2e" stroke-width="1.5"/></svg>
+        <div class="proteus-message" id="proteus-message"><span>Proteus:</span> Struktur menentukan fungsi! Selamat datang di BuildVerse. Aku Arsitek Proteus, siap membimbingmu memahami dunia protein dan biokimia. Ada 78 topik menarik!</div>
+      </div>
+      <div class="library-grid" id="library-grid"></div>
+      <div class="pagination" id="pagination"></div>
+    </main>
+  </div>
+
+  <div class="detail-overlay" id="detail-overlay"><div class="detail-panel" id="detail-panel"><button class="detail-close" id="detail-close-btn">Tutup</button><div class="detail-icon-large" id="detail-icon"></div><div class="detail-title" id="detail-title"></div><div class="detail-category" id="detail-category"></div><div class="detail-section" id="detail-content"></div><button class="btn-3d" id="detail-open-3d" style="width:100%;justify-content:center;padding:14px;">🔍 Lihat Model 3D di Sketchfab</button></div></div>
+  <div class="model-3d-overlay" id="model-3d-overlay"><div class="model-3d-container"><div class="model-3d-header"><span class="model-3d-title" id="model-3d-title">Model 3D</span><button class="model-3d-close" id="model-3d-close-btn">Tutup</button></div><iframe class="model-3d-iframe" id="model-3d-iframe" allowfullscreen allow="autoplay; fullscreen; xr-spatial-tracking" title="Model 3D"></iframe><div class="model-3d-fallback">Model tidak muncul? <a id="model-3d-fallback-link" href="#" target="_blank" rel="noopener">Buka di Sketchfab</a></div></div></div>
+
+  <script>
+    (function() {
+      const categories = [
+        { id: 'asam-amino', name: 'Asam Amino', icon: '🧱', color: '#f39c12' },
+        { id: 'struktur-protein', name: 'Struktur Protein', icon: '🏗️', color: '#e74c3c' },
+        { id: 'fungsi-protein', name: 'Fungsi Protein', icon: '⚙️', color: '#3498db' },
+        { id: 'enzim', name: 'Enzim & Kinetika', icon: '⚡', color: '#2ecc71' },
+        { id: 'protein-khusus', name: 'Protein Khusus', icon: '💎', color: '#9b59b6' },
+        { id: 'teknik', name: 'Teknik Analisis', icon: '🔬', color: '#e67e22' },
+        { id: 'lipida', name: 'Lipida & Membran', icon: '🛢️', color: '#1abc9c' },
+        { id: 'karbohidrat', name: 'Karbohidrat', icon: '🍬', color: '#d35400' },
+        { id: 'metabolisme', name: 'Metabolisme Energi', icon: '🔥', color: '#c0392b' },
+        { id: 'sinyal', name: 'Sinyal & Regulasi', icon: '📡', color: '#8e44ad' },
+        { id: 'biotek-protein', name: 'Bioteknologi Protein', icon: '🧬', color: '#27ae60' }
+      ];
+
+      function generateItems() {
+        const items = [];
+        function add(id, name, category, icon, iconBg, content) {
+          items.push({ id, name, category, icon, iconBg, content, sketchfabSearch: name.replace(/\s+/g,'+')+'+3d+model' });
+        }
+		        const aaCat = 'asam-amino';
+        add('amino-acid-overview', 'Asam Amino - Overview', aaCat, '🧱', '#f39c12', `<h4>Definisi & Struktur Umum</h4><p>Asam amino adalah blok pembangun (monomer) protein. Setiap asam amino memiliki struktur umum yang terdiri dari atom karbon sentral (karbon alfa) yang terikat secara kovalen ke empat gugus berbeda: gugus amino (-NH2), gugus karboksil (-COOH), atom hidrogen (-H), dan rantai samping (gugus R) yang unik untuk setiap asam amino. Karena karbon alfa terikat ke empat gugus berbeda, semua asam amino standar (kecuali glisin) bersifat kiral dengan konfigurasi L pada organisme hidup.</p><p>Ada 20 asam amino standar yang dikode oleh kode genetik universal dan digunakan untuk mensintesis protein di ribosom. Asam amino ini sering disebut sebagai asam amino proteinogenik. Selain 20 asam amino standar, ada dua asam amino tambahan yang dimasukkan ke protein melalui mekanisme khusus: selenosistein (asam amino ke-21) dan pirolisin (asam amino ke-22).</p><p>Asam amino berperan tidak hanya sebagai blok pembangun protein, tetapi juga sebagai prekursor untuk berbagai biomolekul penting: neurotransmitter (glutamat, GABA, dopamin dari tirosin), hormon (tiroksin dari tirosin), nukleotida (glisin dan aspartat untuk sintesis purin), dan heme (glisin).</p><h4>Klasifikasi Berdasarkan R-Group</h4><ul><li><strong>Nonpolar (Hidrofobik):</strong> Glisin, Alanin, Valin, Leusin, Isoleusin, Prolin, Metionin, Fenilalanin, Triptofan. Cenderung terletak di bagian dalam protein.</li><li><strong>Polar Tidak Bermuatan:</strong> Serin, Treonin, Sistein, Asparagin, Glutamin, Tirosin. Dapat membentuk ikatan hidrogen.</li><li><strong>Polar Bermuatan Positif (Basa):</strong> Lisin, Arginin, Histidin. Memiliki gugus amino tambahan.</li><li><strong>Polar Bermuatan Negatif (Asam):</strong> Aspartat, Glutamat. Memiliki gugus karboksil tambahan.</li></ul>`);
+
+        add('essential-amino-acids', 'Asam Amino Esensial', aaCat, '🍖', '#e74c3c', `<h4>Definisi & Daftar</h4><p>Asam amino esensial adalah asam amino yang tidak dapat disintesis oleh tubuh manusia sehingga harus diperoleh dari makanan. Ada 9 asam amino esensial pada manusia dewasa: Histidin (His/H), Isoleusin (Ile/I), Leusin (Leu/L), Lisin (Lys/K), Metionin (Met/M), Fenilalanin (Phe/F), Treonin (Thr/T), Triptofan (Trp/W), dan Valin (Val/V).</p><p>Mnemonik untuk menghafal: "PVT TIM HALL" (Phenylalanine, Valine, Threonine, Tryptophan, Isoleucine, Methionine, Histidine, Arginine, Leucine, Lysine). Arginin dianggap semi-esensial karena orang dewasa dapat mensintesisnya dalam jumlah terbatas tetapi anak-anak dan kondisi tertentu memerlukan asupan dari makanan.</p><h4>Sumber Makanan</h4><p>Protein hewani (daging, telur, susu) mengandung semua asam amino esensial dalam proporsi yang baik dan disebut "protein lengkap". Protein nabati sering kekurangan satu atau lebih asam amino esensial: biji-bijian rendah lisin, kacang-kacangan rendah metionin. Kombinasi biji-bijian dan kacang-kacangan (seperti nasi dan kacang) memberikan profil asam amino lengkap.</p>`);
+
+        add('non-essential-amino-acids', 'Asam Amino Non-Esensial', aaCat, '🧪', '#3498db', `<h4>Definisi & Daftar</h4><p>Asam amino non-esensial adalah asam amino yang dapat disintesis oleh tubuh manusia dari metabolit antara. Ada 11 asam amino non-esensial: Alanin, Arginin (semi-esensial), Asparagin, Aspartat, Sistein, Glutamat, Glutamin, Glisin, Prolin, Serin, dan Tirosin. Meskipun disebut non-esensial, mereka tetap diperlukan untuk sintesis protein dan fungsi metabolisme.</p><p>Sintesis asam amino non-esensial menggunakan prekursor dari jalur metabolisme sentral: glikolisis (3-fosfogliserat → serin), siklus Krebs (oksaloasetat → aspartat, α-ketoglutarat → glutamat), dan jalur pentosa fosfat. Tirosin disintesis dari fenilalanin yang esensial, sehingga jika asupan fenilalanin tidak mencukupi, tirosin menjadi esensial.</p>`);
+
+        add('non-standard-amino-acids', 'Asam Amino Non-Standar', aaCat, '🔮', '#9b59b6', `<h4>Selenosistein & Pirolisin</h4><p>Selenosistein (Sec/U) adalah asam amino ke-21 yang mengandung selenium sebagai pengganti sulfur (seperti pada sistein). Selenosistein dimasukkan ke protein melalui mekanisme unik: tRNA khusus (tRNA[Ser]Sec) diisi dengan serin, kemudian enzim selenoprotein sintase mengubah serin menjadi selenosistein. Kodon UGA, yang biasanya merupakan kodon stop, dibaca sebagai selenosistein ketika ada elemen SECIS (SElenoCysteine Insertion Sequence) di mRNA. Protein yang mengandung selenosistein disebut selenoprotein, termasuk glutation peroksidase dan tioredoksin reduktase.</p><p>Pirolisin (Pyl/O) adalah asam amino ke-22 yang ditemukan pada arkea metanogenik dan beberapa bakteri. Pirolisin memiliki struktur unik dengan cincin pirolin. Dimasukkan ke protein melalui kodon UAG (biasanya stop) dengan bantuan tRNA khusus (tRNA[Pyl]) dan aminoacyl-tRNA synthetase khusus (PylRS).</p>`);
+
+        add('peptide-bond', 'Ikatan Peptida', aaCat, '🔗', '#2ecc71', `<h4>Pembentukan & Karakteristik</h4><p>Ikatan peptida adalah ikatan kovalen yang menghubungkan asam amino dalam rantai polipeptida. Terbentuk melalui reaksi kondensasi (dehidrasi) antara gugus α-karboksil satu asam amino dan gugus α-amino asam amino berikutnya, melepaskan satu molekul air. Reaksi ini dikatalisis oleh ribosom selama translasi.</p><p>Ikatan peptida memiliki karakteristik unik yang penting untuk struktur protein: ikatan ini memiliki karakter ikatan ganda parsial (partial double bond) karena resonansi elektron antara gugus karbonil dan nitrogen amida. Akibatnya, ikatan peptida bersifat planar (semua atom terletak pada satu bidang) dan tidak dapat berotasi bebas. Konfigurasi trans lebih disukai (99.7% ikatan peptida pada protein) karena konfigurasi cis menyebabkan benturan sterik antar rantai samping, kecuali untuk ikatan yang melibatkan prolin di mana cis lebih umum.</p>`);
+
+        add('isoelectric-point', 'Titik Isoelektrik (pI)', aaCat, '⚖️', '#e67e22', `<h4>Definisi & Zwitterion</h4><p>Titik isoelektrik (pI) adalah pH di mana molekul (asam amino atau protein) memiliki muatan netto nol. Pada pH ini, jumlah muatan positif sama dengan jumlah muatan negatif. Dalam larutan dengan pH di bawah pI, asam amino bermuatan positif. Dalam larutan dengan pH di atas pI, asam amino bermuatan negatif.</p><p>Pada pH fisiologis (~7.4), asam amino berada dalam bentuk zwitterion: gugus amino terprotonasi (-NH3+) dan gugus karboksil terdeprotonasi (-COO-), sehingga muatan netto bergantung pada gugus R. pI dihitung sebagai rata-rata dari dua nilai pKa yang mengapit spesies netral. Untuk asam amino dengan rantai samping tidak bermuatan, pI = (pKa1 + pKa2)/2, biasanya sekitar 5.5-6.0.</p>`);
+
+        add('r-group-classification', 'Klasifikasi R-Group', aaCat, '📊', '#1abc9c', `<h4>Empat Kelompok Utama</h4><ul><li><strong>Nonpolar (Hidrofobik) - 9 aa:</strong> Glisin (Gly/G), Alanin (Ala/A), Valin (Val/V), Leusin (Leu/L), Isoleusin (Ile/I), Prolin (Pro/P), Metionin (Met/M), Fenilalanin (Phe/F), Triptofan (Trp/W). Rantai samping terdiri dari hidrokarbon atau cincin aromatik.</li><li><strong>Polar Tidak Bermuatan - 6 aa:</strong> Serin (Ser/S), Treonin (Thr/T), Sistein (Cys/C), Asparagin (Asn/N), Glutamin (Gln/Q), Tirosin (Tyr/Y). Dapat membentuk ikatan hidrogen.</li><li><strong>Bermuatan Positif (Basa) - 3 aa:</strong> Lisin (Lys/K), Arginin (Arg/R), Histidin (His/H). Memiliki gugus amino tambahan yang terprotonasi pada pH fisiologis.</li><li><strong>Bermuatan Negatif (Asam) - 2 aa:</strong> Aspartat (Asp/D), Glutamat (Glu/E). Memiliki gugus karboksil tambahan yang terdeprotonasi pada pH fisiologis.</li></ul>`);
+
+        add('cysteine-disulfide', 'Sistein & Ikatan Disulfida', aaCat, '🔗', '#f39c12', `<h4>Peran Sistein</h4><p>Sistein adalah asam amino yang mengandung gugus tiol (-SH) di rantai sampingnya. Gugus tiol sangat reaktif dan dapat mengalami oksidasi untuk membentuk ikatan disulfida (jembatan disulfida) dengan sistein lain: 2 R-SH + [O] → R-S-S-R + H2O. Ikatan disulfida adalah ikatan kovalen yang memberikan stabilitas tambahan pada struktur tersier protein.</p><p>Ikatan disulfida terutama penting untuk protein yang berfungsi di lingkungan ekstraseluler yang oksidatif (seperti antibodi, insulin, dan hormon peptida). Protein intraseluler biasanya tidak memiliki ikatan disulfida karena lingkungan reduktif sitoplasma (kadar glutation tinggi) menjaga sistein dalam bentuk tiol bebas. Pembentukan ikatan disulfida pada protein eukariotik terjadi di lumen Retikulum Endoplasma, dikatalisis oleh enzim protein disulfida isomerase (PDI).</p>`);
+
+        add('glycine-proline', 'Glisin & Prolin - Peran Khusus', aaCat, '🎯', '#8e44ad', `<h4>Glisin (Gly/G)</h4><p>Glisin adalah asam amino terkecil dengan rantai samping hanya atom hidrogen. Karena ukurannya yang kecil, glisin memberikan fleksibilitas konformasi tinggi pada rantai polipeptida. Glisin sangat penting dalam struktur kolagen: setiap residu ketiga dalam triple helix kolagen adalah glisin (pola Gly-X-Y). Glisin terletak di bagian dalam triple helix di mana tidak ada ruang untuk rantai samping yang lebih besar. Mutasi glisin di kolagen menyebabkan osteogenesis imperfecta (penyakit tulang rapuh).</p><h4>Prolin (Pro/P)</h4><p>Prolin unik karena rantai sampingnya membentuk cincin pirolidin yang terikat kembali ke nitrogen amida. Ini membatasi rotasi ikatan N-Cα dan menyebabkan prolin bertindak sebagai "pemutus heliks" (helix breaker) — prolin jarang ditemukan di heliks alfa karena geometrinya yang tidak kompatibel. Prolin sering ditemukan di belokan (turns) antara elemen struktur sekunder.</p>`);
+
+        add('amino-acid-buffer', 'Buffer Asam Amino', aaCat, '🧪', '#d35400', `<h4>Kapasitas Buffer</h4><p>Asam amino memiliki setidaknya dua gugus yang dapat terionisasi (α-amino dan α-karboksil) dan beberapa memiliki gugus tambahan di rantai samping, memberikan kapasitas buffer di rentang pH berbeda. Histidin sangat penting secara biologis karena pKa rantai samping imidazolnya (~6.0) dekat dengan pH fisiologis (7.4).</p><p>Histidin adalah buffer utama dalam protein (seperti hemoglobin) dan berkontribusi pada kapasitas buffer darah. Gugus imidazol dapat menerima atau melepas proton dengan mudah pada pH fisiologis, menjadikannya residu katalitik penting di banyak enzim (seperti serin protease dan karbonat anhidrase).</p>`);
+
+        const spCat = 'struktur-protein';
+        add('primary-structure', 'Struktur Primer', spCat, '📜', '#e74c3c', `<h4>Definisi & Signifikansi</h4><p>Struktur primer protein adalah urutan linear asam amino dalam rantai polipeptida, dari ujung N-terminal (gugus amino bebas) hingga ujung C-terminal (gugus karboksil bebas). Urutan ini ditentukan oleh urutan nukleotida dalam gen yang mengkode protein tersebut. Struktur primer menentukan semua tingkat struktur yang lebih tinggi — seperti yang dibuktikan oleh eksperimen Anfinsen.</p><p>Urutan asam amino pertama yang berhasil ditentukan adalah insulin oleh Frederick Sanger pada tahun 1955 (Nobel Kimia 1958). Sanger menggunakan metode degradasi dengan 1-fluoro-2,4-dinitrobenzena (reagen Sanger) untuk mengidentifikasi asam amino N-terminal. Penemuan ini membuktikan bahwa protein memiliki urutan yang terdefinisi secara tepat, bukan campuran acak.</p>`);
+
+        add('secondary-structure', 'Struktur Sekunder', spCat, '🌀', '#3498db', `<h4>Alfa Heliks</h4><p>Alfa heliks adalah struktur sekunder paling umum, ditemukan oleh Linus Pauling pada tahun 1951. Heliks kanan (right-handed) memiliki 3.6 residu asam amino per putaran, pitch (jarak per putaran) 5.4 Å, dan distabilkan oleh ikatan hidrogen antara gugus C=O residu ke-n dengan gugus N-H residu ke-(n+4). Rantai samping menonjol ke luar dari sumbu heliks.</p><h4>Beta Sheet</h4><p>Beta sheet terdiri dari untai beta yang terhubung oleh ikatan hidrogen antar untai (inter-strand). Dapat berupa parallel (untai searah) atau antiparallel (untai berlawanan arah). Beta sheet antiparallel lebih stabil karena ikatan hidrogen lebih linear. Beta sheet membentuk struktur "pleated" (berlipat) karena geometri ikatan.</p><h4>Beta Turn & Random Coil</h4><p>Beta turn adalah belokan tajam yang menghubungkan dua elemen struktur sekunder, biasanya terdiri dari 4 residu. Random coil adalah daerah tanpa struktur sekunder teratur, memberikan fleksibilitas pada protein.</p>`);
+
+        add('tertiary-structure', 'Struktur Tersier', spCat, '🧶', '#f39c12', `<h4>Definisi & Interaksi</h4><p>Struktur tersier adalah pelipatan tiga dimensi lengkap dari satu rantai polipeptida. Distabilkan oleh berbagai interaksi: interaksi hidrofobik (peran dominan), ikatan hidrogen, ikatan ionik (jembatan garam), ikatan disulfida, dan gaya van der Waals. Pelipatan protein didorong secara termodinamika: protein melipat ke konformasi dengan energi bebas Gibbs terendah.</p><p>Domain protein adalah unit pelipatan independen dalam struktur tersier. Banyak protein terdiri dari beberapa domain yang masing-masing memiliki fungsi berbeda. Contoh: protein Src kinase memiliki domain SH3 (pengikatan prolin), SH2 (pengikatan fosfotirosin), dan domain kinase katalitik.</p>`);
+
+        add('quaternary-structure', 'Struktur Kuartener', spCat, '🏛️', '#2ecc71', `<h4>Definisi & Contoh</h4><p>Struktur kuartener adalah pengaturan beberapa rantai polipeptida (subunit) yang bergabung membentuk protein fungsional. Subunit dapat identik (homomer, seperti homodimer) atau berbeda (heteromer, seperti hemoglobin α2β2). Interaksi antar subunit meliputi ikatan non-kovalen (ikatan hidrogen, interaksi hidrofobik, jembatan garam) dan kadang ikatan disulfida.</p><p>Hemoglobin adalah contoh klasik: tetramer α2β2 di mana setiap subunit mengikat satu molekul heme dan satu molekul O2. Struktur kuartener memungkinkan kooperativitas: pengikatan O2 ke satu subunit meningkatkan afinitas subunit lain (efek homotropik).</p>`);
+
+        add('motifs-domains', 'Motif & Domain', spCat, '🔷', '#9b59b6', `<h4>Motif Struktural</h4><p>Motif adalah pola pelipatan kecil yang berulang di berbagai protein: helix-turn-helix (pengikatan DNA), zinc finger (ion Zn2+ terkoordinasi oleh sistein dan histidin), leucine zipper (dimerisasi faktor transkripsi), coiled-coil (dua heliks melilit), dan EF hand (pengikatan Ca2+).</p><h4>Domain Fungsional</h4><p>Domain adalah unit struktural dan fungsional semi-independen. Contoh: SH2 domain (mengenali fosfotirosin, ~100 aa), SH3 domain (mengenali motif kaya prolin), PH domain (mengikat fosfatidilinositol di membran), dan domain katalitik kinase. Arsitektur modular ini memungkinkan evolusi protein baru melalui penggabungan domain yang berbeda.</p>`);
+
+        add('fibrous-vs-globular', 'Protein Fibrilar vs Globular', spCat, '⚖️', '#e67e22', `<h4>Protein Fibrilar</h4><p>Protein fibrilar memiliki struktur memanjang, tidak larut dalam air, dan berfungsi struktural. Kolagen adalah protein paling melimpah di tubuh, membentuk triple helix dari tiga rantai dengan motif Gly-X-Y. Keratin adalah komponen rambut, kuku, dan kulit. Elastin memberikan elastisitas pada pembuluh darah dan paru-paru.</p><h4>Protein Globular</h4><p>Protein globular memiliki bentuk kompak, larut dalam air, dan berfungsi dalam katalisis, transport, dan regulasi. Mioglobin (penyimpanan O2 di otot) adalah protein globular pertama yang strukturnya ditentukan dengan kristalografi sinar-X oleh John Kendrew (Nobel 1958).</p>`);
+
+        add('denaturation-renaturation', 'Denaturasi & Renaturasi', spCat, '🌡️', '#c0392b', `<h4>Eksperimen Anfinsen</h4><p>Christian Anfinsen memenangkan Nobel Kimia 1972 untuk eksperimennya pada ribonuklease A (RNase A). RNase A memiliki 124 asam amino dan 4 ikatan disulfida. Anfinsen mendenaturasi RNase A dengan urea 8M (memutus interaksi non-kovalen) dan β-merkaptoetanol (memutus ikatan disulfida), menghasilkan protein yang kehilangan aktivitas enzimatiknya.</p><p>Saat urea dan β-merkaptoetanol dihilangkan secara bertahap, RNase A secara spontan melipat kembali ke konformasi aktifnya. Ini membuktikan bahwa informasi untuk pelipatan protein terkandung dalam struktur primer. Paradoks Levinthal menunjukkan bahwa pelipatan protein tidak mungkin melalui pencarian acak semua konformasi, melainkan mengikuti jalur pelipatan terarah.</p>`);
+
+        add('protein-structure-prediction', 'Prediksi Struktur Protein', spCat, '💻', '#1abc9c', `<h4>AlphaFold</h4><p>AlphaFold adalah sistem kecerdasan buatan yang dikembangkan oleh DeepMind (Google) untuk memprediksi struktur tiga dimensi protein dari urutan asam aminonya. AlphaFold 2 (2020) mencapai akurasi yang sebanding dengan metode eksperimental, memecahkan masalah yang telah menjadi "grand challenge" biologi selama 50 tahun. Demis Hassabis dan John Jumper dianugerahi Nobel Kimia 2024 bersama David Baker untuk kontribusi ini.</p><p>AlphaFold menggunakan arsitektur transformer dan dilatih pada database PDB (Protein Data Bank) yang berisi lebih dari 200.000 struktur protein. Prediksi struktur protein membuka era baru dalam drug design dan pemahaman penyakit.</p>`);
+
+        const fpCat = 'fungsi-protein';
+        add('enzyme-function', 'Enzim - Katalis Biologis', fpCat, '⚡', '#2ecc71', `<h4>Definisi & Sisi Aktif</h4><p>Enzim adalah protein yang mengkatalisis reaksi kimia dengan menurunkan energi aktivasi. Sisi aktif adalah celah atau kantong pada enzim yang mengikat substrat dan mengkatalisis reaksi. Model lock-and-key (Emil Fischer, 1894) menyatakan bahwa sisi aktif dan substrat memiliki bentuk komplementer yang tepat. Model induced fit (Daniel Koshland, 1958) menyatakan bahwa pengikatan substrat menginduksi perubahan konformasi pada enzim.</p><p>Enzim sangat spesifik: beberapa hanya mengenali satu substrat (seperti glukokinase untuk glukosa), sementara yang lain dapat mengkatalisis reaksi pada kelas molekul yang lebih luas. Spesifisitas dicapai melalui interaksi non-kovalen antara residu di sisi aktif dan substrat.</p>`);
+
+        add('transport-proteins', 'Protein Transport', fpCat, '🚚', '#e74c3c', `<h4>Contoh Protein Transport</h4><p>Hemoglobin mengangkut O2 dari paru ke jaringan. Setiap molekul hemoglobin dapat mengikat 4 molekul O2. Albumin adalah protein plasma paling melimpah yang mengangkut asam lemak bebas, hormon steroid, bilirubin, dan obat-obatan. Transferin mengangkut besi (Fe3+) dalam darah. GLUT (Glucose Transporter) memfasilitasi difusi glukosa melintasi membran sel.</p>`);
+
+        add('structural-proteins', 'Protein Struktural', fpCat, '🏗️', '#f39c12', `<h4>Kolagen, Keratin, Elastin</h4><p>Kolagen adalah protein struktural paling melimpah di tubuh manusia (~25% massa protein total), membentuk serat di kulit, tendon, tulang, dan kartilago. Triple helix kolagen terdiri dari tiga rantai polipeptida dengan motif Gly-X-Y. Keratin adalah protein struktural di epidermis, rambut, dan kuku. Aktin dan tubulin membentuk sitoskeleton yang memberikan bentuk dan memungkinkan pergerakan sel.</p>`);
+
+        add('antibodies', 'Antibodi (Imunoglobulin)', fpCat, '🛡️', '#9b59b6', `<h4>Struktur & Fungsi</h4><p>Antibodi adalah glikoprotein berbentuk Y yang diproduksi oleh sel B sebagai respons terhadap antigen asing. Struktur dasar terdiri dari dua rantai berat (heavy chain) dan dua rantai ringan (light chain) yang dihubungkan oleh ikatan disulfida. Bagian Fab (Fragment antigen-binding) mengenali antigen spesifik, sementara bagian Fc (Fragment crystallizable) berinteraksi dengan reseptor sel imun.</p><p>Lima kelas imunoglobulin: IgG (paling melimpah, melintasi plasenta), IgM (pentamer, respons primer), IgA (dimer di mukosa), IgE (alergi dan parasit), dan IgD (reseptor sel B). Keragaman antibodi dihasilkan melalui rekombinasi V(D)J dan hipermutasi somatik.</p>`);
+
+        add('hormone-proteins', 'Hormon Protein', fpCat, '💉', '#3498db', `<h4>Contoh & Mekanisme</h4><p>Insulin adalah hormon peptida (51 aa) yang menurunkan glukosa darah. Glukagon (29 aa) meningkatkan glukosa darah. Hormon pertumbuhan (191 aa) merangsang pertumbuhan. FSH dan LH mengatur reproduksi. Hormon protein berikatan dengan reseptor permukaan sel dan mengaktivasi jalur sinyal intraseluler.</p>`);
+
+        add('receptor-proteins', 'Reseptor', fpCat, '📡', '#e67e22', `<h4>Jenis Reseptor Protein</h4><p>Reseptor adalah protein yang menerima sinyal dari luar sel dan mentransduksinya ke dalam sel. GPCR (7-transmembran), RTK (aktivitas tirosin kinase), reseptor sitokin (terkait JAK-STAT), dan reseptor inti (faktor transkripsi yang diaktivasi ligan).</p><div class="cross-link"><strong>Baca juga di MicroVerse 2:</strong> GPCR, RTK, dan jenis reseptor lainnya sudah dibahas detail di <a href="microverse2.html" target="_blank">MicroVerse 2 - Sinyal Sel</a>.</div>`);
+
+        add('motor-proteins', 'Protein Motor', fpCat, '🏃', '#8e44ad', `<h4>Miosin, Kinesin, Dynein</h4><p>Miosin berinteraksi dengan aktin untuk menghasilkan kontraksi otot. Kinesin berjalan sepanjang mikrotubulus menuju ujung (+) (anterograde transport). Dynein berjalan menuju ujung (-) (retrograde transport). Semua protein motor menggunakan hidrolisis ATP sebagai sumber energi untuk perubahan konformasi.</p>`);
+
+        add('regulatory-proteins', 'Protein Regulator Gen', fpCat, '🎛️', '#1abc9c', `<h4>Faktor Transkripsi</h4><p>Faktor transkripsi adalah protein yang mengikat DNA dan mengatur transkripsi gen. Memiliki domain pengikat DNA (DBD) dan domain aktivasi (AD). Contoh: p53 (tumor suppressor), NF-κB (respons imun), Myc (proliferasi sel), dan reseptor steroid (reseptor inti).</p>`);
+
+        const ezCat = 'enzim';
+        add('michaelis-menten', 'Kinetika Michaelis-Menten', ezCat, '📈', '#e74c3c', `<h4>Persamaan & Parameter</h4><p>Model Michaelis-Menten menjelaskan kinetika enzim dengan asumsi steady-state. Persamaan: V0 = (Vmax × [S]) / (Km + [S]). Km (konstanta Michaelis) adalah konsentrasi substrat di mana kecepatan reaksi setengah Vmax. Km mencerminkan afinitas enzim terhadap substrat: Km rendah = afinitas tinggi. Vmax adalah kecepatan maksimum saat enzim jenuh dengan substrat.</p><p>Plot Lineweaver-Burk (double reciprocal plot: 1/V0 vs 1/[S]) menghasilkan garis lurus dengan slope Km/Vmax, memudahkan penentuan parameter kinetik dan analisis inhibisi.</p>`);
+
+        add('enzyme-inhibition', 'Inhibisi Enzim', ezCat, '🚫', '#c0392b', `<h4>Jenis-Jenis Inhibisi</h4><ul><li><strong>Kompetitif:</strong> Inhibitor mirip substrat, mengikat sisi aktif. Meningkatkan Km, Vmax tetap. Dapat diatasi dengan meningkatkan [S]. Contoh: statin (inhibitor HMG-CoA reduktase).</li><li><strong>Non-Kompetitif:</strong> Inhibitor mengikat di luar sisi aktif. Km tetap, Vmax menurun. Contoh: inhibitor logam berat.</li><li><strong>Unkompetitif:</strong> Inhibitor hanya mengikat kompleks ES. Km dan Vmax menurun. Relatif jarang.</li></ul>`);
+
+        add('allosteric-regulation', 'Regulasi Alosterik', ezCat, '🎚️', '#f39c12', `<h4>Kurva Sigmoid & Model</h4><p>Enzim alosterik menunjukkan kinetika sigmoid (bukan hiperbolik) karena kooperativitas antar subunit. Model concerted (MWC/Monod-Wyman-Changeux): semua subunit berada dalam keadaan T (tense, afinitas rendah) atau R (relaxed, afinitas tinggi) secara bersamaan. Model sequential (KNF/Koshland-Nemethy-Filmer): pengikatan ligan menginduksi perubahan bertahap.</p><p>Efektor alosterik dapat berupa aktivator (meningkatkan afinitas) atau inhibitor (menurunkan afinitas). Contoh klasik: aspartat transkarbamoilase (ATCase) dalam biosintesis pirimidin.</p>`);
+
+        add('cofactors-coenzymes', 'Kofaktor & Koenzim', ezCat, '🔋', '#2ecc71', `<h4>Definisi & Contoh</h4><p>Kofaktor adalah molekul non-protein yang diperlukan enzim untuk aktivitas katalitik. Ion logam (Mg2+, Zn2+, Fe2+, Cu2+) adalah kofaktor anorganik. Koenzim adalah kofaktor organik: NAD+ dan FAD (pembawa elektron), koenzim A (pembawa gugus asil), TPP (tiamin pirofosfat, dari vitamin B1), PLP (piridoksal fosfat, dari vitamin B6).</p><p>Banyak vitamin berfungsi sebagai prekursor koenzim. Defisiensi vitamin menyebabkan defisiensi koenzim dan gangguan metabolisme. Contoh: defisiensi niacin (vitamin B3) → defisiensi NAD+ → pellagra.</p>`);
+
+        add('zymogen-activation', 'Zimogen & Aktivasi Proteolitik', ezCat, '🔓', '#9b59b6', `<h4>Definisi & Contoh</h4><p>Zimogen (proenzim) adalah prekursor enzim inaktif yang memerlukan pemotongan proteolitik untuk aktivasi. Mekanisme ini mencegah enzim mencerna jaringan tempat sintesisnya. Contoh: tripsinogen → tripsin (oleh enteropeptidase di usus), pepsinogen → pepsin (oleh HCl di lambung), kaskade pembekuan darah (faktor pembekuan diaktivasi secara berurutan).</p>`);
+
+        add('isoenzymes', 'Isoenzim', ezCat, '🧪', '#3498db', `<h4>Definisi & Signifikansi Diagnostik</h4><p>Isoenzim adalah bentuk berbeda dari enzim yang sama, dikode oleh gen berbeda, dengan sifat kinetik berbeda. Laktat dehidrogenase (LDH) memiliki 5 isoenzim (LDH1-5) dengan distribusi jaringan berbeda. Kreatin kinase (CK) memiliki 3 isoenzim: CK-MM (otot rangka), CK-MB (jantung), CK-BB (otak). Deteksi isoenzim spesifik dalam darah digunakan untuk diagnosis infark miokard (CK-MB meningkat).</p>`);
+
+        const pkCat = 'protein-khusus';
+        add('hemoglobin-myoglobin', 'Hemoglobin & Mioglobin', pkCat, '🩸', '#e74c3c', `<h4>Perbedaan & Fungsi</h4><p>Mioglobin (Mb) adalah protein monomer di otot yang menyimpan O2. Memiliki afinitas O2 sangat tinggi (P50 ~2.8 torr) dan kurva disosiasi hiperbolik. Hemoglobin (Hb) adalah tetramer (α2β2) di eritrosit yang mengangkut O2. Memiliki kurva disosiasi sigmoid karena kooperativitas: pengikatan O2 ke subunit pertama memudahkan pengikatan ke subunit berikutnya.</p><p>Efek Bohr: penurunan pH (peningkatan CO2) menurunkan afinitas Hb terhadap O2, memfasilitasi pelepasan O2 di jaringan yang aktif bermetabolisme. Efek 2,3-BPG: 2,3-bisfosfogliserat mengikat deoksihemoglobin dan menstabilkan keadaan T, menurunkan afinitas O2. Janin memiliki HbF (α2γ2) dengan afinitas O2 lebih tinggi dari HbA dewasa untuk mengambil O2 dari sirkulasi maternal.</p>`);
+
+        add('collagen', 'Kolagen', pkCat, '🧵', '#f39c12', `<h4>Struktur & Penyakit</h4><p>Kolagen adalah protein struktural utama pada hewan, menyusun ~25% massa protein tubuh. Struktur unik: triple helix dari tiga rantai polipeptida (rantai α) dengan motif Gly-X-Y berulang. Prolin dan hidroksiprolin membatasi rotasi dan menstabilkan heliks. Hidroksiprolin dibentuk dari prolin oleh enzim prolyl hidroksilase yang memerlukan vitamin C sebagai kofaktor.</p><p>Defisiensi vitamin C menyebabkan skorbut: hidroksiprolin tidak terbentuk, kolagen tidak stabil, menyebabkan gusi berdarah, kehilangan gigi, dan luka tidak sembuh. Osteogenesis imperfecta (penyakit tulang rapuh) disebabkan mutasi pada gen kolagen tipe I.</p>`);
+
+        add('actin-myosin', 'Aktin & Miosin', pkCat, '💪', '#d35400', `<h4>Sliding Filament Model</h4><p>Kontraksi otot terjadi melalui sliding filament model: filamen aktin tipis meluncur melewati filamen miosin tebal, memperpendek sarkomer. Siklus jembatan silang (cross-bridge cycle): (1) miosin terikat kuat ke aktin (rigor), (2) ATP mengikat miosin, melepaskannya dari aktin, (3) hidrolisis ATP, miosin "cocked", (4) miosin berikatan lemah ke aktin, (5) pelepasan Pi, power stroke, (6) pelepasan ADP, kembali ke keadaan rigor.</p><p>Troponin dan tropomiosin mengatur kontraksi otot rangka. Ca2+ mengikat troponin C, menyebabkan perubahan konformasi yang memindahkan tropomiosin dari situs pengikatan miosin pada aktin, memungkinkan kontraksi.</p>`);
+
+        add('insulin-detail', 'Insulin', pkCat, '💉', '#3498db', `<h4>Struktur & Sintesis</h4><p>Insulin adalah hormon peptida (51 aa) yang disintesis sebagai preproinsulin di sel beta pankreas. Setelah pemotongan sinyal peptida, proinsulin melipat dan membentuk 3 jembatan disulfida. Pemotongan proteolitik melepaskan C-peptide, menghasilkan insulin matang yang terdiri dari rantai A (21 aa) dan rantai B (30 aa) yang dihubungkan oleh 2 jembatan disulfida inter-chain.</p><p>Insulin dilepaskan saat glukosa darah tinggi dan bekerja melalui reseptor insulin (RTK) untuk menurunkan glukosa darah. Diabetes tipe 1 disebabkan penghancuran sel beta autoimun. Diabetes tipe 2 disebabkan resistensi insulin.</p>`);
+
+        add('prions', 'Prion', pkCat, '🧟', '#c0392b', `<h4>Protein Misfolding</h4><p>Prion (proteinaceous infectious particle) adalah protein yang dapat menyebabkan penyakit dengan menginduksi perubahan konformasi pada protein normal. PrP (Prion Protein) normal terutama terdiri dari heliks alfa, tetapi dapat melipat ulang menjadi bentuk patogen yang kaya beta sheet (PrPSc). Bentuk patogen ini tahan terhadap protease dan dapat menginduksi PrP normal untuk juga berubah menjadi bentuk patogen.</p><p>Penyakit prion: Creutzfeldt-Jakob Disease (CJD) pada manusia, bovine spongiform encephalopathy (BSE/mad cow disease) pada sapi, kuru pada suku Fore di Papua Nugini (dari ritual kanibalisme), dan scrapie pada domba. Penyakit prion selalu fatal dan saat ini tidak ada pengobatan yang efektif.</p>`);
+
+        add('hsp-chaperone', 'Heat Shock Proteins (HSP)', pkCat, '🌡️', '#e67e22', `<h4>Chaperone Molekuler</h4><p>Heat Shock Proteins adalah chaperone molekuler yang membantu pelipatan protein, mencegah agregasi, dan memperbaiki protein yang rusak akibat stres. Hsp70 mengikat peptida hidrofobik yang terpapar pada protein yang belum terlipat. Hsp90 membantu pelipatan protein sinyal (kinase, reseptor steroid). Chaperonin (Hsp60/GroEL) menyediakan ruang terisolasi untuk pelipatan.</p><p>Ekspresi HSP meningkat saat stres termal, oksidatif, atau toksik, memberikan perlindungan terhadap kerusakan seluler. HSP juga berperan dalam presentasi antigen dan respons imun.</p>`);
+
+        const tekCat = 'teknik';
+        add('chromatography', 'Kromatografi', tekCat, '🧪', '#e67e22', `<h4>Jenis & Aplikasi</h4><p>Kromatografi adalah teknik pemisahan molekul berdasarkan interaksi diferensial dengan fase diam (stationary) dan fase gerak (mobile). Kromatografi afinitas memanfaatkan pengikatan spesifik (misalnya, antibodi-antigen, GST-glutation). Ion exchange memisahkan berdasarkan muatan. Size exclusion (gel filtration) memisahkan berdasarkan ukuran. HPLC (High-Performance Liquid Chromatography) memberikan resolusi tinggi.</p><p>Kromatografi adalah metode utama untuk pemurnian protein dalam penelitian dan industri bioteknologi.</p>`);
+
+        add('sds-page', 'Elektroforesis SDS-PAGE', tekCat, '📊', '#3498db', `<h4>Prinsip & Prosedur</h4><p>SDS-PAGE (Sodium Dodecyl Sulfate Polyacrylamide Gel Electrophoresis) memisahkan protein berdasarkan berat molekul. SDS adalah deterjen anionik yang mendenaturasi protein dan memberikan muatan negatif yang proporsional dengan massa. β-merkaptoetanol atau DTT memutus ikatan disulfida. Protein bermigrasi melalui gel poliakrilamid di bawah medan listrik; protein kecil bergerak lebih cepat.</p><p>Pewarnaan dengan Coomassie Brilliant Blue atau silver stain memungkinkan visualisasi pita protein. Western blotting dapat dilakukan setelah SDS-PAGE untuk deteksi protein spesifik dengan antibodi.</p>`);
+
+        add('western-blot-detail', 'Western Blot (Detail)', tekCat, '📋', '#8e44ad', `<h4>Prinsip & Langkah</h4><p>Western blot adalah teknik untuk mendeteksi protein spesifik dalam sampel kompleks. Langkah: (1) SDS-PAGE, (2) transfer protein ke membran PVDF atau nitroselulosa, (3) blocking dengan BSA atau susu untuk mencegah pengikatan non-spesifik, (4) inkubasi dengan antibodi primer spesifik untuk protein target, (5) inkubasi dengan antibodi sekunder terkonjugasi enzim (HRP atau alkaline phosphatase), (6) deteksi dengan substrat chemiluminescence atau kolorimetri.</p><p>Western blot banyak digunakan dalam penelitian biomedis dan diagnostik (misalnya, konfirmasi HIV).</p>`);
+
+        add('elisa-detail', 'ELISA (Detail)', tekCat, '🧫', '#2ecc71', `<h4>Jenis & Aplikasi</h4><p>ELISA adalah immunoassay untuk mendeteksi dan mengukur antibodi atau antigen. Direct ELISA: antigen dilapiskan, dideteksi dengan antibodi berlabel. Indirect ELISA: antibodi primer tidak berlabel, dideteksi dengan antibodi sekunder berlabel. Sandwich ELISA: antigen ditangkap di antara dua antibodi. Competitive ELISA: antigen sampel bersaing dengan antigen berlabel.</p><p>Aplikasi: tes kehamilan (hCG), diagnosis HIV, pengukuran sitokin, deteksi alergen makanan.</p>`);
+
+        add('mass-spectrometry', 'Spektrometri Massa', tekCat, '⚗️', '#9b59b6', `<h4>Prinsip & Aplikasi</h4><p>Spektrometri massa mengukur rasio massa-terhadap-muatan (m/z) ion. Protein diionisasi dengan MALDI (Matrix-Assisted Laser Desorption/Ionization) atau ESI (Electrospray Ionization). Analisis massa menghasilkan peptide mass fingerprint untuk identifikasi protein. Tandem MS (MS/MS) memfragmentasi peptida untuk informasi sekuens.</p><p>Spektrometri massa adalah alat utama dalam proteomik - studi sistematis semua protein dalam sel, jaringan, atau organisme.</p>`);
+
+        add('xray-crystallography', 'Kristalografi Sinar-X', tekCat, '💎', '#1abc9c', `<h4>Prinsip & Pencapaian</h4><p>Kristalografi sinar-X menentukan struktur tiga dimensi protein pada resolusi atomik. Protein harus dikristalisasi terlebih dahulu, yang sering menjadi langkah tersulit. Kristal dipapari sinar-X, dan pola difraksi dianalisis untuk menghasilkan peta densitas elektron. Model atomik dibangun ke dalam peta ini.</p><p>Struktur DNA (Watson & Crick, berdasarkan data Franklin), mioglobin (Kendrew, 1958), hemoglobin (Perutz, 1960), dan ribosom (Steitz, Ramakrishnan, Yonath, Nobel 2009) semuanya ditentukan dengan kristalografi sinar-X.</p>`);
+
+        const liCat = 'lipida';
+        add('lipid-overview', 'Lipida - Overview', liCat, '🛢️', '#1abc9c', `<h4>Definisi & Klasifikasi</h4><p>Lipida adalah biomolekul hidrofobik atau amfipatik yang tidak larut dalam air tetapi larut dalam pelarut organik nonpolar. Berbeda dengan protein, asam nukleat, dan karbohidrat, lipida tidak membentuk polimer. Fungsi utama lipida meliputi penyimpanan energi (trigliserida), komponen struktural membran (fosfolipid, kolesterol), sinyal sel (steroid, prostaglandin), dan isolasi termal.</p><p>Klasifikasi utama lipida: asam lemak, trigliserida (triasilgliserol), fosfolipid (gliserofosfolipid dan sfingolipid), sterol (kolesterol, hormon steroid), dan eikosanoid (prostaglandin, leukotrien). Lipida bersifat esensial untuk kehidupan karena membentuk barier yang memisahkan sel dari lingkungannya.</p><h4>Fungsi Biologis</h4><ul><li><strong>Penyimpanan Energi:</strong> Trigliserida menyimpan energi 2.5 kali lebih banyak per gram dibanding karbohidrat (9 kcal/g vs 4 kcal/g).</li><li><strong>Struktur Membran:</strong> Fosfolipid membentuk bilayer yang menjadi dasar semua membran biologis.</li><li><strong>Sinyal:</strong> Hormon steroid, prostaglandin, dan fosfatidilinositol terlibat dalam jalur sinyal.</li><li><strong>Vitamin:</strong> Vitamin A, D, E, K adalah lipida yang larut dalam lemak.</li></ul>`);
+
+        add('fatty-acids', 'Asam Lemak', liCat, '🧈', '#f39c12', `<h4>Struktur & Jenis</h4><p>Asam lemak adalah asam karboksilat dengan rantai hidrokarbon panjang (4-36 karbon). Asam lemak jenuh tidak memiliki ikatan rangkap (contoh: asam palmitat C16:0, asam stearat C18:0). Asam lemak tak jenuh memiliki satu (monounsaturated, contoh: asam oleat C18:1Δ9) atau lebih (polyunsaturated, contoh: asam linoleat C18:2Δ9,12) ikatan rangkap.</p><p>Konfigurasi ikatan rangkap pada asam lemak alami biasanya cis, yang menyebabkan lekukan pada rantai hidrokarbon dan menurunkan titik leleh. Asam lemak trans (dari hidrogenasi parsial minyak nabati) memiliki konfigurasi trans yang membuat rantai lebih linear, meningkatkan titik leleh, dan terkait dengan penyakit kardiovaskular.</p><p>Asam lemak esensial (asam linoleat omega-6 dan asam α-linolenat omega-3) tidak dapat disintesis oleh manusia dan harus diperoleh dari makanan. Mereka adalah prekursor untuk eikosanoid dan penting untuk perkembangan otak.</p>`);
+
+        add('triglycerides', 'Trigliserida', liCat, '💧', '#e67e22', `<h4>Struktur & Fungsi</h4><p>Trigliserida (triasilgliserol) adalah ester dari gliserol dengan tiga asam lemak. Mereka adalah bentuk penyimpanan energi utama pada hewan dan tumbuhan. Trigliserida disimpan di sel adiposa (adiposit) dalam bentuk tetesan lemak yang hampir anhidrat, memberikan penyimpanan energi yang efisien tanpa membawa berat air tambahan.</p><p>Trigliserida menyediakan insulasi termal dan perlindungan mekanis untuk organ. Lipase (seperti lipase pankreatik) menghidrolisis trigliserida menjadi asam lemak bebas dan gliserol. Asam lemak kemudian dioksidasi melalui β-oksidasi di mitokondria untuk menghasilkan energi.</p><div class="info-box"><strong>Tahukah Kamu?</strong> Rata-rata orang dengan berat 70 kg memiliki cadangan energi sekitar 100,000 kcal dalam bentuk trigliserida, cukup untuk bertahan hidup tanpa makanan selama 30-40 hari. Bandingkan dengan glikogen yang hanya menyediakan ~2,000 kcal (cukup untuk 1 hari).</div>`);
+
+        add('phospholipids', 'Fosfolipid', liCat, '🧼', '#3498db', `<h4>Struktur & Peran Membran</h4><p>Fosfolipid adalah lipid amfipatik dengan kepala hidrofilik (gliserol-fosfat + gugus polar seperti kolin, serin, etanolamin) dan dua ekor hidrofobik (asam lemak). Sifat amfipatik ini memungkinkan fosfolipid membentuk bilayer spontan di lingkungan air, yang merupakan dasar struktural semua membran biologis.</p><p>Jenis fosfolipid utama: fosfatidilkolin (PC, paling melimpah), fosfatidiletanolamin (PE), fosfatidilserin (PS, muncul di luar saat apoptosis sebagai sinyal "makan saya"), fosfatidilinositol (PI, prekursor second messenger IP3 dan DAG), dan sfingomielin (kaya di myelin). Kolesterol menyisip di antara fosfolipid dan memodulasi fluiditas membran.</p>`);
+
+        add('cholesterol-steroids', 'Kolesterol & Steroid', liCat, '💊', '#e74c3c', `<h4>Kolesterol</h4><p>Kolesterol adalah sterol esensial pada hewan yang berfungsi sebagai komponen membran (memodulasi fluiditas) dan prekursor untuk hormon steroid, asam empedu, dan vitamin D. Kolesterol disintesis di hati dari asetil-KoA melalui jalur mevalonat. Statin, obat penurun kolesterol paling banyak diresepkan, menghambat HMG-CoA reduktase, enzim pembatas laju dalam sintesis kolesterol.</p><h4>Hormon Steroid</h4><p>Hormon steroid disintesis dari kolesterol di korteks adrenal dan gonad. Meliputi glukokortikoid (kortisol, respons stres), mineralokortikoid (aldosteron, keseimbangan garam), androgen (testosteron), dan estrogen (estradiol). Hormon steroid berikatan dengan reseptor intraseluler dan mengatur transkripsi gen.</p>`);
+		
+		        add('eicosanoids', 'Eikosanoid', liCat, '🔥', '#c0392b', `<h4>Definisi & Jalur</h4><p>Eikosanoid adalah molekul sinyal yang disintesis dari asam arakidonat (C20:4), asam lemak 20-karbon. Jalur siklooksigenase (COX) menghasilkan prostaglandin dan tromboksan. Jalur lipoksigenase (LOX) menghasilkan leukotrien. Eikosanoid bertindak secara lokal (parakrin/autokrin) dengan umur paruh sangat pendek (detik hingga menit).</p><p>NSAID (Non-Steroidal Anti-Inflammatory Drugs) seperti aspirin dan ibuprofen menghambat COX, mengurangi produksi prostaglandin pro-inflamasi. Aspirin secara unik mengasetilasi COX secara ireversibel, sementara NSAID lain adalah inhibitor kompetitif reversibel.</p>`);
+
+        add('membrane-lipid', 'Lipid Membran', liCat, '🔄', '#2ecc71', `<h4>Fluid Mosaic Model</h4><p>Model fluid mosaic (Singer & Nicolson, 1972) menggambarkan membran sebagai bilayer fosfolipid fluid dengan protein yang tertanam. Lipid dan protein dapat bergerak lateral dalam membran (difusi lateral), tetapi jarang melakukan flip-flop (perpindahan dari satu lapisan ke lapisan lain) tanpa bantuan enzim flipase.</p><p>Asimetri lipid membran dijaga oleh flipase, flopase, dan scramblase. Fosfatidilserin dan fosfatidiletanolamin terutama di lapisan dalam; fosfatidilkolin dan sfingomielin terutama di lapisan luar. Hilangnya asimetri (paparan PS di permukaan) adalah sinyal apoptosis.</p>`);
+
+        add('lipid-rafts', 'Lipid Rafts', liCat, '🏝️', '#9b59b6', `<h4>Definisi & Fungsi</h4><p>Lipid rafts adalah mikrodomain membran yang kaya kolesterol dan sfingolipid dengan rantai asam lemak jenuh panjang. Karena interaksi yang lebih rapat, lipid rafts lebih teratur dan kurang fluid dibandingkan bilayer sekitarnya. Lipid rafts berfungsi sebagai platform untuk sinyal sel, mengkonsentrasikan reseptor dan protein sinyal.</p><p>Protein GPI-anchored dan protein asilasi (seperti Src kinase) cenderung terlokalisasi di lipid rafts. Caveolae adalah invaginasi membran yang kaya caveolin dan merupakan subset lipid rafts. Lipid rafts juga berperan dalam endositosis, trafficking membran, dan infeksi virus.</p>`);
+
+        add('lipoproteins', 'Lipoprotein', liCat, '🚢', '#8e44ad', `<h4>Definisi & Jenis</h4><p>Lipoprotein adalah partikel yang mengangkut lipid hidrofobik dalam darah (lingkungan berair). Struktur: inti trigliserida dan kolesterol ester, dikelilingi oleh monolayer fosfolipid, kolesterol bebas, dan apolipoprotein. Apolipoprotein berfungsi sebagai ligan untuk reseptor dan kofaktor untuk enzim.</p><p>Jenis lipoprotein: kilomikron (mengangkut lipid dari usus), VLDL (Very Low-Density Lipoprotein, dari hati), LDL (Low-Density Lipoprotein, "kolesterol jahat"), HDL (High-Density Lipoprotein, "kolesterol baik"). LDL tinggi dan HDL rendah adalah faktor risiko penyakit kardiovaskular.</p>`);
+
+        const khCat = 'karbohidrat';
+        add('carbohydrate-overview', 'Karbohidrat - Overview', khCat, '🍬', '#d35400', `<h4>Definisi & Klasifikasi</h4><p>Karbohidrat adalah biomolekul paling melimpah di Bumi, dengan rumus umum (CH2O)n. Fungsi utama: sumber energi (glukosa), penyimpanan energi (glikogen, pati), dan struktural (selulosa, kitin). Klasifikasi: monosakarida (glukosa, fruktosa, galaktosa), disakarida (sukrosa, laktosa, maltosa), oligosakarida (3-10 unit), dan polisakarida (ratusan hingga ribuan unit).</p><p>Monosakarida dapat berupa aldosa (gugus aldehida, contoh: glukosa) atau ketosa (gugus keton, contoh: fruktosa). Mereka juga diklasifikasikan berdasarkan jumlah karbon: triosa (3C), pentosa (5C, ribosa), heksosa (6C, glukosa). Monosakarida dengan 5+ karbon cenderung membentuk struktur cincin dalam larutan.</p>`);
+
+        add('glucose-metabolism', 'Metabolisme Glukosa', khCat, '🔥', '#e67e22', `<h4>Glikolisis & Siklus Krebs</h4><p>Glukosa adalah sumber energi utama sel. Glikolisis (di sitoplasma) memecah 1 glukosa (6C) menjadi 2 piruvat (3C), menghasilkan 2 ATP dan 2 NADH. Dalam kondisi anaerob, piruvat direduksi menjadi laktat (fermentasi laktat). Dalam kondisi aerob, piruvat memasuki mitokondria dan diubah menjadi asetil-KoA, yang masuk ke siklus Krebs menghasilkan NADH dan FADH2 untuk rantai transpor elektron.</p><p>Total produksi ATP dari 1 glukosa: ~30-32 ATP (glikolisis: 2 ATP + 2 NADH, siklus Krebs: 2 GTP + 6 NADH + 2 FADH2, rantai transpor elektron: ~26-28 ATP dari NADH dan FADH2).</p><div class="cross-link"><strong>Baca juga di MicroVerse 1:</strong> Glikolisis, siklus Krebs, dan rantai transpor elektron sudah dibahas detail di <a href="microverse1.html" target="_blank">MicroVerse 1 - Metabolisme Sel</a>.</div>`);
+
+        add('glycogen-starch', 'Glikogen & Pati', khCat, '📦', '#f39c12', `<h4>Polisakarida Penyimpanan</h4><p>Glikogen adalah polimer glukosa bercabang dengan ikatan α-1,4-glikosidik (linear) dan α-1,6-glikosidik (titik cabang, setiap 8-12 residu). Disimpan terutama di hati dan otot sebagai cadangan energi cepat. Glikogen hati mempertahankan glukosa darah; glikogen otot menyediakan energi untuk kontraksi otot.</p><p>Pati adalah polisakarida penyimpanan pada tumbuhan, terdiri dari amilosa (rantai lurus α-1,4) dan amilopektin (bercabang α-1,4 dan α-1,6, lebih banyak dari amilosa). Pati adalah sumber karbohidrat utama dalam makanan manusia.</p>`);
+
+        add('cellulose-chitin', 'Selulosa & Kitin', khCat, '🌿', '#27ae60', `<h4>Polisakarida Struktural</h4><p>Selulosa adalah polimer glukosa dengan ikatan β-1,4-glikosidik, membentuk rantai linear yang saling berikatan hidrogen membentuk mikrofibril kuat. Selulosa adalah komponen utama dinding sel tumbuhan dan merupakan biomolekul paling melimpah di Bumi. Manusia tidak dapat mencerna selulosa karena tidak memiliki enzim selulase, tetapi serat selulosa penting untuk kesehatan pencernaan.</p><p>Kitin adalah polimer N-asetilglukosamin dengan ikatan β-1,4, ditemukan di eksoskeleton artropoda (serangga, krustasea) dan dinding sel jamur. Kitin adalah polisakarida kedua paling melimpah di Bumi setelah selulosa.</p>`);
+
+        add('glycosylation', 'Glikosilasi Protein', khCat, '🏷️', '#8e44ad', `<h4>N-linked & O-linked Glycosylation</h4><p>Glikosilasi adalah penambahan karbohidrat ke protein, merupakan modifikasi pasca-translasi paling umum. N-linked glycosylation: oligosakarida ditambahkan ke asparagin (N) dalam sekuens Asn-X-Ser/Thr di lumen RE. O-linked glycosylation: gula ditambahkan ke serin atau treonin di Golgi.</p><p>Glikosilasi mempengaruhi pelipatan protein, stabilitas, aktivitas biologis, dan pengenalan sel. Glikokaliks (lapisan karbohidrat di permukaan sel) penting untuk adhesi sel, komunikasi, dan respons imun. Perubahan glikosilasi terkait dengan kanker dan penyakit inflamasi.</p>`);
+
+        add('glycobiology', 'Glikobiologi', khCat, '🔬', '#1abc9c', `<h4>Definisi & Aplikasi</h4><p>Glikobiologi adalah studi tentang struktur, biosintesis, dan fungsi karbohidrat (glikan) dalam sistem biologis. Glikan terlibat dalam berbagai proses: pengenalan sel-sel, adhesi, sinyal, respons imun, dan infeksi patogen. Virus influenza menggunakan hemaglutinin untuk mengikat asam sialat pada glikoprotein permukaan sel inang.</p><p>Aplikasi glikobiologi: pengembangan vaksin (vaksin konjugat untuk bakteri), terapi kanker (antibodi yang menargetkan glikan tumor), dan biomaterial (scaffold berbasis polisakarida untuk rekayasa jaringan).</p>`);
+
+        const metCat = 'metabolisme';
+        add('atp-energy', 'ATP - Mata Uang Energi', metCat, '⚡', '#f1c40f', `<h4>Struktur & Hidrolisis</h4><p>Adenosin trifosfat (ATP) adalah molekul pembawa energi universal dalam sel. Terdiri dari adenin, ribosa, dan tiga gugus fosfat yang dihubungkan oleh ikatan fosfoanhidrida. Hidrolisis ATP → ADP + Pi melepaskan 30.5 kJ/mol (7.3 kcal/mol) dalam kondisi standar, tetapi dalam sel, ΔG hidrolisis sebenarnya sekitar -50 hingga -60 kJ/mol karena konsentrasi ATP, ADP, dan Pi yang tidak seimbang.</p><p>ATP dihasilkan melalui fosforilasi tingkat substrat (glikolisis, siklus Krebs) dan fosforilasi oksidatif (rantai transpor elektron). Sel manusia memproduksi dan menggunakan sekitar 40 kg ATP per hari. ATP terus didaur ulang: setiap molekul ATP digunakan dan diregenerasi sekitar 1000-1500 kali per hari.</p>`);
+
+        add('electron-transport', 'Rantai Transpor Elektron (Detail)', metCat, '🔋', '#e74c3c', `<h4>Kompleks & Gradien Proton</h4><p>Rantai transpor elektron (ETC) terletak di membran dalam mitokondria. Kompleks I (NADH dehidrogenase) menerima elektron dari NADH. Kompleks II (suksinat dehidrogenase) menerima elektron dari FADH2. Elektron mengalir ke ubikuinon (Q), Kompleks III (sitokrom bc1), sitokrom c, dan Kompleks IV (sitokrom c oksidase), yang mereduksi O2 menjadi H2O.</p><p>Energi dari aliran elektron digunakan untuk memompa proton (H+) dari matriks ke ruang antar membran, menciptakan gradien elektrokimia. ATP sintase (Kompleks V) menggunakan energi dari aliran balik proton (kemosmosis) untuk mensintesis ATP dari ADP + Pi.</p>`);
+
+        add('chemiosmosis', 'Kemosmosis', metCat, '🔄', '#2ecc71', `<h4>Teori Mitchell</h4><p>Teori kemosmosis, diusulkan oleh Peter Mitchell pada tahun 1961 (Nobel Kimia 1978), menyatakan bahwa energi dari transpor elektron digunakan untuk memompa proton melintasi membran, menciptakan gradien elektrokimia (gaya gerak proton) yang mendorong sintesis ATP. Ini adalah mekanisme universal untuk sintesis ATP di mitokondria, kloroplas, dan bakteri.</p><p>Gradien proton terdiri dari dua komponen: gradien konsentrasi (ΔpH, perbedaan pH) dan potensial listrik (Δψ, perbedaan muatan). ATP sintase adalah motor molekuler yang memutar rotor (cincin c) saat proton mengalir, menyebabkan perubahan konformasi di subunit katalitik yang mensintesis ATP.</p>`);
+
+        add('uncoupling-proteins', 'Uncoupling Proteins (UCP)', metCat, '🌡️', '#d35400', `<h4>Termogenesis</h4><p>Uncoupling proteins adalah protein di membran dalam mitokondria yang menyediakan jalur alternatif bagi proton untuk kembali ke matriks, melewati ATP sintase. Ini memisahkan (uncouple) transpor elektron dari sintesis ATP, sehingga energi dilepaskan sebagai panas.</p><p>UCP1 (thermogenin) di adiposa coklat sangat penting untuk termogenesis non-menggigil pada bayi dan hewan hibernasi. UCP2 dan UCP3 memiliki peran yang kurang dipahami tetapi mungkin terlibat dalam mengurangi produksi ROS. Senyawa kimia seperti 2,4-dinitrofenol (DNP) adalah uncoupler buatan yang pernah digunakan sebagai obat penurun berat badan namun berbahaya karena menyebabkan hipertermia fatal.</p>`);
+
+        add('photosynthesis-overview', 'Fotosintesis - Overview', metCat, '☀️', '#2ecc71', `<h4>Reaksi Terang & Siklus Calvin</h4><p>Fotosintesis adalah proses konversi energi cahaya menjadi energi kimia (ATP dan NADPH) dan fiksasi CO2 menjadi karbohidrat. Terjadi di kloroplas pada tumbuhan dan alga. Reaksi terang (di membran tilakoid): cahaya menggerakkan transpor elektron, memecah H2O menjadi O2, menghasilkan ATP dan NADPH. Siklus Calvin (di stroma): menggunakan ATP dan NADPH untuk mengfiksasi CO2 menjadi glukosa.</p><p>Persamaan keseluruhan: 6CO2 + 6H2O + cahaya → C6H12O6 + 6O2. Fotosintesis adalah sumber utama O2 di atmosfer Bumi dan dasar rantai makanan.</p><div class="cross-link"><strong>Baca juga di GreenVerse (mendatang):</strong> Fotosintesis detail (reaksi terang, siklus Calvin, C4, CAM) akan dibahas di GreenVerse.</div>`);
+
+        add('pentose-phosphate-pathway', 'Jalur Pentosa Fosfat (PPP)', metCat, '🧪', '#9b59b6', `<h4>Fungsi & Fase</h4><p>Jalur pentosa fosfat adalah jalur metabolisme alternatif dari glikolisis yang menghasilkan NADPH (untuk biosintesis reduktif dan antioksidan) dan ribosa-5-fosfat (untuk sintesis nukleotida). Terdiri dari fase oksidatif (ireversibel, menghasilkan NADPH dan ribulosa-5-fosfat) dan fase non-oksidatif (reversibel, mengkonversi ribulosa-5-fosfat menjadi intermediate glikolitik).</p><p>PPP sangat aktif di jaringan yang memerlukan NADPH untuk biosintesis (hati, jaringan adiposa) atau ribosa untuk pembelahan sel (sumsum tulang, sel kanker). Defisiensi glukosa-6-fosfat dehidrogenase (G6PD), enzim pertama PPP, menyebabkan anemia hemolitik saat terpapar stres oksidatif karena kurangnya NADPH untuk meregenerasi glutation.</p>`);
+
+        add('glyoxylate-cycle', 'Siklus Glioksilat', metCat, '🌱', '#27ae60', `<h4>Definisi & Signifikansi</h4><p>Siklus glioksilat adalah variasi siklus Krebs yang memungkinkan organisme mengkonversi asetil-KoA (dari pemecahan asam lemak) menjadi glukosa. Tidak ada pada hewan, tetapi ada pada tumbuhan, bakteri, dan jamur. Enzim kunci: isositrat liase dan malat sintase, yang melewati langkah-langkah dekarboksilasi siklus Krebs.</p><p>Siklus glioksilat memungkinkan biji yang kaya minyak (seperti biji bunga matahari, kacang) mengubah cadangan lemak menjadi karbohidrat selama perkecambahan. Ini adalah target potensial untuk obat antijamur karena siklus ini diperlukan untuk virulensi beberapa patogen jamur.</p>`);
+
+        const siCat = 'sinyal';
+        add('signal-transduction-overview', 'Transduksi Sinyal - Overview', siCat, '📡', '#8e44ad', `<h4>Prinsip Umum</h4><p>Transduksi sinyal adalah proses di mana sinyal ekstraseluler (ligan) diubah menjadi respons intraseluler. Tahapan: (1) reseptor mendeteksi sinyal, (2) amplifikasi melalui kaskade sinyal, (3) integrasi sinyal dari berbagai jalur, (4) respons seluler (perubahan metabolisme, ekspresi gen, pergerakan, kematian).</p><p>Komponen utama jalur sinyal: reseptor, protein G, second messenger (cAMP, Ca2+, IP3, DAG), kinase dan fosfatase, faktor transkripsi. Sinyal dapat bersifat endokrin (jarak jauh melalui darah), parakrin (ke sel tetangga), autokrin (ke diri sendiri), atau juxtakrin (kontak langsung).</p><div class="cross-link"><strong>Baca juga di MicroVerse 2:</strong> GPCR, RTK, Notch, Wnt, Hedgehog, dan JAK-STAT sudah dibahas detail di <a href="microverse2.html" target="_blank">MicroVerse 2 - Sinyal Sel</a>.</div>`);
+
+        add('second-messengers', 'Second Messenger', siCat, '📢', '#f39c12', `<h4>cAMP, Ca2+, IP3, DAG</h4><p>Second messenger adalah molekul kecil intraseluler yang menyebarkan sinyal dari reseptor ke efektor. cAMP disintesis dari ATP oleh adenilat siklase (diaktivasi oleh Gαs, dihambat oleh Gαi). cAMP mengaktivasi Protein Kinase A (PKA). IP3 (inositol 1,4,5-trisfosfat) dan DAG (diasilgliserol) dihasilkan dari pemecahan PIP2 oleh fosfolipase C (PLC). IP3 memicu pelepasan Ca2+ dari RE; DAG mengaktivasi Protein Kinase C (PKC).</p><p>Ca2+ adalah second messenger universal. Konsentrasi Ca2+ sitosolik sangat rendah (~100 nM) dibanding di luar sel (~1-2 mM) dan di RE, menciptakan gradien besar untuk sinyal cepat. Ca2+ berikatan dengan protein sensor seperti calmodulin dan troponin C.</p>`);
+
+        add('kinase-phosphatase', 'Kinase & Fosfatase', siCat, '⚙️', '#3498db', `<h4>Fosforilasi Reversibel</h4><p>Protein kinase mentransfer gugus fosfat dari ATP ke residu serin, treonin, atau tirosin pada protein target. Manusia memiliki ~518 kinase (kinome). Protein fosfatase menghapus gugus fosfat. Fosforilasi adalah saklar molekuler utama yang mengatur aktivitas protein, interaksi protein-protein, dan lokalisasi seluler.</p><p>Contoh: Reseptor Tirosin Kinase (RTK) memfosforilasi tirosin setelah aktivasi. MAP kinase cascade (Raf → MEK → ERK) mengamplifikasi sinyal proliferasi. Protein fosfatase seperti PP1 dan PP2A mengembalikan protein ke keadaan basal.</p>`);
+
+        add('apoptosis-signaling', 'Sinyal Apoptosis', siCat, '💀', '#c0392b', `<h4>Jalur Intrinsik & Ekstrinsik</h4><p>Apotosis (kematian sel terprogram) diatur oleh keseimbangan protein pro-apoptosis (Bax, Bak, Bid, Bim) dan anti-apoptosis (Bcl-2, Bcl-xL). Jalur intrinsik (mitokondria): pelepasan sitokrom c → apoptosom → kaspase-9 → kaspase-3 → apoptosis. Jalur ekstrinsik (reseptor kematian): FasL/Fas atau TNF/TNFR → DISC → kaspase-8 → kaspase-3.</p><div class="cross-link"><strong>Baca juga di MicroVerse 2:</strong> Apoptosis intrinsik, ekstrinsik, dan kaskade kaspase sudah dibahas detail di <a href="microverse2.html" target="_blank">MicroVerse 2 - Apoptosis & Nekrosis</a>.</div>`);
+
+        add('cell-cycle-signaling', 'Sinyal Siklus Sel', siCat, '🔄', '#2ecc71', `<h4>Siklin & CDK</h4><p>Progresi siklus sel diatur oleh kompleks siklin-CDK. Siklin D-CDK4/6 (fase G1), Siklin E-CDK2 (transisi G1/S), Siklin A-CDK2 (fase S), Siklin B-CDK1 (mitosis). Inhibitor CDK (p16, p21, p27) menghentikan siklus sel sebagai respons terhadap kerusakan DNA atau sinyal anti-proliferasi.</p><p>Checkpoint G1/S (titik restriksi) adalah pos pemeriksaan utama. Checkpoint G2/M memastikan DNA telah direplikasi dengan benar. Spindle Assembly Checkpoint (SAC) memastikan semua kromosom melekat ke spindle sebelum anafase.</p><div class="cross-link"><strong>Baca juga di MicroVerse 2:</strong> Semua checkpoint siklus sel sudah dibahas detail di <a href="microverse2.html" target="_blank">MicroVerse 2 - Cell Cycle Checkpoints</a>.</div>`);
+
+        add('growth-factor-signaling', 'Sinyal Faktor Pertumbuhan', siCat, '🌱', '#27ae60', `<h4>EGF, FGF, NGF, VEGF</h4><p>Faktor pertumbuhan adalah protein yang merangsang proliferasi, diferensiasi, dan kelangsungan hidup sel. EGF (Epidermal Growth Factor) mengaktivasi jalur Ras-MAPK melalui EGFR. VEGF (Vascular Endothelial Growth Factor) merangsang angiogenesis. NGF (Nerve Growth Factor) mendukung kelangsungan hidup neuron.</p><p>Overekspresi atau mutasi reseptor faktor pertumbuhan adalah driver onkogenik umum. Terapi target: trastuzumab (anti-HER2 untuk kanker payudara), bevacizumab (anti-VEGF untuk angiogenesis tumor), erlotinib (inhibitor EGFR untuk kanker paru).</p>`);
+
+        const btCat = 'biotek-protein';
+        add('recombinant-protein', 'Produksi Protein Rekombinan', btCat, '🧬', '#27ae60', `<h4>Definisi & Sistem Ekspresi</h4><p>Protein rekombinan adalah protein yang diproduksi oleh organisme yang telah dimodifikasi secara genetik untuk mengekspresikan gen asing. Insulin manusia adalah protein rekombinan pertama yang disetujui untuk penggunaan terapeutik (1982, diproduksi oleh bakteri E. coli).</p><p>Sistem ekspresi: bakteri (E. coli, cepat, murah, tetapi tidak dapat melakukan modifikasi pasca-translasi eukariotik), ragi (S. cerevisiae, P. pastoris), sel serangga (baculovirus), sel mamalia (CHO - Chinese Hamster Ovary, paling umum untuk protein terapeutik), dan tanaman transgenik.</p><div class="info-box"><strong>Fakta:</strong> Sebelum insulin rekombinan, insulin diekstrak dari pankreas babi dan sapi. Insulin rekombinan menghilangkan risiko reaksi alergi dan memastikan pasokan yang konsisten.</div>`);
+
+        add('site-directed-mutagenesis', 'Site-Directed Mutagenesis', btCat, '✂️', '#e74c3c', `<h4>Definisi & Aplikasi</h4><p>Site-directed mutagenesis adalah teknik untuk mengubah asam amino spesifik dalam protein dengan mengubah kodon yang sesuai dalam gen. Memungkinkan studi hubungan struktur-fungsi: mengganti satu asam amino untuk melihat efeknya pada aktivitas enzim, stabilitas, atau pengikatan ligan.</p><p>Metode: PCR dengan primer mutagenik, Kunkel mutagenesis (menggunakan urasil-containing template), atau sintesis gen de novo. Aplikasi: meningkatkan stabilitas termal enzim untuk industri, mengurangi imunogenisitas protein terapeutik, menciptakan enzim dengan spesifisitas substrat yang diubah.</p>`);
+
+        add('protein-engineering', 'Protein Engineering', btCat, '🏗️', '#f39c12', `<h4>Desain Rasional & Evolusi Terarah</h4><p>Protein engineering adalah desain dan konstruksi protein dengan sifat yang diinginkan. Dua pendekatan utama: desain rasional (menggunakan pengetahuan struktur untuk memprediksi mutasi yang menguntungkan) dan evolusi terarah (meniru evolusi alam dalam tabung reaksi melalui mutagenesis acak dan seleksi).</p><p>Frances Arnold memenangkan Nobel Kimia 2018 untuk evolusi terarah enzim. Aplikasi: enzim untuk deterjen (tahan panas dan basa), enzim untuk biofuel (mendegradasi selulosa), antibodi terapeutik dengan afinitas tinggi, dan enzim untuk sintesis kimia hijau.</p>`);
+
+        add('antibody-engineering', 'Antibody Engineering', btCat, '🛡️', '#9b59b6', `<h4>Antibodi Monoklonal & Humanisasi</h4><p>Antibodi monoklonal (mAb) diproduksi oleh satu klon sel B, mengenali satu epitop spesifik. Diproduksi dengan teknologi hibridoma (fusi sel B dengan sel mieloma). Antibodi murine (tikus) bersifat imunogenik pada manusia, sehingga antibodi chimeric, humanized, atau fully human dikembangkan untuk mengurangi HAMA (Human Anti-Mouse Antibody) response.</p><p>Contoh antibodi terapeutik: rituximab (anti-CD20, limfoma), trastuzumab (anti-HER2, kanker payudara), adalimumab (anti-TNFα, artritis reumatoid), pembrolizumab (anti-PD-1, imunoterapi kanker). Pasar antibodi terapeutik bernilai lebih dari $200 miliar.</p>`);
+
+        add('enzyme-inhibitors-drugs', 'Inhibitor Enzim sebagai Obat', btCat, '💊', '#c0392b', `<h4>Contoh & Mekanisme</h4><p>Banyak obat bekerja dengan menghambat enzim spesifik. Statin menghambat HMG-CoA reduktase (sintesis kolesterol). ACE inhibitor (lisinopril) menghambat Angiotensin-Converting Enzyme (hipertensi). Inhibitor COX (aspirin, ibuprofen) menghambat siklooksigenase (inflamasi). Inhibitor protease HIV (ritonavir) menghambat protease virus. Inhibitor kinase (imatinib) menghambat BCR-ABL di leukemia.</p><p>Desain obat berbasis struktur menggunakan kristalografi sinar-X atau prediksi komputasional untuk merancang inhibitor yang fit dengan sisi aktif enzim target.</p>`);
+
+        add('proteomics', 'Proteomik', btCat, '🔬', '#3498db', `<h4>Definisi & Teknik</h4><p>Proteomik adalah studi sistematis tentang semua protein dalam sel, jaringan, atau organisme (proteom). Berbeda dengan genom yang relatif statis, proteom bersifat dinamis: berubah seiring waktu, antar jenis sel, dan sebagai respons terhadap lingkungan. Proteomik mengidentifikasi protein, mengukur level ekspresi, menganalisis modifikasi pasca-translasi, dan mempelajari interaksi protein-protein.</p><p>Teknik utama: spektrometri massa (identifikasi dan kuantifikasi protein), two-dimensional gel electrophoresis (2D-PAGE), protein microarray, yeast two-hybrid (interaksi protein-protein), dan bioinformatika proteomik.</p>`);
+
+        return items;
+      }
+
+      const allItems = generateItems();
+      let currentCategory = 'all', currentPage = 1;
+      const itemsPerPage = 20;
+      let filteredItems = [...allItems];
+      let currentOrganelle = null;
+      let searchMode = 'internal';
+
+      const sidebar = document.getElementById('sidebar');
+      const libraryGrid = document.getElementById('library-grid');
+      const pagination = document.getElementById('pagination');
+      const searchInput = document.getElementById('search-input');
+      const searchBtn = document.getElementById('search-btn');
+      const searchExtInput = document.getElementById('search-ext-input');
+      const searchExtBtn = document.getElementById('search-ext-btn');
+      const externalResults = document.getElementById('external-results');
+      const itemCount = document.getElementById('item-count');
+      const proteusMessage = document.getElementById('proteus-message');
+      const detailOverlay = document.getElementById('detail-overlay');
+      const detailCloseBtn = document.getElementById('detail-close-btn');
+      const detailIcon = document.getElementById('detail-icon');
+      const detailTitle = document.getElementById('detail-title');
+      const detailCategory = document.getElementById('detail-category');
+      const detailContent = document.getElementById('detail-content');
+      const detailOpen3dBtn = document.getElementById('detail-open-3d');
+      const model3dOverlay = document.getElementById('model-3d-overlay');
+      const model3dTitle = document.getElementById('model-3d-title');
+      const model3dIframe = document.getElementById('model-3d-iframe');
+      const model3dCloseBtn = document.getElementById('model-3d-close-btn');
+      const model3dFallbackLink = document.getElementById('model-3d-fallback-link');
+      const themeToggleBtn = document.getElementById('theme-toggle-btn');
+      const backBtn = document.getElementById('back-btn');
+
+      function setTheme(t) {
+        if(t==='light'){document.body.classList.add('light-theme');themeToggleBtn.innerHTML='☾ Dark';}
+        else{document.body.classList.remove('light-theme');themeToggleBtn.innerHTML='☀ Light';}
+        localStorage.setItem('bioverse_theme',t);
+      }
+      setTheme(localStorage.getItem('bioverse_theme')||'dark');
+      themeToggleBtn.addEventListener('click',()=>setTheme(document.body.classList.contains('light-theme')?'dark':'light'));
+
+      function buildSidebar(){
+        const counts={}; allItems.forEach(i=>counts[i.category]=(counts[i.category]||0)+1);
+        categories.forEach(cat=>{
+          const btn=document.createElement('button');
+          btn.className='category-btn'+(cat.id==='all'?' active':'');
+          btn.dataset.category=cat.id;
+          btn.innerHTML=`${cat.name} <span class="category-count">${cat.id==='all'?allItems.length:counts[cat.id]||0}</span>`;
+          btn.addEventListener('click',()=>{
+            document.querySelectorAll('.category-btn').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            currentCategory=cat.id; currentPage=1; filterItems();
+          });
+          sidebar.appendChild(btn);
+        });
+      }
+
+      function filterItems(){
+        let items=[...allItems];
+        if(currentCategory!=='all') items=items.filter(i=>i.category===currentCategory);
+        const q=searchInput.value.trim().toLowerCase();
+        if(q) items=items.filter(i=>i.name.toLowerCase().includes(q)||i.content.toLowerCase().includes(q));
+        filteredItems=items; itemCount.textContent=items.length+' item'; renderPage();
+      }
+
+      function renderPage(){
+        const tp=Math.ceil(filteredItems.length/itemsPerPage);
+        const start=(currentPage-1)*itemsPerPage;
+        const pageItems=filteredItems.slice(start,start+itemsPerPage);
+        libraryGrid.innerHTML='';
+        pageItems.forEach(item=>{
+          const card=document.createElement('div'); card.className='organelle-card';
+          card.innerHTML=`<div class="card-icon" style="background:${item.iconBg};color:white;">${item.icon}</div><div class="card-title">${item.name}</div><div class="card-function">${item.content.replace(/<[^>]*>/g,'').substring(0,120)}...</div><div class="card-actions"><button class="btn-detail">Detail</button><button class="btn-3d">3D</button></div>`;
+          card.addEventListener('click',()=>openDetail(item));
+          card.querySelector('.btn-detail').addEventListener('click',e=>{e.stopPropagation();openDetail(item);});
+          card.querySelector('.btn-3d').addEventListener('click',e=>{e.stopPropagation();openModel3D(item);});
+          libraryGrid.appendChild(card);
+        });
+        renderPagination(tp);
+      }
+
+      function renderPagination(tp){
+        pagination.innerHTML=''; if(tp<=1) return;
+        const prev=document.createElement('button'); prev.className='page-btn'; prev.textContent='«'; prev.disabled=currentPage===1; prev.onclick=()=>{currentPage--;renderPage();window.scrollTo(0,0);}; pagination.appendChild(prev);
+        for(let i=1;i<=tp;i++){const b=document.createElement('button');b.className='page-btn'+(i===currentPage?' active':'');b.textContent=i;b.onclick=()=>{currentPage=i;renderPage();window.scrollTo(0,0);};pagination.appendChild(b);}
+        const next=document.createElement('button');next.className='page-btn';next.textContent='»';next.disabled=currentPage===tp;next.onclick=()=>{currentPage++;renderPage();window.scrollTo(0,0);};pagination.appendChild(next);
+      }
+
+      function openDetail(item){
+        currentOrganelle=item; detailIcon.innerHTML=item.icon; detailIcon.style.background=item.iconBg; detailIcon.style.color='white';
+        detailTitle.textContent=item.name; const co=categories.find(c=>c.id===item.category); detailCategory.textContent=co?co.name:item.category;
+        detailContent.innerHTML=item.content; detailOverlay.classList.add('active');
+        proteusMessage.innerHTML=`<span>Proteus:</span> Struktur menentukan fungsi! Kamu sedang mempelajari <strong>${item.name}</strong>. Mari kita lihat blueprint-nya!`;
+      }
+      detailCloseBtn.addEventListener('click',()=>detailOverlay.classList.remove('active'));
+      detailOverlay.addEventListener('click',e=>{if(e.target===detailOverlay)detailOverlay.classList.remove('active');});
+      detailOpen3dBtn.addEventListener('click',()=>{if(currentOrganelle)openModel3D(currentOrganelle);});
+
+      function openModel3D(item){
+        model3dTitle.textContent='Model 3D: '+item.name;
+        const url='https://sketchfab.com/search?q='+encodeURIComponent(item.sketchfabSearch)+'&type=models';
+        model3dIframe.src=url; model3dFallbackLink.href=url; model3dOverlay.classList.add('active');
+      }
+      model3dCloseBtn.addEventListener('click',()=>{model3dOverlay.classList.remove('active');model3dIframe.src='';});
+      model3dOverlay.addEventListener('click',e=>{if(e.target===model3dOverlay){model3dOverlay.classList.remove('active');model3dIframe.src='';}});
+
+      function performSearch(){currentPage=1;filterItems();externalResults.classList.remove('active');}
+      searchBtn.addEventListener('click',performSearch);
+      searchInput.addEventListener('keypress',e=>{if(e.key==='Enter')performSearch();});
+
+      async function performExternalSearch(){
+        const q=searchExtInput.value.trim();
+        if(!q) return;
+        externalResults.innerHTML='<p style="text-align:center;">🔍 Mencari di Wikipedia...</p>';
+        externalResults.classList.add('active');
+        proteusMessage.innerHTML=`<span>Proteus:</span> Mencari info tentang "<em>${q}</em>" dari sumber eksternal...`;
+        try{
+          const resp=await fetch(`https://id.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*`);
+          const data=await resp.json();
+          if(data.query.search.length===0){externalResults.innerHTML='<p>Tidak ditemukan hasil.</p>';return;}
+          let html='';
+          for(let i=0;i<Math.min(data.query.search.length,5);i++){
+            const r=data.query.search[i];
+            html+=`<div class="external-result-item"><h5>${r.title}</h5><p>${r.snippet.replace(/<\/?[^>]+(>|$)/g,'').substring(0,300)}...</p><a href="https://id.wikipedia.org/wiki/${encodeURIComponent(r.title)}" target="_blank">Baca di Wikipedia →</a></div>`;
+          }
+          externalResults.innerHTML=html;
+          proteusMessage.innerHTML=`<span>Proteus:</span> Aku menemukan ${Math.min(data.query.search.length,5)} hasil dari Wikipedia untuk "<em>${q}</em>". Struktur informasi yang rapi!`;
+        }catch(e){externalResults.innerHTML='<p>Gagal mencari. Coba lagi nanti.</p>';}
+      }
+      searchExtBtn.addEventListener('click',performExternalSearch);
+      searchExtInput.addEventListener('keypress',e=>{if(e.key==='Enter')performExternalSearch();});
+
+      document.querySelectorAll('.search-tab').forEach(tab=>{
+        tab.addEventListener('click',()=>{
+          document.querySelectorAll('.search-tab').forEach(t=>t.classList.remove('active'));
+          tab.classList.add('active');
+          searchMode=tab.dataset.tab;
+          document.getElementById('search-internal').style.display=searchMode==='internal'?'flex':'none';
+          document.getElementById('search-external').style.display=searchMode==='external'?'flex':'none';
+          if(searchMode==='internal') externalResults.classList.remove('active');
+        });
+      });
+
+      backBtn.addEventListener('click',()=>{window.location.href='index.html';});
+      buildSidebar(); filterItems();
+
+      const greetings=[
+        '<span>Proteus:</span> Struktur menentukan fungsi! Selamat datang di BuildVerse. Aku Arsitek Proteus, siap membimbingmu memahami dunia protein dan biokimia!',
+        '<span>Proteus:</span> Protein itu seperti bangunan: struktur primer adalah batu bata, sekunder adalah dinding, tersier adalah ruangan, dan kuartener adalah gedung lengkapnya!',
+        '<span>Proteus:</span> Tahukah kamu? Satu sel manusia mengandung sekitar 10 miliar molekul protein dari 20.000 jenis berbeda!',
+        '<span>Proteus:</span> Coba fitur "Cari di Web" untuk mencari info protein dari Wikipedia. Pengetahuan adalah fondasi!'
+      ];
+      let gi=0;
+      setInterval(()=>{if(!detailOverlay.classList.contains('active')&&!model3dOverlay.classList.contains('active')){proteusMessage.innerHTML=greetings[gi%greetings.length];gi++;}},15000);
+    })();
+  </script>
+</body>
+</html>
