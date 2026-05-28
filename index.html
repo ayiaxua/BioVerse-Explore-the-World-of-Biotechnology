@@ -9,537 +9,130 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-primary: #0a0f1a;
-      --bg-secondary: #111827;
-      --text-primary: #e2e8f0;
-      --text-secondary: #94a3b8;
-      --accent: #00E5A0;
-      --accent-blue: #1E90FF;
-      --accent-gold: #FFD700;
-      --accent-red: #e74c3c;
-      --accent-cyan: #00FFFF;
-      --card-bg: rgba(15, 25, 45, 0.7);
-      --card-border: rgba(255, 255, 255, 0.1);
-      --glow: 0 0 30px rgba(0, 229, 160, 0.4);
-      --glow-blue: 0 0 25px rgba(30, 144, 255, 0.4);
-      --glow-gold: 0 0 25px rgba(255, 215, 0, 0.4);
-      --glow-red: 0 0 25px rgba(231, 76, 60, 0.4);
-      --glow-cyan: 0 0 25px rgba(0, 255, 255, 0.4);
-      --font-display: 'Orbitron', sans-serif;
-      --font-body: 'Poppins', sans-serif;
+      --bg-primary: #0a0f1a; --bg-secondary: #111827; --text-primary: #e2e8f0; --text-secondary: #94a3b8;
+      --accent: #00E5A0; --accent-blue: #1E90FF; --accent-gold: #FFD700; --accent-red: #e74c3c; --accent-cyan: #00FFFF;
+      --card-bg: rgba(15, 25, 45, 0.7); --card-border: rgba(255, 255, 255, 0.1);
+      --glow: 0 0 30px rgba(0, 229, 160, 0.4); --glow-blue: 0 0 25px rgba(30, 144, 255, 0.4);
+      --glow-gold: 0 0 25px rgba(255, 215, 0, 0.4); --glow-red: 0 0 25px rgba(231, 76, 60, 0.4);
+      --glow-cyan: 0 0 25px rgba(0, 255, 255, 0.4); --font-display: 'Orbitron', sans-serif; --font-body: 'Poppins', sans-serif;
     }
     .light-theme {
-      --bg-primary: #f0f4f8;
-      --bg-secondary: #e2e8f0;
-      --text-primary: #1a202c;
-      --text-secondary: #4a5568;
-      --card-bg: rgba(255, 255, 255, 0.85);
-      --card-border: rgba(0, 0, 0, 0.1);
-      --glow: 0 0 30px rgba(0, 180, 130, 0.3);
-      --glow-blue: 0 0 25px rgba(30, 100, 200, 0.3);
-      --glow-gold: 0 0 25px rgba(200, 160, 0, 0.3);
-      --glow-red: 0 0 25px rgba(200, 60, 50, 0.3);
+      --bg-primary: #f0f4f8; --bg-secondary: #e2e8f0; --text-primary: #1a202c; --text-secondary: #4a5568;
+      --card-bg: rgba(255, 255, 255, 0.85); --card-border: rgba(0, 0, 0, 0.1);
+      --glow: 0 0 30px rgba(0, 180, 130, 0.3); --glow-blue: 0 0 25px rgba(30, 100, 200, 0.3);
+      --glow-gold: 0 0 25px rgba(200, 160, 0, 0.3); --glow-red: 0 0 25px rgba(200, 60, 50, 0.3);
       --glow-cyan: 0 0 25px rgba(0, 180, 180, 0.3);
     }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      font-family: var(--font-body); background: var(--bg-primary); color: var(--text-primary);
-      overflow-x: hidden; transition: background 0.4s, color 0.4s; height:100vh; width:100vw; position:relative;
-    }
+    body { font-family: var(--font-body); background: var(--bg-primary); color: var(--text-primary); overflow-x: hidden; transition: background 0.4s, color 0.4s; height:100vh; width:100vw; position:relative; }
     #particles-bg { position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; }
-    #app-container {
-      position:relative; z-index:1; width:100%; height:100vh;
-      display:flex; flex-direction:column; align-items:center; justify-content:center;
-    }
-    .theme-toggle {
-      position:fixed; top:20px; right:20px; z-index:100; background:var(--card-bg);
-      border:1px solid var(--card-border); backdrop-filter:blur(15px); color:var(--text-primary);
-      padding:10px 18px; border-radius:30px; cursor:pointer; font-family:var(--font-body);
-      font-weight:600; font-size:0.85rem; display:flex; align-items:center; gap:8px;
-      transition:all 0.3s; box-shadow:0 4px 15px rgba(0,0,0,0.2);
-    }
+    #app-container { position:relative; z-index:1; width:100%; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .theme-toggle { position:fixed; top:20px; right:20px; z-index:100; background:var(--card-bg); border:1px solid var(--card-border); backdrop-filter:blur(15px); color:var(--text-primary); padding:10px 18px; border-radius:30px; cursor:pointer; font-weight:600; font-size:0.85rem; display:flex; align-items:center; gap:8px; transition:all 0.3s; box-shadow:0 4px 15px rgba(0,0,0,0.2); }
     .theme-toggle:hover { transform:scale(1.05); border-color:var(--accent); }
-    .progress-tracker {
-      position:fixed; top:20px; left:20px; z-index:100; background:var(--card-bg);
-      backdrop-filter:blur(15px); padding:12px 24px; border-radius:30px; font-weight:600;
-      font-size:0.9rem; border:1px solid var(--card-border); box-shadow:0 4px 15px rgba(0,0,0,0.2);
-      display:flex; align-items:center; gap:8px; letter-spacing:0.5px;
-    }
+    .progress-tracker { position:fixed; top:20px; left:20px; z-index:100; background:var(--card-bg); backdrop-filter:blur(15px); padding:12px 24px; border-radius:30px; font-weight:600; font-size:0.9rem; border:1px solid var(--card-border); box-shadow:0 4px 15px rgba(0,0,0,0.2); display:flex; align-items:center; gap:8px; letter-spacing:0.5px; }
     .progress-tracker span { color:var(--accent); font-weight:700; font-family:var(--font-display); font-size:1.1rem; }
     .progress-bar { width:80px; height:6px; background:rgba(255,255,255,0.2); border-radius:10px; overflow:hidden; margin-left:8px; }
     .progress-fill { height:100%; background:var(--accent); border-radius:10px; transition:width 0.5s ease; width:0%; }
     .map-header { text-align:center; margin-bottom:1.5rem; z-index:10; position:relative; }
-    .map-header .logo-text {
-      font-family:var(--font-display); font-size:3.5rem; font-weight:800;
-      background:linear-gradient(135deg, var(--accent), var(--accent-blue), var(--accent-gold));
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-      letter-spacing:2px; margin-bottom:0.3rem; animation:titleGlow 3s ease-in-out infinite;
-    }
-    @keyframes titleGlow {
-      0%,100%{filter:drop-shadow(0 0 15px rgba(0,229,160,0.5));}
-      50%{filter:drop-shadow(0 0 30px rgba(30,144,255,0.7));}
-    }
+    .map-header .logo-text { font-family:var(--font-display); font-size:3.5rem; font-weight:800; background:linear-gradient(135deg, var(--accent), var(--accent-blue), var(--accent-gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; letter-spacing:2px; margin-bottom:0.3rem; animation:titleGlow 3s ease-in-out infinite; }
+    @keyframes titleGlow { 0%,100%{filter:drop-shadow(0 0 15px rgba(0,229,160,0.5));} 50%{filter:drop-shadow(0 0 30px rgba(30,144,255,0.7));} }
     .map-header .subtitle { font-size:1.1rem; color:var(--text-secondary); font-weight:400; letter-spacing:1px; }
-    .islands-grid {
-      display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
-      gap:1.5rem; max-width:1100px; padding:1rem; z-index:10; position:relative;
-    }
-    .island-card {
-      width:150px; height:180px; background:var(--card-bg); backdrop-filter:blur(15px);
-      border-radius:24px; display:flex; flex-direction:column; align-items:center; justify-content:center;
-      cursor:pointer; transition:all 0.35s cubic-bezier(0.4,0,0.2,1);
-      border:2px solid var(--card-border); color:var(--text-primary); text-align:center;
-      position:relative; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,0.3);
-    }
-    .island-card::before {
-      content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%;
-      background:radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
-      opacity:0; transition:opacity 0.4s;
-    }
+    .islands-grid { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:1.5rem; max-width:1100px; padding:1rem; z-index:10; position:relative; }
+    .island-card { width:150px; height:180px; background:var(--card-bg); backdrop-filter:blur(15px); border-radius:24px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:all 0.35s; border:2px solid var(--card-border); color:var(--text-primary); text-align:center; position:relative; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,0.3); }
+    .island-card::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%); opacity:0; transition:opacity 0.4s; }
     .island-card:hover::before { opacity:1; }
     .island-card:hover { transform:translateY(-12px) scale(1.04); border-color:var(--accent); box-shadow:var(--glow); }
     .island-card.locked { opacity:0.7; filter:grayscale(30%); }
     .island-card.locked:hover { border-color:rgba(255,255,255,0.3); box-shadow:0 8px 25px rgba(0,0,0,0.3); transform:translateY(-5px) scale(1.02); }
-    .island-icon-wrapper {
-      width:60px; height:60px; margin-bottom:0.6rem; display:flex; align-items:center;
-      justify-content:center; filter:drop-shadow(0 4px 8px rgba(0,0,0,0.4)); transition:transform 0.3s;
-    }
+    .island-icon-wrapper { width:60px; height:60px; margin-bottom:0.6rem; display:flex; align-items:center; justify-content:center; filter:drop-shadow(0 4px 8px rgba(0,0,0,0.4)); transition:transform 0.3s; }
     .island-card:hover .island-icon-wrapper { transform:scale(1.1) rotate(-3deg); }
     .island-icon-wrapper svg { width:55px; height:55px; }
-    .island-name {
-      font-weight:700; font-size:0.95rem; letter-spacing:0.5px; font-family:var(--font-display);
-      text-transform:uppercase; background:rgba(0,0,0,0.3); padding:4px 14px; border-radius:20px; margin-top:4px;
-    }
+    .island-name { font-weight:700; font-size:0.95rem; letter-spacing:0.5px; font-family:var(--font-display); text-transform:uppercase; background:rgba(0,0,0,0.3); padding:4px 14px; border-radius:20px; margin-top:4px; }
     .island-tag { font-size:0.7rem; color:var(--text-secondary); margin-top:2px; font-weight:400; }
-    .island-card.micro { border-color:rgba(0,229,160,0.6); }
-    .island-card.micro:hover { border-color:#00E5A0; box-shadow:var(--glow); }
-    .island-card.code { border-color:rgba(30,144,255,0.6); }
-    .island-card.code:hover { border-color:#1E90FF; box-shadow:var(--glow-blue); }
-    .island-card.build { border-color:rgba(255,215,0,0.6); }
-    .island-card.build:hover { border-color:#FFD700; box-shadow:var(--glow-gold); }
-    .island-card.green { border-color:rgba(46,204,113,0.6); }
-    .island-card.green:hover { border-color:#2ecc71; box-shadow:0 0 25px rgba(46,204,113,0.4); }
-    .island-card.aqua { border-color:rgba(0,255,255,0.6); }
-    .island-card.aqua:hover { border-color:#00FFFF; box-shadow:var(--glow-cyan); }
-    .island-card.med { border-color:rgba(231,76,60,0.6); }
-    .island-card.med:hover { border-color:#e74c3c; box-shadow:var(--glow-red); }
-    .start-button {
-      margin-top:2rem; background:linear-gradient(135deg, var(--accent), #00b87a);
-      border:none; padding:16px 45px; border-radius:50px; font-size:1.2rem; font-weight:700;
-      color:#0a1a2a; cursor:pointer; transition:all 0.4s; box-shadow:var(--glow);
-      letter-spacing:1px; z-index:10; font-family:var(--font-display); text-transform:uppercase;
-      position:relative; overflow:hidden;
-    }
+    .island-card.micro { border-color:rgba(0,229,160,0.6); } .island-card.micro:hover { border-color:#00E5A0; box-shadow:var(--glow); }
+    .island-card.code { border-color:rgba(30,144,255,0.6); } .island-card.code:hover { border-color:#1E90FF; box-shadow:var(--glow-blue); }
+    .island-card.build { border-color:rgba(255,215,0,0.6); } .island-card.build:hover { border-color:#FFD700; box-shadow:var(--glow-gold); }
+    .island-card.green { border-color:rgba(46,204,113,0.6); } .island-card.green:hover { border-color:#2ecc71; box-shadow:0 0 25px rgba(46,204,113,0.4); }
+    .island-card.aqua { border-color:rgba(0,255,255,0.6); } .island-card.aqua:hover { border-color:#00FFFF; box-shadow:var(--glow-cyan); }
+    .island-card.med { border-color:rgba(231,76,60,0.6); } .island-card.med:hover { border-color:#e74c3c; box-shadow:var(--glow-red); }
+    .start-button { margin-top:2rem; background:linear-gradient(135deg, var(--accent), #00b87a); border:none; padding:16px 45px; border-radius:50px; font-size:1.2rem; font-weight:700; color:#0a1a2a; cursor:pointer; transition:all 0.4s; box-shadow:var(--glow); letter-spacing:1px; z-index:10; font-family:var(--font-display); text-transform:uppercase; position:relative; overflow:hidden; }
     .start-button:hover { transform:scale(1.07); box-shadow:0 0 50px rgba(0,229,160,0.7); }
-    .start-button::after {
-      content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%;
-      background:linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
-      animation:shine 2s infinite;
-    }
-    @keyframes shine {
-      0%{transform:translateX(-100%) rotate(45deg);}
-      100%{transform:translateX(100%) rotate(45deg);}
-    }
-    .guide-container {
-      position:fixed; bottom:30px; right:30px; z-index:200;
-      display:flex; flex-direction:column; align-items:flex-end; pointer-events:none;
-      animation:guideEntrance 1s ease-out;
-    }
-    @keyframes guideEntrance {
-      from{transform:translateX(100px);opacity:0;}
-      to{transform:translateX(0);opacity:1;}
-    }
-    .speech-bubble {
-      background:var(--card-bg); backdrop-filter:blur(20px); color:var(--text-primary);
-      padding:14px 20px; border-radius:24px 24px 4px 24px; font-weight:500;
-      max-width:240px; margin-bottom:10px; box-shadow:0 8px 30px rgba(0,0,0,0.4);
-      font-size:0.9rem; border:1px solid var(--accent); animation:bubbleFloat 3s ease-in-out infinite;
-    }
-    @keyframes bubbleFloat {
-      0%,100%{transform:translateY(0);}
-      50%{transform:translateY(-5px);}
-    }
-    .speech-bubble::after {
-      content:''; position:absolute; bottom:-14px; right:28px;
-      width:0; height:0; border-left:14px solid transparent;
-      border-right:14px solid transparent; border-top:16px solid var(--accent);
-    }
-    .guide-character {
-      width:80px; height:100px; animation:characterIdle 2s ease-in-out infinite;
-      filter:drop-shadow(0 8px 15px rgba(0,0,0,0.5));
-    }
-    @keyframes characterIdle {
-      0%,100%{transform:translateY(0) rotate(0deg);}
-      25%{transform:translateY(-6px) rotate(-2deg);}
-      75%{transform:translateY(-3px) rotate(2deg);}
-    }
-    .popup-overlay {
-      position:fixed; top:0; left:0; width:100%; height:100%;
-      background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); z-index:300;
-      display:none; align-items:center; justify-content:center; animation:fadeIn 0.3s ease;
-    }
+    .start-button::after { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent); animation:shine 2s infinite; }
+    @keyframes shine { 0%{transform:translateX(-100%) rotate(45deg);} 100%{transform:translateX(100%) rotate(45deg);} }
+    .guide-container { position:fixed; bottom:30px; right:30px; z-index:200; display:flex; flex-direction:column; align-items:flex-end; pointer-events:none; animation:guideEntrance 1s ease-out; }
+    @keyframes guideEntrance { from{transform:translateX(100px);opacity:0;} to{transform:translateX(0);opacity:1;} }
+    .speech-bubble { background:var(--card-bg); backdrop-filter:blur(20px); color:var(--text-primary); padding:14px 20px; border-radius:24px 24px 4px 24px; font-weight:500; max-width:240px; margin-bottom:10px; box-shadow:0 8px 30px rgba(0,0,0,0.4); font-size:0.9rem; border:1px solid var(--accent); animation:bubbleFloat 3s ease-in-out infinite; }
+    @keyframes bubbleFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-5px);} }
+    .speech-bubble::after { content:''; position:absolute; bottom:-14px; right:28px; width:0; height:0; border-left:14px solid transparent; border-right:14px solid transparent; border-top:16px solid var(--accent); }
+    .guide-character { width:80px; height:100px; animation:characterIdle 2s ease-in-out infinite; filter:drop-shadow(0 8px 15px rgba(0,0,0,0.5)); }
+    @keyframes characterIdle { 0%,100%{transform:translateY(0) rotate(0deg);} 25%{transform:translateY(-6px) rotate(-2deg);} 75%{transform:translateY(-3px) rotate(2deg);} }
+    .popup-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); z-index:300; display:none; align-items:center; justify-content:center; animation:fadeIn 0.3s ease; }
     @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
-    .popup-dialog {
-      background:var(--card-bg); backdrop-filter:blur(25px); border:2px solid var(--accent);
-      border-radius:28px; padding:35px 40px; text-align:center; box-shadow:var(--glow);
-      max-width:420px; animation:popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
-    }
+    .popup-dialog { background:var(--card-bg); backdrop-filter:blur(25px); border:2px solid var(--accent); border-radius:28px; padding:35px 40px; text-align:center; box-shadow:var(--glow); max-width:420px; animation:popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275); }
     @keyframes popIn { from{transform:scale(0.8);opacity:0;} to{transform:scale(1);opacity:1;} }
     .popup-dialog h3 { font-family:var(--font-display); font-size:1.8rem; color:var(--accent); margin-bottom:0.8rem; }
     .popup-dialog p { color:var(--text-secondary); margin-bottom:1.5rem; line-height:1.6; }
-    .popup-close-btn {
-      background:var(--accent); color:#0a1a2a; border:none; padding:10px 28px;
-      border-radius:30px; font-weight:700; cursor:pointer; font-family:var(--font-body); transition:0.3s;
-    }
+    .popup-close-btn { background:var(--accent); color:#0a1a2a; border:none; padding:10px 28px; border-radius:30px; font-weight:700; cursor:pointer; transition:0.3s; }
     .popup-close-btn:hover { transform:scale(1.05); box-shadow:0 0 20px rgba(0,229,160,0.5); }
-    @media (max-width:768px) {
-      .map-header .logo-text { font-size:2.2rem; }
-      .island-card { width:120px; height:150px; }
-      .island-icon-wrapper svg { width:40px; height:40px; }
-      .island-name { font-size:0.75rem; }
-      .guide-container { bottom:15px; right:15px; }
-      .guide-character { width:60px; height:75px; }
-    }
+    @media (max-width:768px) { .map-header .logo-text { font-size:2.2rem; } .island-card { width:120px; height:150px; } .island-icon-wrapper svg { width:40px; height:40px; } .island-name { font-size:0.75rem; } .guide-container { bottom:15px; right:15px; } .guide-character { width:60px; height:75px; } }
   </style>
 </head>
 <body class="dark-theme">
   <canvas id="particles-bg"></canvas>
-
-  <button class="theme-toggle" id="theme-toggle-btn">
-    <span class="theme-icon">&#9788;</span> Light Mode
-  </button>
-
-  <div class="progress-tracker">
-    Penjelajahan <span id="progress-count">0</span>/6
-    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-  </div>
+  <button class="theme-toggle" id="theme-toggle-btn"><span class="theme-icon">&#9788;</span> Light Mode</button>
+  <div class="progress-tracker">Penjelajahan <span id="progress-count">0</span>/6<div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div></div>
 
   <div id="app-container">
-    <div class="map-header">
-      <div class="logo-text">BIOVERSE</div>
-      <div class="subtitle">Platform belajar interaktif dari sel hingga ekosistem</div>
-    </div>
-
+    <div class="map-header"><div class="logo-text">BIOVERSE</div><div class="subtitle">Platform belajar interaktif dari sel hingga ekosistem</div></div>
     <div class="islands-grid">
-      <!-- MicroVerse -->
-      <div class="island-card micro" data-world="micro" data-name="MicroVerse" data-link="microverse1.html">
-        <div class="island-icon-wrapper">
-          <svg viewBox="0 0 60 60" fill="none">
-            <circle cx="30" cy="30" r="22" fill="none" stroke="#00E5A0" stroke-width="3"/>
-            <circle cx="30" cy="30" r="12" fill="#00E5A0" opacity="0.7"/>
-            <circle cx="30" cy="30" r="6" fill="#0a1a2a"/>
-            <circle cx="22" cy="24" r="4" fill="#00E5A0" opacity="0.8"/>
-            <circle cx="38" cy="24" r="3" fill="#00E5A0" opacity="0.8"/>
-            <circle cx="30" cy="40" r="4" fill="#00E5A0" opacity="0.6"/>
-          </svg>
-        </div>
-        <div class="island-name">MicroVerse</div>
-        <div class="island-tag">Dunia Sel</div>
-      </div>
-
-      <!-- CodeVerse -->
-      <div class="island-card code" data-world="code" data-name="CodeVerse" data-link="codeverse.html">
-        <div class="island-icon-wrapper">
-          <svg viewBox="0 0 60 60" fill="none">
-            <path d="M15 10 L30 45 L45 10" stroke="#1E90FF" stroke-width="3" fill="none" stroke-linecap="round"/>
-            <path d="M15 50 L30 15 L45 50" stroke="#1E90FF" stroke-width="3" fill="none" stroke-linecap="round"/>
-            <circle cx="15" cy="10" r="5" fill="#1E90FF"/>
-            <circle cx="45" cy="10" r="5" fill="#1E90FF"/>
-            <circle cx="15" cy="50" r="5" fill="#1E90FF"/>
-            <circle cx="45" cy="50" r="5" fill="#1E90FF"/>
-            <circle cx="30" cy="30" r="4" fill="#fff" opacity="0.8"/>
-          </svg>
-        </div>
-        <div class="island-name">CodeVerse</div>
-        <div class="island-tag">Dunia DNA</div>
-      </div>
-
-      <!-- BuildVerse -->
-      <!-- BuildVerse - DUNIA PROTEIN -->
-      <div class="island-card build" data-world="build" data-name="BuildVerse" data-link="buildverse.html">
-        <div class="island-icon-wrapper">
-          <svg viewBox="0 0 60 60" fill="none">
-            <rect x="10" y="20" width="12" height="30" rx="4" fill="#FFD700"/>
-            <rect x="24" y="12" width="12" height="38" rx="4" fill="#FFD700" opacity="0.8"/>
-            <rect x="38" y="18" width="12" height="32" rx="4" fill="#FFD700" opacity="0.6"/>
-            <circle cx="16" cy="20" r="3" fill="#fff"/>
-            <circle cx="30" cy="12" r="3" fill="#fff"/>
-            <circle cx="44" cy="18" r="3" fill="#fff"/>
-          </svg>
-        </div>
-        <div class="island-name">BuildVerse</div>
-        <div class="island-tag">Dunia Protein</div>
-      </div>
-
-      <!-- GreenVerse -->
-      <div class="island-card green locked" data-world="green" data-name="GreenVerse">
-        <div class="island-icon-wrapper">
-          <svg viewBox="0 0 60 60" fill="none">
-            <rect x="26" y="28" width="8" height="24" rx="3" fill="#8B5E3C"/>
-            <circle cx="30" cy="20" r="14" fill="#2ecc71" opacity="0.8"/>
-            <circle cx="22" cy="18" r="8" fill="#2ecc71"/>
-            <circle cx="38" cy="22" r="7" fill="#2ecc71" opacity="0.9"/>
-            <circle cx="30" cy="14" r="6" fill="#27ae60"/>
-            <line x1="30" y1="6" x2="30" y2="2" stroke="#2ecc71" stroke-width="2"/>
-          </svg>
-        </div>
-        <div class="island-name">GreenVerse</div>
-        <div class="island-tag">Dunia Tumbuhan</div>
-      </div>
-
-      <!-- AquaVerse -->
-      <div class="island-card aqua locked" data-world="aqua" data-name="AquaVerse">
-        <div class="island-icon-wrapper">
-          <svg viewBox="0 0 60 60" fill="none">
-            <path d="M10 40 Q20 25 30 40 Q40 55 50 40" stroke="#00FFFF" stroke-width="3" fill="none"/>
-            <ellipse cx="28" cy="30" rx="12" ry="7" fill="#00FFFF" opacity="0.7"/>
-            <circle cx="28" cy="30" r="3" fill="#0a1a2a"/>
-            <path d="M38 28 L45 24 L48 30 L42 33 Z" fill="#00FFFF" opacity="0.8"/>
-            <circle cx="20" cy="42" r="4" fill="#00FFFF" opacity="0.5"/>
-            <circle cx="40" cy="44" r="3" fill="#00FFFF" opacity="0.5"/>
-          </svg>
-        </div>
-        <div class="island-name">AquaVerse</div>
-        <div class="island-tag">Dunia Laut</div>
-      </div>
-
-      <!-- MedVerse -->
-      <div class="island-card med locked" data-world="med" data-name="MedVerse">
-        <div class="island-icon-wrapper">
-          <svg viewBox="0 0 60 60" fill="none">
-            <rect x="20" y="8" width="20" height="44" rx="10" fill="#e74c3c" opacity="0.8"/>
-            <rect x="8" y="20" width="44" height="20" rx="10" fill="#e74c3c" opacity="0.8"/>
-            <circle cx="30" cy="30" r="8" fill="#fff"/>
-            <circle cx="30" cy="30" r="4" fill="#e74c3c"/>
-            <rect x="22" y="38" width="16" height="3" rx="2" fill="#fff" opacity="0.6"/>
-          </svg>
-        </div>
-        <div class="island-name">MedVerse</div>
-        <div class="island-tag">Dunia Medis</div>
-      </div>
+      <div class="island-card micro" data-world="micro" data-link="microverse1.html"><div class="island-icon-wrapper"><svg viewBox="0 0 60 60" fill="none"><circle cx="30" cy="30" r="22" fill="none" stroke="#00E5A0" stroke-width="3"/><circle cx="30" cy="30" r="12" fill="#00E5A0" opacity="0.7"/><circle cx="30" cy="30" r="6" fill="#0a1a2a"/><circle cx="22" cy="24" r="4" fill="#00E5A0" opacity="0.8"/><circle cx="38" cy="24" r="3" fill="#00E5A0" opacity="0.8"/><circle cx="30" cy="40" r="4" fill="#00E5A0" opacity="0.6"/></svg></div><div class="island-name">MicroVerse</div><div class="island-tag">Dunia Sel</div></div>
+      <div class="island-card code" data-world="code" data-link="codeverse.html"><div class="island-icon-wrapper"><svg viewBox="0 0 60 60" fill="none"><path d="M15 10 L30 45 L45 10" stroke="#1E90FF" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M15 50 L30 15 L45 50" stroke="#1E90FF" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="15" cy="10" r="5" fill="#1E90FF"/><circle cx="45" cy="10" r="5" fill="#1E90FF"/><circle cx="15" cy="50" r="5" fill="#1E90FF"/><circle cx="45" cy="50" r="5" fill="#1E90FF"/><circle cx="30" cy="30" r="4" fill="#fff" opacity="0.8"/></svg></div><div class="island-name">CodeVerse</div><div class="island-tag">Dunia DNA</div></div>
+      <div class="island-card build" data-world="build" data-link="buildverse.html"><div class="island-icon-wrapper"><svg viewBox="0 0 60 60" fill="none"><rect x="10" y="20" width="12" height="30" rx="4" fill="#FFD700"/><rect x="24" y="12" width="12" height="38" rx="4" fill="#FFD700" opacity="0.8"/><rect x="38" y="18" width="12" height="32" rx="4" fill="#FFD700" opacity="0.6"/><circle cx="16" cy="20" r="3" fill="#fff"/><circle cx="30" cy="12" r="3" fill="#fff"/><circle cx="44" cy="18" r="3" fill="#fff"/></svg></div><div class="island-name">BuildVerse</div><div class="island-tag">Dunia Protein</div></div>
+      <div class="island-card green locked" data-world="green"><div class="island-icon-wrapper"><svg viewBox="0 0 60 60" fill="none"><rect x="26" y="28" width="8" height="24" rx="3" fill="#8B5E3C"/><circle cx="30" cy="20" r="14" fill="#2ecc71" opacity="0.8"/><circle cx="22" cy="18" r="8" fill="#2ecc71"/><circle cx="38" cy="22" r="7" fill="#2ecc71" opacity="0.9"/><circle cx="30" cy="14" r="6" fill="#27ae60"/><line x1="30" y1="6" x2="30" y2="2" stroke="#2ecc71" stroke-width="2"/></svg></div><div class="island-name">GreenVerse</div><div class="island-tag">Dunia Tumbuhan</div></div>
+      <div class="island-card aqua locked" data-world="aqua"><div class="island-icon-wrapper"><svg viewBox="0 0 60 60" fill="none"><path d="M10 40 Q20 25 30 40 Q40 55 50 40" stroke="#00FFFF" stroke-width="3" fill="none"/><ellipse cx="28" cy="30" rx="12" ry="7" fill="#00FFFF" opacity="0.7"/><circle cx="28" cy="30" r="3" fill="#0a1a2a"/><path d="M38 28 L45 24 L48 30 L42 33 Z" fill="#00FFFF" opacity="0.8"/><circle cx="20" cy="42" r="4" fill="#00FFFF" opacity="0.5"/><circle cx="40" cy="44" r="3" fill="#00FFFF" opacity="0.5"/></svg></div><div class="island-name">AquaVerse</div><div class="island-tag">Dunia Laut</div></div>
+      <div class="island-card med locked" data-world="med"><div class="island-icon-wrapper"><svg viewBox="0 0 60 60" fill="none"><rect x="20" y="8" width="20" height="44" rx="10" fill="#e74c3c" opacity="0.8"/><rect x="8" y="20" width="44" height="20" rx="10" fill="#e74c3c" opacity="0.8"/><circle cx="30" cy="30" r="8" fill="#fff"/><circle cx="30" cy="30" r="4" fill="#e74c3c"/><rect x="22" y="38" width="16" height="3" rx="2" fill="#fff" opacity="0.6"/></svg></div><div class="island-name">MedVerse</div><div class="island-tag">Dunia Medis</div></div>
     </div>
-
     <button class="start-button" id="start-explore-btn">Mulai Jelajah</button>
   </div>
 
-  <!-- Popup Coming Soon -->
-  <div class="popup-overlay" id="coming-soon-popup">
-    <div class="popup-dialog">
-      <h3 id="popup-world-title">Coming Soon</h3>
-      <p id="popup-world-desc">Dunia ini masih dalam pengembangan. Tim BioVerse sedang bekerja keras untuk menghadirkannya!</p>
-      <button class="popup-close-btn" id="popup-close-btn">Tutup</button>
-    </div>
-  </div>
+  <div class="popup-overlay" id="coming-soon-popup"><div class="popup-dialog"><h3 id="popup-world-title">Coming Soon</h3><p id="popup-world-desc">Dunia ini masih dalam pengembangan. Tim BioVerse sedang bekerja keras untuk menghadirkannya!</p><button class="popup-close-btn" id="popup-close-btn">Tutup</button></div></div>
 
-  <!-- Karakter BioGuide -->
   <div class="guide-container" id="guide-container">
     <div class="speech-bubble" id="guide-speech">Halo! Pilih dunia untuk mulai belajar.</div>
-    <svg class="guide-character" viewBox="0 0 80 100" fill="none">
-      <rect x="25" y="45" width="30" height="35" rx="12" fill="#00E5A0"/>
-      <circle cx="40" cy="32" r="18" fill="#FFDAB9"/>
-      <path d="M22 28 Q30 10 40 12 Q50 10 58 28" fill="#4A2C2A"/>
-      <circle cx="33" cy="32" r="4" fill="white"/>
-      <circle cx="47" cy="32" r="4" fill="white"/>
-      <circle cx="34" cy="33" r="2" fill="#1a1a2e"/>
-      <circle cx="48" cy="33" r="2" fill="#1a1a2e"/>
-      <path d="M34 40 Q40 46 46 40" stroke="#1a1a2e" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <rect x="8" y="48" width="14" height="6" rx="5" fill="#FFDAB9" transform="rotate(-20 15 50)"/>
-      <rect x="58" y="52" width="14" height="6" rx="5" fill="#FFDAB9"/>
-      <rect x="28" y="78" width="10" height="14" rx="6" fill="#1a3a5c"/>
-      <rect x="42" y="78" width="10" height="14" rx="6" fill="#1a3a5c"/>
-      <rect x="24" y="45" width="32" height="28" rx="8" fill="white" opacity="0.5"/>
-    </svg>
+    <svg class="guide-character" viewBox="0 0 80 100" fill="none"><rect x="25" y="45" width="30" height="35" rx="12" fill="#00E5A0"/><circle cx="40" cy="32" r="18" fill="#FFDAB9"/><path d="M22 28 Q30 10 40 12 Q50 10 58 28" fill="#4A2C2A"/><circle cx="33" cy="32" r="4" fill="white"/><circle cx="47" cy="32" r="4" fill="white"/><circle cx="34" cy="33" r="2" fill="#1a1a2e"/><circle cx="48" cy="33" r="2" fill="#1a1a2e"/><path d="M34 40 Q40 46 46 40" stroke="#1a1a2e" stroke-width="2" fill="none" stroke-linecap="round"/><rect x="8" y="48" width="14" height="6" rx="5" fill="#FFDAB9" transform="rotate(-20 15 50)"/><rect x="58" y="52" width="14" height="6" rx="5" fill="#FFDAB9"/><rect x="28" y="78" width="10" height="14" rx="6" fill="#1a3a5c"/><rect x="42" y="78" width="10" height="14" rx="6" fill="#1a3a5c"/><rect x="24" y="45" width="32" height="28" rx="8" fill="white" opacity="0.5"/></svg>
   </div>
 
   <script>
     (function() {
-      let currentTheme = 'dark';
-      let visitedWorlds = new Set();
-      const totalWorlds = 6;
-
-      const themeToggleBtn = document.getElementById('theme-toggle-btn');
-      const progressCount = document.getElementById('progress-count');
-      const progressFill = document.getElementById('progress-fill');
-      const startBtn = document.getElementById('start-explore-btn');
-      const popupOverlay = document.getElementById('coming-soon-popup');
-      const popupTitle = document.getElementById('popup-world-title');
-      const popupDesc = document.getElementById('popup-world-desc');
-      const popupCloseBtn = document.getElementById('popup-close-btn');
-      const guideSpeech = document.getElementById('guide-speech');
-
-      // Partikel Background
-      const canvas = document.getElementById('particles-bg');
-      const ctx = canvas.getContext('2d');
-      let particles = [];
-
-      function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      }
-      window.addEventListener('resize', resizeCanvas);
-      resizeCanvas();
-
+      let currentTheme = 'dark'; let visitedWorlds = new Set(); const totalWorlds = 6;
+      const themeToggleBtn = document.getElementById('theme-toggle-btn'); const progressCount = document.getElementById('progress-count'); const progressFill = document.getElementById('progress-fill');
+      const startBtn = document.getElementById('start-explore-btn'); const popupOverlay = document.getElementById('coming-soon-popup'); const popupTitle = document.getElementById('popup-world-title'); const popupDesc = document.getElementById('popup-world-desc'); const popupCloseBtn = document.getElementById('popup-close-btn'); const guideSpeech = document.getElementById('guide-speech');
+      const canvas = document.getElementById('particles-bg'); const ctx = canvas.getContext('2d'); let particles = [];
+      function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+      window.addEventListener('resize', resizeCanvas); resizeCanvas();
       class Particle {
-        constructor() {
-          this.reset();
-        }
-        reset() {
-          this.x = Math.random() * canvas.width;
-          this.y = Math.random() * canvas.height;
-          this.size = Math.random() * 2 + 1;
-          this.speedX = (Math.random() - 0.5) * 0.5;
-          this.speedY = (Math.random() - 0.5) * 0.5;
-          this.opacity = Math.random() * 0.6 + 0.2;
-          this.color = currentTheme === 'dark'
-            ? `rgba(0, 229, 160, ${this.opacity})`
-            : `rgba(30, 144, 255, ${this.opacity})`;
-        }
-        update() {
-          this.x += this.speedX;
-          this.y += this.speedY;
-          if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
-        }
-        draw() {
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-          ctx.fillStyle = this.color;
-          ctx.fill();
-        }
+        constructor() { this.reset(); }
+        reset() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 2 + 1; this.speedX = (Math.random() - 0.5) * 0.5; this.speedY = (Math.random() - 0.5) * 0.5; this.opacity = Math.random() * 0.6 + 0.2; this.color = currentTheme === 'dark' ? `rgba(0, 229, 160, ${this.opacity})` : `rgba(30, 144, 255, ${this.opacity})`; }
+        update() { this.x += this.speedX; this.y += this.speedY; if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset(); }
+        draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fillStyle = this.color; ctx.fill(); }
       }
-
-      function initParticles() {
-        particles = [];
-        const count = Math.floor((canvas.width * canvas.height) / 8000);
-        for (let i = 0; i < count; i++) particles.push(new Particle());
-      }
-      initParticles();
-      window.addEventListener('resize', initParticles);
-
-      function animateParticles() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => { p.update(); p.draw(); });
-        for (let i = 0; i < particles.length; i++) {
-          for (let j = i + 1; j < particles.length; j++) {
-            const dx = particles[i].x - particles[j].x;
-            const dy = particles[i].y - particles[j].y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 120) {
-              ctx.beginPath();
-              ctx.moveTo(particles[i].x, particles[i].y);
-              ctx.lineTo(particles[j].x, particles[j].y);
-              ctx.strokeStyle = currentTheme === 'dark'
-                ? `rgba(0, 229, 160, ${0.08 * (1 - dist/120)})`
-                : `rgba(30, 144, 255, ${0.08 * (1 - dist/120)})`;
-              ctx.lineWidth = 0.5;
-              ctx.stroke();
-            }
-          }
-        }
-        requestAnimationFrame(animateParticles);
-      }
+      function initParticles() { particles = []; const count = Math.floor((canvas.width * canvas.height) / 8000); for (let i = 0; i < count; i++) particles.push(new Particle()); }
+      initParticles(); window.addEventListener('resize', initParticles);
+      function animateParticles() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); for (let i = 0; i < particles.length; i++) { for (let j = i + 1; j < particles.length; j++) { const dx = particles[i].x - particles[j].x; const dy = particles[i].y - particles[j].y; const dist = Math.sqrt(dx * dx + dy * dy); if (dist < 120) { ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.strokeStyle = currentTheme === 'dark' ? `rgba(0, 229, 160, ${0.08 * (1 - dist/120)})` : `rgba(30, 144, 255, ${0.08 * (1 - dist/120)})`; ctx.lineWidth = 0.5; ctx.stroke(); } } } requestAnimationFrame(animateParticles); }
       animateParticles();
-
-      // Tema
-      function setTheme(theme) {
-        currentTheme = theme;
-        if (theme === 'light') {
-          document.body.classList.add('light-theme');
-          themeToggleBtn.innerHTML = '<span class="theme-icon">&#9790;</span> Dark Mode';
-        } else {
-          document.body.classList.remove('light-theme');
-          themeToggleBtn.innerHTML = '<span class="theme-icon">&#9788;</span> Light Mode';
-        }
-        particles.forEach(p => {
-          p.color = theme === 'dark'
-            ? `rgba(0, 229, 160, ${p.opacity})`
-            : `rgba(30, 144, 255, ${p.opacity})`;
-        });
-        localStorage.setItem('bioverse_theme', theme);
-      }
+      function setTheme(theme) { currentTheme = theme; if (theme === 'light') { document.body.classList.add('light-theme'); themeToggleBtn.innerHTML = '<span class="theme-icon">&#9790;</span> Dark Mode'; } else { document.body.classList.remove('light-theme'); themeToggleBtn.innerHTML = '<span class="theme-icon">&#9788;</span> Light Mode'; } particles.forEach(p => { p.color = theme === 'dark' ? `rgba(0, 229, 160, ${p.opacity})` : `rgba(30, 144, 255, ${p.opacity})`; }); localStorage.setItem('bioverse_theme', theme); }
       themeToggleBtn.addEventListener('click', () => setTheme(currentTheme === 'dark' ? 'light' : 'dark'));
       setTheme(localStorage.getItem('bioverse_theme') || 'dark');
-
-      // Progress
-      function updateProgress() {
-        const count = visitedWorlds.size;
-        progressCount.textContent = count;
-        progressFill.style.width = `${(count / totalWorlds) * 100}%`;
-      }
-      const savedVisited = localStorage.getItem('bioverse_visited');
-      if (savedVisited) visitedWorlds = new Set(JSON.parse(savedVisited));
-      updateProgress();
-
-      function markVisited(world) {
-        visitedWorlds.add(world);
-        localStorage.setItem('bioverse_visited', JSON.stringify([...visitedWorlds]));
-        updateProgress();
-      }
-
-      // Popup Coming Soon
-      const worldNames = {
-        micro: 'MicroVerse - Dunia Sel',
-        code: 'CodeVerse - Dunia DNA',
-        build: 'BuildVerse - Dunia Protein',
-        green: 'GreenVerse - Dunia Tumbuhan',
-        aqua: 'AquaVerse - Dunia Laut',
-        med: 'MedVerse - Dunia Medis'
-      };
-
-      function showComingSoon(worldKey) {
-        popupTitle.textContent = worldNames[worldKey] || 'Dunia Baru';
-        popupDesc.textContent = 'Dunia ini masih dalam pengembangan. Tim BioVerse sedang bekerja keras untuk menghadirkannya!';
-        popupOverlay.style.display = 'flex';
-        guideSpeech.textContent = 'Dunia ini belum tersedia. Coba yang lain dulu ya!';
-      }
-
-      popupCloseBtn.addEventListener('click', () => {
-        popupOverlay.style.display = 'none';
-      });
-
-      popupOverlay.addEventListener('click', (e) => {
-        if (e.target === popupOverlay) popupOverlay.style.display = 'none';
-      });
-
-      // Navigasi Pulau
-      document.querySelectorAll('.island-card').forEach(card => {
-        card.addEventListener('click', () => {
-          const world = card.dataset.world;
-          const link = card.dataset.link;
-
-          if (link) {
-            markVisited(world);
-            window.location.href = link;
-          } else {
-            showComingSoon(world);
-          }
-        });
-      });
-
-      // Tombol Mulai Jelajah
-      startBtn.addEventListener('click', () => {
-        markVisited('micro');
-        guideSpeech.textContent = 'Berangkat! Menuju MicroVerse...';
-        setTimeout(() => {
-          window.location.href = 'microverse1.html';
-        }, 600);
-      });
-
-      // Guide speech random
-      const guideMessages = [
-        'Halo! Pilih dunia untuk mulai belajar.',
-        'MicroVerse dan CodeVerse sudah siap!',
-        'Klik pulau untuk memulai petualangan.',
-        'Setiap dunia punya keunikan tersendiri.',
-        'Yuk, jadi ilmuwan bioteknologi!'
-      ];
-      let messageIndex = 0;
-      setInterval(() => {
-        if (popupOverlay.style.display !== 'flex') {
-          guideSpeech.textContent = guideMessages[messageIndex % guideMessages.length];
-          messageIndex++;
-        }
-      }, 8000);
-
+      function updateProgress() { const count = visitedWorlds.size; progressCount.textContent = count; progressFill.style.width = `${(count / totalWorlds) * 100}%`; }
+      const savedVisited = localStorage.getItem('bioverse_visited'); if (savedVisited) visitedWorlds = new Set(JSON.parse(savedVisited)); updateProgress();
+      function markVisited(world) { visitedWorlds.add(world); localStorage.setItem('bioverse_visited', JSON.stringify([...visitedWorlds])); updateProgress(); }
+      function showComingSoon(worldKey) { const names = { micro:'MicroVerse', code:'CodeVerse', build:'BuildVerse', green:'GreenVerse', aqua:'AquaVerse', med:'MedVerse' }; popupTitle.textContent = names[worldKey] || 'Dunia Baru'; popupDesc.textContent = 'Dunia ini masih dalam pengembangan.'; popupOverlay.style.display = 'flex'; guideSpeech.textContent = 'Dunia ini belum tersedia.'; }
+      popupCloseBtn.addEventListener('click', () => { popupOverlay.style.display = 'none'; });
+      popupOverlay.addEventListener('click', (e) => { if (e.target === popupOverlay) popupOverlay.style.display = 'none'; });
+      document.querySelectorAll('.island-card').forEach(card => { card.addEventListener('click', () => { const world = card.dataset.world; const link = card.dataset.link; if (link) { markVisited(world); window.location.href = link; } else { showComingSoon(world); } }); });
+      startBtn.addEventListener('click', () => { markVisited('micro'); guideSpeech.textContent = 'Berangkat! Menuju MicroVerse...'; setTimeout(() => { window.location.href = 'microverse1.html'; }, 600); });
+      const guideMessages = ['Halo! Pilih dunia untuk mulai belajar.', 'MicroVerse, CodeVerse, dan BuildVerse sudah siap!', 'Klik pulau untuk memulai petualangan.', 'Setiap dunia punya keunikan tersendiri.']; let messageIndex = 0;
+      setInterval(() => { if (popupOverlay.style.display !== 'flex') { guideSpeech.textContent = guideMessages[messageIndex % guideMessages.length]; messageIndex++; } }, 8000);
       updateProgress();
     })();
   </script>
